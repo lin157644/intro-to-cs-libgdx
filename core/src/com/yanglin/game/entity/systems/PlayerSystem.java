@@ -3,34 +3,36 @@ package com.yanglin.game.entity.systems;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.math.Vector2;
-import com.yanglin.game.MainAssetManager;
+import com.yanglin.game.GameAssetManager;
 import com.yanglin.game.entity.EntityEngine;
 import com.yanglin.game.entity.component.*;
 import com.yanglin.game.input.GameInputProcessor;
 import com.yanglin.game.input.KeyInputListener;
 
 public class PlayerSystem extends IteratingSystem implements KeyInputListener {
+    private static final String TAG = Game.class.getSimpleName();
     private final OrthographicCamera camera;
     private FacingComponent.Facing currentFacing = FacingComponent.Facing.FRONT;
     private FacingComponent.Facing previousFacing = FacingComponent.Facing.FRONT;
     private boolean currentIsWalking = false;
     private boolean previousIsWalking = false;
-    private MainAssetManager assetManager;
+    private GameAssetManager assetManager;
 
     // private final ComponentMapper<AnimationComponent> am;
 
-    public PlayerSystem(OrthographicCamera camera, MainAssetManager assetManager) {
+    public PlayerSystem(OrthographicCamera camera, GameAssetManager assetManager) {
         super(Family.all(PlayerComponent.class, PositionComponent.class, AnimationComponent.class).get());
         // am = ComponentMapper.getFor(AnimationComponent.class);
         this.camera = camera;
         this.assetManager = assetManager;
+        Gdx.app.debug(TAG, "Successfully initialized PlayerSystem");
     }
 
     private final Vector2 velocity = new Vector2();
@@ -44,31 +46,31 @@ public class PlayerSystem extends IteratingSystem implements KeyInputListener {
             if (currentIsWalking) {
                 switch (currentFacing) {
                     case FRONT -> {
-                        stateComponent.set(MainAssetManager.PlayerAnimation.WALK_FRONT.getType());
+                        stateComponent.set(GameAssetManager.PlayerAnimation.WALK_FRONT.getType());
                     }
                     case BACK -> {
-                        stateComponent.set(MainAssetManager.PlayerAnimation.WALK_BACK.getType());
+                        stateComponent.set(GameAssetManager.PlayerAnimation.WALK_BACK.getType());
                     }
                     case LEFT -> {
-                        stateComponent.set(MainAssetManager.PlayerAnimation.WALK_LEFT.getType());
+                        stateComponent.set(GameAssetManager.PlayerAnimation.WALK_LEFT.getType());
                     }
                     case RIGHT -> {
-                        stateComponent.set(MainAssetManager.PlayerAnimation.WALK_RIGHT.getType());
+                        stateComponent.set(GameAssetManager.PlayerAnimation.WALK_RIGHT.getType());
                     }
                 }
             } else {
                 switch (currentFacing) {
                     case FRONT -> {
-                        stateComponent.set(MainAssetManager.PlayerAnimation.IDLE_FRONT.getType());
+                        stateComponent.set(GameAssetManager.PlayerAnimation.IDLE_FRONT.getType());
                     }
                     case BACK -> {
-                        stateComponent.set(MainAssetManager.PlayerAnimation.IDLE_BACK.getType());
+                        stateComponent.set(GameAssetManager.PlayerAnimation.IDLE_BACK.getType());
                     }
                     case LEFT -> {
-                        stateComponent.set(MainAssetManager.PlayerAnimation.IDLE_LEFT.getType());
+                        stateComponent.set(GameAssetManager.PlayerAnimation.IDLE_LEFT.getType());
                     }
                     case RIGHT -> {
-                        stateComponent.set(MainAssetManager.PlayerAnimation.IDLE_RIGHT.getType());
+                        stateComponent.set(GameAssetManager.PlayerAnimation.IDLE_RIGHT.getType());
                     }
                 }
             }
@@ -76,55 +78,70 @@ public class PlayerSystem extends IteratingSystem implements KeyInputListener {
             previousIsWalking = currentIsWalking;
         }
 
-        // TODO: Do collision
+        // TODO: Improve performance
         TiledMap map = assetManager.get("tilemaps/school_gate.tmx");
         TiledMapTileLayer collisionLayer = (TiledMapTileLayer) map.getLayers().get("collision");
 
-        float tileWidth = collisionLayer.getTileWidth();
-        float tileHeight = collisionLayer.getTileHeight();
         boolean collisionX = false, collisionY = false;
 
-        float targetX =  positionComponent.position.x + velocity.x;
-        float targetY =  positionComponent.position.y + velocity.y;
+        float targetX = positionComponent.position.x + velocity.x;
+        float targetY = positionComponent.position.y + velocity.y;
+
         // Origin (0, 0) at bottom left
         if (velocity.x < 0) {
             // Bottom left
             collisionX = collisionLayer.getCell((int) (targetX), (int) (targetY)) != null;
-            // Top left
-            if (!collisionX)
-                collisionX = collisionLayer.getCell((int) (targetX), (int) (targetY + 1)) != null;
         } else if (velocity.x > 0) {
             // Bottom right
             collisionX = collisionLayer.getCell((int) (targetX + 1), (int) (targetY)) != null;
-            // Top right
-            if (!collisionX)
-                collisionX = collisionLayer.getCell((int) (targetX + 1), (int) (targetY + 1)) != null;
         }
 
         if (velocity.y < 0) {
             // Bottom left
             collisionY = collisionLayer.getCell((int) (targetX), (int) (targetY)) != null;
-            // Top left
-            if (!collisionY)
-                collisionY = collisionLayer.getCell((int) (targetX), (int) (targetY + 1)) != null;
         } else if (velocity.y > 0) {
             // Bottom right
             collisionY = collisionLayer.getCell((int) (targetX + 1), (int) (targetY)) != null;
-            // Top right
-            if (!collisionY)
-                collisionY = collisionLayer.getCell((int) (targetX + 1), (int) (targetY + 1)) != null;
         }
 
-        if (!collisionX)
-            positionComponent.position.x += velocity.x;
-        if (!collisionY)
-            positionComponent.position.y += velocity.y;
+        if (!collisionX) positionComponent.position.x += velocity.x;
+        if (!collisionY) positionComponent.position.y += velocity.y;
 
-        camera.position.set(entity.getComponent(PositionComponent.class).position, 0);
-        // TODO: Deal with camera out of bound
+        Vector2 cameraPos = new Vector2(entity.getComponent(PositionComponent.class).position);
+        // System.out.println(cameraPos.x);
+        // System.out.println(cameraPos.y);
+        // TODO: Deal with samll tilemap
+        float zoom = 1;
+        float xmax = 47, ymax = 51;
+        float w = Gdx.graphics.getWidth();
+        float h = Gdx.graphics.getHeight();
+        float scaledViewportWidthHalfExtent = (w / h) * 20  * 0.5f;
+        float scaledViewportHeightHalfExtent = 20 * 0.5f;
+        // Horizontal
+        if (cameraPos.x < scaledViewportWidthHalfExtent)
+            cameraPos.x = scaledViewportWidthHalfExtent;
+        else if (cameraPos.x > xmax - scaledViewportWidthHalfExtent)
+            cameraPos.x = xmax - scaledViewportWidthHalfExtent;
 
+        // Vertical
+        if (cameraPos.y < scaledViewportHeightHalfExtent)
+            cameraPos.y = scaledViewportHeightHalfExtent;
+        else if (cameraPos.y > ymax - scaledViewportHeightHalfExtent)
+            cameraPos.y = ymax - scaledViewportHeightHalfExtent;
+
+        camera.position.set(cameraPos, 0);
         camera.update();
         // Gdx.app.debug("PlayerSystem", "PlayerX:" + positionComponent.position.y + "PlayerY:" + positionComponent.position.y);
+    }
+
+    private boolean isWalking(GameInputProcessor gameInputProcessor) {
+        if (gameInputProcessor.isKeyDown(Input.Keys.LEFT)
+                || gameInputProcessor.isKeyDown(Input.Keys.RIGHT)
+                || gameInputProcessor.isKeyDown(Input.Keys.UP)
+                || gameInputProcessor.isKeyDown(Input.Keys.DOWN)) {
+            return true;
+        }
+        return false;
     }
 
     @Override
@@ -133,24 +150,21 @@ public class PlayerSystem extends IteratingSystem implements KeyInputListener {
             case Input.Keys.RIGHT -> {
                 velocity.x = 0.1f;
                 currentFacing = FacingComponent.Facing.RIGHT;
-                currentIsWalking = true;
             }
             case Input.Keys.LEFT -> {
                 velocity.x = -0.1f;
                 currentFacing = FacingComponent.Facing.LEFT;
-                currentIsWalking = true;
             }
             case Input.Keys.DOWN -> {
                 velocity.y = -0.1f;
                 currentFacing = FacingComponent.Facing.FRONT;
-                currentIsWalking = true;
             }
             case Input.Keys.UP -> {
                 velocity.y = 0.1f;
                 currentFacing = FacingComponent.Facing.BACK;
-                currentIsWalking = true;
             }
         }
+        currentIsWalking = isWalking(gameInputProcessor);
         return true;
     }
 
@@ -162,7 +176,6 @@ public class PlayerSystem extends IteratingSystem implements KeyInputListener {
                     velocity.x = -0.1f;
                 } else {
                     velocity.x = 0f;
-                    currentIsWalking = false;
                 }
             }
             case Input.Keys.LEFT -> {
@@ -170,7 +183,6 @@ public class PlayerSystem extends IteratingSystem implements KeyInputListener {
                     velocity.x = 0.1f;
                 } else {
                     velocity.x = 0f;
-                    currentIsWalking = false;
                 }
             }
             case Input.Keys.DOWN -> {
@@ -178,7 +190,6 @@ public class PlayerSystem extends IteratingSystem implements KeyInputListener {
                     velocity.y = 0.1f;
                 } else {
                     velocity.y = 0f;
-                    currentIsWalking = false;
                 }
             }
             case Input.Keys.UP -> {
@@ -186,10 +197,10 @@ public class PlayerSystem extends IteratingSystem implements KeyInputListener {
                     velocity.y = -0.1f;
                 } else {
                     velocity.y = 0f;
-                    currentIsWalking = false;
                 }
             }
         }
+        currentIsWalking = isWalking(gameInputProcessor);
         return true;
     }
 

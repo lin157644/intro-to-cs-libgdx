@@ -3,9 +3,6 @@ package com.yanglin.game.entity;
 import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.PooledEngine;
 import com.yanglin.game.entity.component.*;
-import com.yanglin.game.entity.systems.InventorySystem;
-import com.yanglin.game.entity.systems.QuestSystem;
-import com.yanglin.game.entity.systems.RenderingSystem;
 
 public class EntityEngine extends PooledEngine {
     public static final ComponentMapper<PlayerComponent> playerComponentMapper = ComponentMapper.getFor(PlayerComponent.class);
@@ -14,4 +11,5 @@ public class EntityEngine extends PooledEngine {
     public static final ComponentMapper<FacingComponent> facingComponentMapper = ComponentMapper.getFor(FacingComponent.class);
     public static final ComponentMapper<StateComponent> stateComponentMapper = ComponentMapper.getFor(StateComponent.class);
     public static final ComponentMapper<TextureComponent> textureComponentMapper = ComponentMapper.getFor(TextureComponent.class);
+    public static final ComponentMapper<FontComponent> fontComponentMapper = ComponentMapper.getFor(FontComponent.class);
 }

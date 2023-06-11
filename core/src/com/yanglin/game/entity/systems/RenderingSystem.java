@@ -5,10 +5,11 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.SortedIteratingSystem;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
-import com.yanglin.game.MainAssetManager;
+import com.yanglin.game.GameAssetManager;
 import com.yanglin.game.entity.EntityEngine;
 import com.yanglin.game.entity.component.FontComponent;
 import com.yanglin.game.entity.component.PositionComponent;
@@ -29,21 +30,25 @@ public class RenderingSystem extends SortedIteratingSystem {
     private PositionComponent playerPosComponent;
 
     private Array<Entity> renderQueue;
+    private Texture test;
 
-    public RenderingSystem(MainAssetManager assetManager, OrthographicCamera camera, SpriteBatch batch) {
+    public RenderingSystem(GameAssetManager assetManager, OrthographicCamera camera, SpriteBatch batch) {
+        // TODO: RenderableComponent cause white screen
         super(Family.all(PositionComponent.class, TextureComponent.class).get(), new ZComparator());
 
         this.camera = camera;
         this.batch = batch;
 
-        tm = ComponentMapper.getFor(TextureComponent.class);
-        fm = ComponentMapper.getFor(FontComponent.class);
-        pm = ComponentMapper.getFor(PositionComponent.class);
+        tm = EntityEngine.textureComponentMapper;
+        pm = EntityEngine.positionComponentMapper;
+        fm = EntityEngine.fontComponentMapper;
 
         renderQueue = new Array<Entity>();
 
         TiledMap map = assetManager.get("tilemaps/school_gate.tmx", TiledMap.class);
+        test = assetManager.get("badlogic.jpg");
 
+        // 16 pixels would equal one unit.
         float unitScale = 1 / 16f;
         tiledMapRenderer = new OrthogonalTiledMapRenderer(map, unitScale); // uniScale is necessary
         // ImmutableArray<Component> components = entity.getComponents();
@@ -56,14 +61,14 @@ public class RenderingSystem extends SortedIteratingSystem {
     }
 
     @Override
-    public void update(float deltaTime){
+    public void update(float deltaTime) {
         batch.setProjectionMatrix(camera.combined);
         super.update(deltaTime);
         batch.begin();
         for (Entity entity : renderQueue) {
             TextureComponent tex = tm.get(entity);
             PositionComponent pos = pm.get(entity);
-            if(tex.region != null){
+            if (tex.region != null) {
                 batch.draw(tex.region, pos.position.x, pos.position.y, 1, 2);
             }
             // batch.draw(tex.region,

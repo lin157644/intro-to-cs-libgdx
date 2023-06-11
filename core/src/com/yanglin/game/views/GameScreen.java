@@ -12,7 +12,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.ArrayMap;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.yanglin.game.IWantToGraduate;
-import com.yanglin.game.MainAssetManager;
+import com.yanglin.game.GameAssetManager;
 import com.yanglin.game.entity.EntityEngine;
 import com.yanglin.game.entity.component.*;
 import com.yanglin.game.entity.systems.AnimationSystem;
@@ -22,7 +22,7 @@ import com.yanglin.game.input.GameInputProcessor;
 
 public class GameScreen implements Screen {
     private final EntityEngine engine;
-    private final MainAssetManager assetManager;
+    private final GameAssetManager assetManager;
 
     private final IWantToGraduate game;
 
@@ -74,7 +74,7 @@ public class GameScreen implements Screen {
         positionComponent.position.x = 10;
         positionComponent.position.y = 10;
         ArrayMap<String, Animation<TextureRegion>> tmp = new ArrayMap<>();
-        for (MainAssetManager.PlayerAnimation pa : MainAssetManager.PlayerAnimation.values()) {
+        for (GameAssetManager.PlayerAnimation pa : GameAssetManager.PlayerAnimation.values()) {
             animationComponent.addAnimation(pa.getType(), new Animation<>(0.1f, assetManager.playerAnimationFrames.get(pa)));
         }
         stateComponent.set("IDLE_FRONT");
