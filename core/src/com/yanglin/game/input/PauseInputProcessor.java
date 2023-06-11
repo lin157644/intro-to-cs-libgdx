@@ -1,12 +1,29 @@
-package com.yanglin.game.controller;
+package com.yanglin.game.input;
 
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 
-public class KeyboardInputController implements InputProcessor {
-    // We may implement InputProcessor or InputAdaptor
+public class PauseInputProcessor implements InputProcessor {
     @Override
     public boolean keyDown(int keycode) {
-        return false;
+        // Return true if event is handled
+        Boolean isHandled = false;
+        // TODO: Check if is in pause menu state
+        if(false) {
+            switch (keycode) {
+                case Input.Keys.UP -> {
+                    // Move
+                    isHandled = true;
+                }
+                case Input.Keys.DOWN -> {
+                    isHandled = true;
+                }
+                case Input.Keys.Z -> {
+                    isHandled = true;
+                }
+            }
+        }
+        return isHandled;
     }
 
     @Override

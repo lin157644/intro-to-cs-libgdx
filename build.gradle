@@ -17,6 +17,11 @@ buildscript {
 allprojects {
     apply plugin: "eclipse"
 
+    tasks.withType(JavaCompile).configureEach {
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
+
     version = '1.0'
     ext {
         appName = "I Want To Graduate"

@@ -8,8 +8,9 @@ import com.yanglin.game.IWantToGraduate;
 public class DesktopLauncher {
 	public static void main (String[] arg) {
 		Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
-		config.setForegroundFPS(60);
 		config.setTitle("I Want To Graduate");
+		config.setForegroundFPS(60);
+		config.setWindowedMode(1280, 768);
 		new Lwjgl3Application(new IWantToGraduate(), config);
 	}
 }
