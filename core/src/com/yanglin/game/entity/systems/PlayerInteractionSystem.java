@@ -23,7 +23,7 @@ import com.yanglin.game.input.KeyInputListener;
 public class PlayerInteractionSystem extends IteratingSystem implements MapManager.MapListener, KeyInputListener {
     // Player <-> Item
     // Use tiled object layer
-    private static final String TAG = Game.class.getSimpleName();
+    private static final String TAG = PlayerInteractionSystem.class.getSimpleName();
     private TiledMapTileLayer objectLayer;
     private MapManager mapManager;
     private GameAssetManager assetManager;
@@ -90,10 +90,12 @@ public class PlayerInteractionSystem extends IteratingSystem implements MapManag
                             // TODO: To bad end
                         }
                         case "LANGUAGE" -> {
-                            // TODO: 檢測
+                            // TODO: Trigger QuestSystem
 
                         }
-                        case "GIFT2PROF" -> {}
+                        case "GIFT2PROF" -> {
+                            // TODO: Trigger QuestSystem
+                        }
                         default -> {
                             Gdx.app.log(TAG, "Detect item of unexpected type");
                         }
@@ -175,15 +177,16 @@ public class PlayerInteractionSystem extends IteratingSystem implements MapManag
         playerInteractionListeners.add(listener);
     }
 
-    private void notifyListeners() {
+    private void notifyListeners(PlayerInteractionListener.EventType eventType) {
         for (PlayerInteractionListener listener : playerInteractionListeners) {
-
+            listener.triggerEvent(eventType);
         }
     }
 
     public interface PlayerInteractionListener {
         enum EventType {
-
+            ENTER_LANGUAGE_CENTER,
+            GIFT2PROF,
         }
         // Quest, Item, Dialog
         void triggerEvent(EventType eventType);

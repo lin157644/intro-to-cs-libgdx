@@ -18,7 +18,7 @@ import com.yanglin.game.input.GameInputProcessor;
 import com.yanglin.game.input.KeyInputListener;
 
 public class PlayerMovementSystem extends IteratingSystem implements KeyInputListener, MapManager.MapListener, TimeSystem.TimeSystemListener {
-    private static final String TAG = Game.class.getSimpleName();
+    private static final String TAG = PlayerMovementSystem.class.getSimpleName();
     private final OrthographicCamera camera;
     private FacingComponent.Facing currentFacing = FacingComponent.Facing.FRONT;
     private FacingComponent.Facing previousFacing = FacingComponent.Facing.FRONT;

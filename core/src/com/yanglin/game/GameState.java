@@ -15,9 +15,8 @@ import java.util.Scanner;
 
 public class GameState {
     private static final String TAG = GameState.class.getSimpleName();
+
     public MapManager.EMap map = MapManager.EMap.SCHOOL_GATE;
-    private final Array<ItemComponent.ItemType> items = new Array<>();
-    // TODO: Should initialized in GameScreen/Map...
     public float x = 24;
     public float y = 20;
     public int appleCount = 0;
@@ -28,6 +27,8 @@ public class GameState {
     public boolean hasFinishedOnlineProcedure = false;
     public int month = 5;
     public int date = 1;
+    public int hunger = 0;
+    private final Array<ItemComponent.ItemType> items = new Array<>();
 
     public void addItem(ItemComponent.ItemType itemType){
         if (!items.contains(itemType, true))

@@ -5,7 +5,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.Array;
 
 public class MapManager {
-    private static final String TAG = Game.class.getSimpleName();
+    private static final String TAG = MapManager.class.getSimpleName();
     private final Array<MapListener> mapListeners;
 
     public enum EMap {

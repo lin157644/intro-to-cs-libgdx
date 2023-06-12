@@ -4,30 +4,25 @@ import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.badlogic.gdx.utils.reflect.ClassReflection;
 import com.badlogic.gdx.utils.reflect.ReflectionException;
-import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.yanglin.game.entity.MapManager;
-import com.yanglin.game.entity.component.ItemComponent;
 import com.yanglin.game.views.EScreen;
+import com.yanglin.game.views.Ending;
 
 import java.util.EnumMap;
 
 public class IWantToGraduate extends Game {
     // ApplicationAdapter is more basic than Game
     // It allows fancier transition, but Game is sufficient for us.
-    private static final String TAG = Game.class.getSimpleName();
+    private static final String TAG = IWantToGraduate.class.getSimpleName();
     public Screen currentScreen;
     private final EnumMap<EScreen, Screen> screenMap = new EnumMap<>(EScreen.class);
     public GameAssetManager assetManager = new GameAssetManager();
     public MapManager mapManager = new MapManager();
     public GameState gameState;
-
+    public Ending ending;
 
     @Override
     public void create() {
@@ -44,6 +39,10 @@ public class IWantToGraduate extends Game {
         changeScreen(EScreen.LOADING);
         float w = Gdx.graphics.getWidth();
         float h = Gdx.graphics.getHeight();
+    }
+
+    public void setEnding(Ending ending) {
+        this.ending = ending;
     }
 
     public void changeScreen(EScreen s) {

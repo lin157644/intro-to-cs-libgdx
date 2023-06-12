@@ -10,7 +10,7 @@ public class TimeSystem extends IntervalSystem {
     private static String TAG = TimeSystem.class.getSimpleName();
     private Boolean isPaused;
     private GameState gameState;
-
+    public int hungerAccumulator = 0;
     private Array<TimeSystemListener> listeners = new Array<>();
 
     public TimeSystem(GameState gameState, Boolean isPaused) {
@@ -51,6 +51,7 @@ public class TimeSystem extends IntervalSystem {
                     }
                 }
             }
+            gameState.hunger += 1;
         }
     }
 
@@ -72,7 +73,6 @@ public class TimeSystem extends IntervalSystem {
 
     interface TimeSystemListener {
         void onMonthUpdate(int month);
-
         void onDayUpdate(int day);
     }
 }

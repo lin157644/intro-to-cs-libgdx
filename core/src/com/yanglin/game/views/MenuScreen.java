@@ -50,6 +50,12 @@ public class MenuScreen implements Screen {
                         game.changeScreen(EScreen.GAME);
                         return true;
                     }
+                    case Input.Keys.UP -> {
+                        //
+                    }
+                    case Input.Keys.DOWN -> {
+                        //
+                    }
                 }
                 return false;
             }

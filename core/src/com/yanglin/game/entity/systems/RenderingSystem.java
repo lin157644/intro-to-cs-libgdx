@@ -20,7 +20,7 @@ import com.badlogic.gdx.utils.Array;
 import java.util.Comparator;
 
 public class RenderingSystem extends SortedIteratingSystem implements MapManager.MapListener {
-    private static final String TAG = Game.class.getSimpleName();
+    private static final String TAG = RenderingSystem.class.getSimpleName();
     private final ComponentMapper<TextureComponent> tm;
     private final ComponentMapper<PositionComponent> pm;
     private final OrthogonalTiledMapRenderer tiledMapRenderer;

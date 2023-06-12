@@ -5,15 +5,12 @@ import com.badlogic.ashley.core.Family;
 import com.yanglin.game.input.GameInputProcessor;
 import com.yanglin.game.input.KeyInputListener;
 
-public class PlayerDialogSystem extends EntitySystem implements KeyInputListener, PlayerInteractionSystem.PlayerInteractionListener {
+public class PlayerDialogSystem extends EntitySystem implements KeyInputListener, PlayerInteractionSystem.PlayerInteractionListener, TimeSystem.TimeSystemListener {
     // Player <-> NPC
     // Player get item
     // Time pass
     //...
     public PlayerDialogSystem(){
-        Family dialogableNPC = Family.all().get();
-        Family dialogableItem = Family.all().get();
-
         // Initialize dialog
     }
 
@@ -36,5 +33,13 @@ public class PlayerDialogSystem extends EntitySystem implements KeyInputListener
     @Override
     public void triggerEvent(EventType eventType) {
 
+    }
+
+    @Override
+    public void onMonthUpdate(int month) {}
+
+    @Override
+    public void onDayUpdate(int day) {
+        // TODO: Check hunger
     }
 }
