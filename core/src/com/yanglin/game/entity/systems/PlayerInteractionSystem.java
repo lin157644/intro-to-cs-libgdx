@@ -50,15 +50,14 @@ public class PlayerInteractionSystem extends IteratingSystem implements MapManag
 
     private TiledMapTile collideWithObject(float x, float y) {
         TiledMapTile tile = null;
-        boolean collisionX = false, collisionY = false;
-        if (objectLayer.getCell((int) (x), (int) (y)) == null) {
+        TiledMapTileLayer.Cell cell;
+        if ((cell = objectLayer.getCell((int) (x), (int) (y))) == null
+                && (cell = objectLayer.getCell((int) (x), (int) (y + 0.5))) == null
+                && (cell = objectLayer.getCell((int) (x + 0.5), (int) (y))) == null
+                && (cell = objectLayer.getCell((int) (x + 0.5), (int) (y + 0.5))) == null) {
             return null;
         }
-        if ((tile = objectLayer.getCell((int) (x), (int) (y)).getTile()).getProperties().containsKey("type")
-                || (tile = objectLayer.getCell((int) (x + 1), (int) (y)).getTile()).getProperties().containsKey("type")
-                || (tile = objectLayer.getCell((int) (x), (int) (y + 1)).getTile()).getProperties().containsKey("type")
-                || (tile = objectLayer.getCell((int) (x + 1), (int) (y + 1)).getTile()).getProperties().containsKey("type")
-                || (tile = objectLayer.getCell((int) (x + 0.5), (int) (y + 0.5)).getTile()).getProperties().containsKey("type"))
+        if ((tile = cell.getTile()).getProperties().containsKey("type"))
             return tile;
         return null;
     }

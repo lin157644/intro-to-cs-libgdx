@@ -17,6 +17,7 @@ import com.yanglin.game.views.EScreen;
 
 public class HUDSystem extends EntitySystem implements KeyInputListener {
     // Renderable entities in pause menu system should have a z level higher than 1;
+    private static String TAG = HUDSystem.class.getSimpleName();
     private Boolean isPaused;
     public Stage stage;
     private IWantToGraduate game;
@@ -28,6 +29,8 @@ public class HUDSystem extends EntitySystem implements KeyInputListener {
         this.stage = stage;
         this.isPaused = isPaused;
         this.game = game;
+
+        Gdx.app.debug(TAG, "HUDStage");
 
         // hudCamera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         // hudCamera.position.set(hudCamera.viewportWidth / 2.0f, hudCamera.viewportHeight / 2.0f, 1.0f);

@@ -17,7 +17,7 @@ import com.yanglin.game.entity.component.*;
 import com.yanglin.game.input.GameInputProcessor;
 import com.yanglin.game.input.KeyInputListener;
 
-public class PlayerMovementSystem extends IteratingSystem implements KeyInputListener, MapManager.MapListener {
+public class PlayerMovementSystem extends IteratingSystem implements KeyInputListener, MapManager.MapListener, TimeSystem.TimeSystemListener {
     private static final String TAG = Game.class.getSimpleName();
     private final OrthographicCamera camera;
     private FacingComponent.Facing currentFacing = FacingComponent.Facing.FRONT;
@@ -28,6 +28,9 @@ public class PlayerMovementSystem extends IteratingSystem implements KeyInputLis
     private MapManager mapManager;
     private TiledMap map;
     private TiledMapTileLayer collisionLayer;
+    private final Vector2 velocity = new Vector2();
+    private final Vector2 accleration = new Vector2(0.1f, 0.1f);
+    private Vector2 cameraPos = new Vector2();
 
     // private final ComponentMapper<AnimationComponent> am;
 
@@ -44,8 +47,6 @@ public class PlayerMovementSystem extends IteratingSystem implements KeyInputLis
 
         Gdx.app.debug(TAG, "Successfully initialized PlayerSystem");
     }
-
-    private final Vector2 velocity = new Vector2();
 
     @Override
     protected void processEntity(Entity entity, float deltaTime) {
@@ -115,7 +116,7 @@ public class PlayerMovementSystem extends IteratingSystem implements KeyInputLis
         if (!collisionX) positionComponent.position.x += velocity.x;
         if (!collisionY) positionComponent.position.y += velocity.y;
 
-        Vector2 cameraPos = new Vector2(entity.getComponent(PositionComponent.class).position);
+        cameraPos.set(entity.getComponent(PositionComponent.class).position);
 
         // TODO: Deal with samll tilemap
         float xmax = map.getProperties().get("width", Integer.class);
@@ -156,19 +157,19 @@ public class PlayerMovementSystem extends IteratingSystem implements KeyInputLis
         // TODO: Refactor moving logic
         switch (keycode) {
             case Input.Keys.RIGHT -> {
-                velocity.x = 0.1f;
+                velocity.x = accleration.x;
                 currentFacing = FacingComponent.Facing.RIGHT;
             }
             case Input.Keys.LEFT -> {
-                velocity.x = -0.1f;
+                velocity.x = -accleration.x;
                 currentFacing = FacingComponent.Facing.LEFT;
             }
             case Input.Keys.DOWN -> {
-                velocity.y = -0.1f;
+                velocity.y = -accleration.y;
                 currentFacing = FacingComponent.Facing.FRONT;
             }
             case Input.Keys.UP -> {
-                velocity.y = 0.1f;
+                velocity.y = accleration.y;
                 currentFacing = FacingComponent.Facing.BACK;
             }
         }
@@ -181,7 +182,7 @@ public class PlayerMovementSystem extends IteratingSystem implements KeyInputLis
         switch (keycode) {
             case Input.Keys.RIGHT -> {
                 if (gameInputProcessor.isKeyDown(Input.Keys.LEFT)) {
-                    velocity.x = -0.1f;
+                    velocity.x = -accleration.x;
                     currentFacing = FacingComponent.Facing.LEFT;
                 } else {
                     velocity.x = 0f;
@@ -194,7 +195,7 @@ public class PlayerMovementSystem extends IteratingSystem implements KeyInputLis
             }
             case Input.Keys.LEFT -> {
                 if (gameInputProcessor.isKeyDown(Input.Keys.RIGHT)) {
-                    velocity.x = 0.1f;
+                    velocity.x = accleration.x;
                     currentFacing = FacingComponent.Facing.RIGHT;
                 } else {
                     velocity.x = 0f;
@@ -207,7 +208,7 @@ public class PlayerMovementSystem extends IteratingSystem implements KeyInputLis
             }
             case Input.Keys.DOWN -> {
                 if (gameInputProcessor.isKeyDown(Input.Keys.UP)) {
-                    velocity.y = 0.1f;
+                    velocity.y = accleration.y;
                     currentFacing = FacingComponent.Facing.BACK;
                 } else {
                     velocity.y = 0f;
@@ -220,7 +221,7 @@ public class PlayerMovementSystem extends IteratingSystem implements KeyInputLis
             }
             case Input.Keys.UP -> {
                 if (gameInputProcessor.isKeyDown(Input.Keys.UP)) {
-                    velocity.y = -0.1f;
+                    velocity.y = accleration.y;
                     currentFacing = FacingComponent.Facing.FRONT;
                 } else {
                     velocity.y = 0f;
@@ -252,6 +253,20 @@ public class PlayerMovementSystem extends IteratingSystem implements KeyInputLis
         PositionComponent pos = EntityEngine.positionComponentMapper.get(getEngine().getEntitiesFor(Family.all(PlayerComponent.class).get()).first());
         pos.position.x = map.getProperties().get("spawnX", Integer.class);
         pos.position.y = map.getProperties().get("spawnY", Integer.class);
+
+    }
+
+    @Override
+    public void onMonthUpdate(int month) {
+        if(month==6) {
+            accleration.set(0.2f, 0.2f);
+        } else {
+            accleration.set(0.1f, 0.1f);
+        }
+    }
+
+    @Override
+    public void onDayUpdate(int day) {
 
     }
 }

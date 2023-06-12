@@ -73,6 +73,8 @@ public class GameScreen implements Screen {
         engine.addSystem(timeSystem);
         engine.addSystem(playerDialogSystem);
 
+        timeSystem.addTimeSystemListener(playerMovementSystem);
+
         // Create item entity
         for (ItemComponent.ItemType itemType : ItemComponent.ItemType.values()) {
             Entity entity = engine.createEntity();
