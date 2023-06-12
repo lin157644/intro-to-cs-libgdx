@@ -1,16 +1,15 @@
 package com.yanglin.game.entity.systems;
 
 import com.badlogic.ashley.core.EntitySystem;
-import com.badlogic.ashley.core.Family;
 import com.yanglin.game.input.GameInputProcessor;
 import com.yanglin.game.input.KeyInputListener;
 
-public class PlayerDialogSystem extends EntitySystem implements KeyInputListener, PlayerInteractionSystem.PlayerInteractionListener, TimeSystem.TimeSystemListener {
+public class DialogSystem extends EntitySystem implements KeyInputListener, PlayerInteractionSystem.PlayerInteractionListener, TimeSystem.TimeSystemListener {
     // Player <-> NPC
     // Player get item
     // Time pass
     //...
-    public PlayerDialogSystem(){
+    public DialogSystem(){
         // Initialize dialog
     }
 

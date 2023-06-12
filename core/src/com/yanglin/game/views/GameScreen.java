@@ -63,7 +63,7 @@ public class GameScreen implements Screen {
         final HUDSystem HUDSystem = new HUDSystem(game, uistage, isPaused);
         final PlayerInteractionSystem playerInteractionSystem = new PlayerInteractionSystem(assetManager, mapManager, game.gameState);
         final TimeSystem timeSystem = new TimeSystem(game.gameState, isPaused);
-        final PlayerDialogSystem playerDialogSystem = new PlayerDialogSystem();
+        final DialogSystem dialogSystem = new DialogSystem();
         // Add systems
         engine.addSystem(renderingSystem);
         engine.addSystem(playerMovementSystem);
@@ -71,7 +71,7 @@ public class GameScreen implements Screen {
         engine.addSystem(HUDSystem);
         engine.addSystem(playerInteractionSystem);
         engine.addSystem(timeSystem);
-        engine.addSystem(playerDialogSystem);
+        engine.addSystem(dialogSystem);
 
         timeSystem.addTimeSystemListener(playerMovementSystem);
 
@@ -125,7 +125,7 @@ public class GameScreen implements Screen {
 
         // Priority: Pause -> Dialog -> Interaction(ZX + Force Event) ->  Movement(WASD)
         gameInputProcessor.addKeyInputProcessor(HUDSystem);
-        gameInputProcessor.addKeyInputProcessor(playerDialogSystem);
+        gameInputProcessor.addKeyInputProcessor(dialogSystem);
         gameInputProcessor.addKeyInputProcessor(playerInteractionSystem);
         gameInputProcessor.addKeyInputProcessor(playerMovementSystem);
 
