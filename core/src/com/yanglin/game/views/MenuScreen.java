@@ -13,6 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.yanglin.game.IWantToGraduate;
@@ -22,6 +23,7 @@ public class MenuScreen implements Screen {
     private IWantToGraduate game;
     private final SpriteBatch batch = new SpriteBatch();
     private final BitmapFont titleFont;
+    private Label titleLabel;
     private final Stage stage = new Stage(new ExtendViewport(1280, 720), batch);
 
     public MenuScreen(IWantToGraduate game) {
@@ -31,6 +33,10 @@ public class MenuScreen implements Screen {
         FreeTypeFontParameter parameter = new FreeTypeFontParameter();
         parameter.characters = FreeTypeFontGenerator.DEFAULT_CHARS + "大延畢";
         parameter.size = 120;
+
+        Skin menuSkin = game.assetManager.get("ui/skins/title_skin.json");
+        titleLabel = new Label("TEST", menuSkin);
+        titleLabel.setPosition((float) (Gdx.graphics.getWidth() - titleLabel.getWidth()) / 2 , (float) Gdx.graphics.getHeight() / 2 + titleLabel.getHeight());
 
         titleFont = generator.generateFont(parameter); // font size 12 pixels
         generator.dispose(); // don't forget to dispose to avoid memory leaks!
@@ -62,8 +68,7 @@ public class MenuScreen implements Screen {
         ScreenUtils.clear(0.0f, 0.0f, 0.0f, 1.0f);
 
         batch.begin();
-        titleFont.draw(batch, "大延畢", (float) Gdx.graphics.getWidth() / 2 - 160, (float) Gdx.graphics.getHeight() / 2 + titleFont.getLineHeight());
-        // titleFont.draw(batch, "FPS:" + Gdx.graphics.getFramesPerSecond(), 0, titleFont.getLineHeight());
+        titleLabel.draw(batch, 1.0f);
         batch.end();
 
         stage.act(delta);

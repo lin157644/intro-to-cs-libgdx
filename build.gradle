@@ -72,5 +72,8 @@ project(":core") {
         api "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"
         api "com.badlogicgames.ashley:ashley:$ashleyVersion"
         api "com.rafaskoberg.gdx:typing-label:$typingLabelVersion"
+        implementation 'com.github.raeleus.stripe:stripe:1.4.5'
+        implementation 'com.github.raeleus.stripe:freetype:1.4.5'
+
     }
 }

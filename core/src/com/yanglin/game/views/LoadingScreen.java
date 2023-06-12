@@ -19,6 +19,7 @@ public class LoadingScreen implements Screen {
         assetManager.loadTiledMap();
         assetManager.loadImages();
         assetManager.loadFonts();
+        assetManager.loadSkins();
     }
 
     @Override
