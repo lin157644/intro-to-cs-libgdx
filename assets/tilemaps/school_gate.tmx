@@ -386,13 +386,13 @@
 1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1
 </data>
  </layer>
- <objectgroup id="3" name="obj" visible="0">
-  <object id="8" name="right" type="mapChange" x="736" y="256" width="16" height="144"/>
-  <object id="9" name="right_top" type="mapChange" x="576" y="0" width="144" height="16"/>
-  <object id="10" name="left_top" type="mapChange" x="32" y="0" width="144" height="16"/>
-  <object id="11" name="left" type="mapChange" x="0" y="256" width="16" height="160"/>
-  <object id="12" name="apple_basket" type="dialogable" x="304" y="224" width="16" height="16"/>
-  <object id="13" name="exit" x="320" y="800" width="144" height="16"/>
+ <objectgroup id="3" name="obj">
+  <object id="8" name="right" type="map" x="736" y="256" width="16" height="144"/>
+  <object id="9" name="right_top" type="map" x="576" y="0" width="144" height="16"/>
+  <object id="10" name="left_top" type="map" x="32" y="0" width="144" height="16"/>
+  <object id="11" name="left" type="map" x="0" y="256" width="16" height="160"/>
+  <object id="12" name="apple_basket" type="item" x="304" y="224" width="16" height="16"/>
+  <object id="13" name="exit" type="screen" x="320" y="800" width="144" height="16"/>
  </objectgroup>
  <layer id="2" name="top" width="47" height="51" visible="0">
   <data encoding="csv">

@@ -6,12 +6,12 @@ public class MapManager {
     private final Array<MapListener> mapListeners;
 
     public enum EMap {
-        SCHOOL_GATE("tilemap/school_gate.tmx"),
-        DORM_AREA("tilemap/.tmx"),
-        ENGINEERING_BUILDING("tilemap/.tmx"),
-        OFFICE_STUDENT("tilemap/.tmx"),
-        DORM_INTERNAL("tilemap/dorm.tmx"),
-        LIBRARY_INTERNAL("tilemap/.tmx");
+        SCHOOL_GATE("tilemaps/school_gate.tmx"),
+        DORM_AREA("tilemaps/.tmx"),
+        ENGINEERING_BUILDING("tilemaps/.tmx"),
+        OFFICE_STUDENT("tilemaps/.tmx"),
+        DORM_INTERNAL("tilemaps/dorm.tmx"),
+        LIBRARY_INTERNAL("tilemaps/.tmx");
 
         private final String fileName;
 
@@ -46,6 +46,7 @@ public class MapManager {
 
     public void setCurrentMap(EMap map){
         this.currentMap = map;
+        notifyMapListener(map);
     }
 
     public EMap getCurrentMap() {

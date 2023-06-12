@@ -11,18 +11,18 @@ import java.io.FileWriter;
 import java.util.Scanner;
 
 public class GameState {
-    public MapManager.EMap map;
+    public MapManager.EMap map = MapManager.EMap.SCHOOL_GATE;
     public Array<ItemComponent.ItemType> items;
     // TODO: Should initialized in GameScreen/Map...
     public float x = 10;
     public float y = 10;
-    public boolean hasEaten;
-    public boolean hasWorshiped;
-    public boolean hasPassEnglish;
-    public boolean hasEnoughHours;
-    public boolean hasFinishedOnlineProcedure;
-    public int month;
-    public int date;
+    public boolean hasEaten = false;
+    public boolean hasWorshiped = false;
+    public boolean hasPassEnglish = false;
+    public boolean hasEnoughHours = false;
+    public boolean hasFinishedOnlineProcedure = false;
+    public int month = 5;
+    public int date = 1;
 
     public static GameState loadState() {
         File file = new File("graduate.save");

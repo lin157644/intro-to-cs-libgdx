@@ -4,6 +4,8 @@ import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.SortedIteratingSystem;
+import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -11,6 +13,7 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.yanglin.game.GameAssetManager;
 import com.yanglin.game.entity.EntityEngine;
+import com.yanglin.game.entity.MapManager;
 import com.yanglin.game.entity.component.FontComponent;
 import com.yanglin.game.entity.component.PositionComponent;
 import com.yanglin.game.entity.component.RenderableComponent;
@@ -19,7 +22,8 @@ import com.badlogic.gdx.utils.Array;
 
 import java.util.Comparator;
 
-public class RenderingSystem extends SortedIteratingSystem {
+public class RenderingSystem extends SortedIteratingSystem implements MapManager.MapListener{
+    private static final String TAG = Game.class.getSimpleName();
     private final ComponentMapper<TextureComponent> tm;
     private final ComponentMapper<FontComponent> fm;
     private final ComponentMapper<PositionComponent> pm;
@@ -30,14 +34,19 @@ public class RenderingSystem extends SortedIteratingSystem {
     private PositionComponent playerPosComponent;
 
     private Array<Entity> renderQueue;
-    private Texture test;
+    private float unitScale;
 
-    public RenderingSystem(GameAssetManager assetManager, OrthographicCamera camera, SpriteBatch batch) {
+    private GameAssetManager assetManager;
+    private MapManager mapManager;
+
+    public RenderingSystem(GameAssetManager assetManager, OrthographicCamera camera, SpriteBatch batch, MapManager mapManager) {
         // TODO: RenderableComponent cause white screen
         super(Family.all(PositionComponent.class, TextureComponent.class).get(), new ZComparator());
 
         this.camera = camera;
         this.batch = batch;
+        this.assetManager = assetManager;
+        this.mapManager = mapManager;
 
         tm = EntityEngine.textureComponentMapper;
         pm = EntityEngine.positionComponentMapper;
@@ -45,11 +54,9 @@ public class RenderingSystem extends SortedIteratingSystem {
 
         renderQueue = new Array<Entity>();
 
-        TiledMap map = assetManager.get("tilemaps/school_gate.tmx", TiledMap.class);
-        test = assetManager.get("badlogic.jpg");
-
-        // 16 pixels would equal one unit.
-        float unitScale = 1 / 16f;
+        TiledMap map = assetManager.get(mapManager.getCurrentMap().getFileName(), TiledMap.class);
+        // unitScale = 1 / 16f; // Assume width and height are the same
+        unitScale = 1 / (float) map.getProperties().get("tilewidth", Integer.class);
         tiledMapRenderer = new OrthogonalTiledMapRenderer(map, unitScale); // uniScale is necessary
         // ImmutableArray<Component> components = entity.getComponents();
     }
@@ -80,6 +87,14 @@ public class RenderingSystem extends SortedIteratingSystem {
             //         t.rotation);
         }
         batch.end();
+    }
+
+    @Override
+    public void mapChanged(MapManager.EMap EMap) {
+        Gdx.app.debug(TAG, "Changing map to: " + EMap.name());
+        TiledMap map = assetManager.get(mapManager.getCurrentMap().getFileName(), TiledMap.class);
+        unitScale = 1 / (float) map.getProperties().get("tilewidth", Integer.class);
+        tiledMapRenderer.setMap(map);
     }
 
     private static class ZComparator implements Comparator<Entity> {

@@ -4,11 +4,14 @@ import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.badlogic.gdx.utils.reflect.ClassReflection;
 import com.badlogic.gdx.utils.reflect.ReflectionException;
+import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.yanglin.game.entity.MapManager;
 import com.yanglin.game.views.EScreen;
 
@@ -24,12 +27,15 @@ public class IWantToGraduate extends Game {
     public MapManager mapManager = new MapManager();
     public GameState gameState;
 
+
     @Override
     public void create() {
         Gdx.app.setLogLevel(Application.LOG_DEBUG);
         gameState = GameState.loadState();
         mapManager.setCurrentMap(gameState.map);
         changeScreen(EScreen.LOADING);
+        float w = Gdx.graphics.getWidth();
+        float h = Gdx.graphics.getHeight();
     }
 
     public void changeScreen(EScreen s) {

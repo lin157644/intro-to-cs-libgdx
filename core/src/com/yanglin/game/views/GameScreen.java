@@ -2,32 +2,47 @@ package com.yanglin.game.views;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Button;
+import com.badlogic.gdx.scenes.scene2d.ui.Container;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.ArrayMap;
 import com.badlogic.gdx.utils.ScreenUtils;
+import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.yanglin.game.IWantToGraduate;
 import com.yanglin.game.GameAssetManager;
 import com.yanglin.game.entity.EntityEngine;
 import com.yanglin.game.entity.component.*;
-import com.yanglin.game.entity.systems.AnimationSystem;
-import com.yanglin.game.entity.systems.PauseMenuSystem;
-import com.yanglin.game.entity.systems.PlayerMovementSystem;
-import com.yanglin.game.entity.systems.RenderingSystem;
+import com.yanglin.game.entity.systems.*;
 import com.yanglin.game.input.GameInputProcessor;
+import com.yanglin.game.ui.PauseButton;
+import com.yanglin.game.ui.PauseToggle;
 
 public class GameScreen implements Screen {
     private final EntityEngine engine;
     private final GameAssetManager assetManager;
     private final IWantToGraduate game;
     private final OrthographicCamera camera;
+    public Stage uistage;
+    private SpriteBatch batch;
+    private Boolean playMusic = true;
+    private Boolean playEffect = true;
 
 
     public Boolean isPaused = false;
+
     public GameScreen(IWantToGraduate game) {
         this.game = game;
 
@@ -35,31 +50,42 @@ public class GameScreen implements Screen {
 
         this.assetManager = game.assetManager;
 
+        batch = new SpriteBatch();
+
         float w = Gdx.graphics.getWidth();
         float h = Gdx.graphics.getHeight();
         camera = new OrthographicCamera();
         // Camera show a specific size of area in game world, which is independent to the window size.
         camera.setToOrtho(false, (w / h) * 20, 20);
+
+        // UI
+        uistage = new Stage();
+        // new FitViewport(1280, 720, new OrthographicCamera()), batch
     }
 
     @Override
     public void show() {
         // Create systems
-        final RenderingSystem renderingSystem = new RenderingSystem(assetManager, camera, new SpriteBatch());
-        final PlayerMovementSystem playerMovementSystem = new PlayerMovementSystem(camera, assetManager);
+        final RenderingSystem renderingSystem = new RenderingSystem(assetManager, camera, batch, game.mapManager);
+        final PlayerMovementSystem playerMovementSystem = new PlayerMovementSystem(camera, assetManager, game.mapManager);
         final AnimationSystem playerAnimationSystem = new AnimationSystem(assetManager);
-        final PauseMenuSystem pauseMenuSystem= new PauseMenuSystem(isPaused);
+        final PauseMenuSystem pauseMenuSystem = new PauseMenuSystem(assetManager, uistage, isPaused);
+        final PlayerInteractionSystem playerInteractionSystem = new PlayerInteractionSystem(assetManager, game.mapManager);
         // Add systems
         engine.addSystem(renderingSystem);
         engine.addSystem(playerMovementSystem);
         engine.addSystem(playerAnimationSystem);
         engine.addSystem(pauseMenuSystem);
+        engine.addSystem(playerInteractionSystem);
+
+        game.mapManager.addMapListener(playerInteractionSystem);
+        game.mapManager.addMapListener(renderingSystem);
 
         // Create item entity
-        for (ItemComponent.ItemType t : ItemComponent.ItemType.values()) {
+        for (ItemComponent.ItemType itemType : ItemComponent.ItemType.values()) {
             Entity entity = engine.createEntity();
             ItemComponent itemComponent = engine.createComponent(ItemComponent.class);
-            itemComponent.type = t;
+            itemComponent.type = itemType;
             entity.add(itemComponent);
             engine.addEntity(entity);
         }
@@ -107,16 +133,20 @@ public class GameScreen implements Screen {
             engine.addEntity(itemEntity);
         }
 
-        // Create pause menu enitties
+        // Create pause menu
 
 
         // Input
+        InputMultiplexer inputMultiplexer = new InputMultiplexer();
         GameInputProcessor gameInputProcessor = new GameInputProcessor();
 
         gameInputProcessor.addKeyInputProcessor(pauseMenuSystem);
         gameInputProcessor.addKeyInputProcessor(playerMovementSystem);
 
-        Gdx.input.setInputProcessor(gameInputProcessor);
+        inputMultiplexer.addProcessor(uistage);
+        inputMultiplexer.addProcessor(gameInputProcessor);
+
+        Gdx.input.setInputProcessor(inputMultiplexer);
 
     }
 
@@ -124,6 +154,8 @@ public class GameScreen implements Screen {
     public void render(float delta) {
         ScreenUtils.clear(1.0f, 1.0f, 1.0f, 0.0f);
         engine.update(delta);
+        // uistage.act(delta);
+        // uistage.draw();
     }
 
     @Override

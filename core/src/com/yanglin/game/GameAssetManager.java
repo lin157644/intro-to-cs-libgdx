@@ -43,12 +43,13 @@ public class GameAssetManager extends AssetManager {
 
     public void loadTiledMap() {
         load("tilemaps/school_gate.tmx", TiledMap.class);
-        // load("tilemaps/dorm.tmx", TiledMap.class);
+        load("tilemaps/dorm.tmx", TiledMap.class);
     }
 
-    public void loadSprites() {
+    public void loadImages() {
         load("sprites/player.png", Texture.class);
         load("badlogic.jpg", Texture.class);
+        load("tilesets/Modern_UI_Style_2_48x48.png", Texture.class);
     }
 
     public void buildPlayerAnimationFrames() {

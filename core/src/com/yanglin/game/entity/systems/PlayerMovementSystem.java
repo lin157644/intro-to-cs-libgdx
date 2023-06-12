@@ -25,14 +25,23 @@ public class PlayerMovementSystem extends IteratingSystem implements KeyInputLis
     private boolean currentIsWalking = false;
     private boolean previousIsWalking = false;
     private GameAssetManager assetManager;
+    private MapManager mapManager;
+    private TiledMap map;
+    private TiledMapTileLayer collisionLayer;
 
     // private final ComponentMapper<AnimationComponent> am;
 
-    public PlayerMovementSystem(OrthographicCamera camera, GameAssetManager assetManager) {
+    public PlayerMovementSystem(OrthographicCamera camera, GameAssetManager assetManager, MapManager mapManager) {
         super(Family.all(PlayerComponent.class, PositionComponent.class, AnimationComponent.class).get());
         // am = ComponentMapper.getFor(AnimationComponent.class);
         this.camera = camera;
         this.assetManager = assetManager;
+        this.mapManager = mapManager;
+
+        map = assetManager.get(mapManager.getCurrentMap().getFileName());
+        collisionLayer = (TiledMapTileLayer) map.getLayers().get("collision");
+        mapManager.addMapListener(this);
+
         Gdx.app.debug(TAG, "Successfully initialized PlayerSystem");
     }
 
@@ -79,9 +88,7 @@ public class PlayerMovementSystem extends IteratingSystem implements KeyInputLis
             previousIsWalking = currentIsWalking;
         }
 
-        // TODO: Improve performance
-        TiledMap map = assetManager.get("tilemaps/school_gate.tmx");
-        TiledMapTileLayer collisionLayer = (TiledMapTileLayer) map.getLayers().get("collision");
+        // TODO: Improve performance?
 
         boolean collisionX = false, collisionY = false;
 
@@ -109,6 +116,7 @@ public class PlayerMovementSystem extends IteratingSystem implements KeyInputLis
         if (!collisionY) positionComponent.position.y += velocity.y;
 
         Vector2 cameraPos = new Vector2(entity.getComponent(PositionComponent.class).position);
+
         // TODO: Deal with samll tilemap
         float xmax = map.getProperties().get("width", Integer.class);
         float ymax = map.getProperties().get("height", Integer.class);
@@ -236,6 +244,7 @@ public class PlayerMovementSystem extends IteratingSystem implements KeyInputLis
     @Override
     public void mapChanged(MapManager.EMap EMap) {
         // TODO: Reset player position
-
+        map = assetManager.get(mapManager.getCurrentMap().getFileName());
+        collisionLayer = (TiledMapTileLayer) map.getLayers().get("collision");
     }
 }
