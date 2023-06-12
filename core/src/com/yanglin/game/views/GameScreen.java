@@ -2,7 +2,6 @@ package com.yanglin.game.views;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Animation;
@@ -16,18 +15,19 @@ import com.yanglin.game.GameAssetManager;
 import com.yanglin.game.entity.EntityEngine;
 import com.yanglin.game.entity.component.*;
 import com.yanglin.game.entity.systems.AnimationSystem;
-import com.yanglin.game.entity.systems.PlayerSystem;
+import com.yanglin.game.entity.systems.PauseMenuSystem;
+import com.yanglin.game.entity.systems.PlayerMovementSystem;
 import com.yanglin.game.entity.systems.RenderingSystem;
 import com.yanglin.game.input.GameInputProcessor;
 
 public class GameScreen implements Screen {
     private final EntityEngine engine;
     private final GameAssetManager assetManager;
-
     private final IWantToGraduate game;
-
     private final OrthographicCamera camera;
 
+
+    public Boolean isPaused = false;
     public GameScreen(IWantToGraduate game) {
         this.game = game;
 
@@ -46,13 +46,14 @@ public class GameScreen implements Screen {
     public void show() {
         // Create systems
         final RenderingSystem renderingSystem = new RenderingSystem(assetManager, camera, new SpriteBatch());
-        final PlayerSystem playerSystem = new PlayerSystem(camera, assetManager);
+        final PlayerMovementSystem playerMovementSystem = new PlayerMovementSystem(camera, assetManager);
         final AnimationSystem playerAnimationSystem = new AnimationSystem(assetManager);
-
+        final PauseMenuSystem pauseMenuSystem= new PauseMenuSystem(isPaused);
         // Add systems
         engine.addSystem(renderingSystem);
-        engine.addSystem(playerSystem);
+        engine.addSystem(playerMovementSystem);
         engine.addSystem(playerAnimationSystem);
+        engine.addSystem(pauseMenuSystem);
 
         // Create item entity
         for (ItemComponent.ItemType t : ItemComponent.ItemType.values()) {
@@ -69,10 +70,13 @@ public class GameScreen implements Screen {
         PositionComponent positionComponent = engine.createComponent(PositionComponent.class);
         AnimationComponent animationComponent = engine.createComponent(AnimationComponent.class);
         TextureComponent textureComponent = engine.createComponent(TextureComponent.class);
+        RenderableComponent renderableComponent = engine.createComponent(RenderableComponent.class);
         StateComponent stateComponent = engine.createComponent(StateComponent.class);
-        // TODO: Initialize component
-        positionComponent.position.x = 10;
-        positionComponent.position.y = 10;
+
+        // TODO: Initialize components
+        positionComponent.position.x = game.gameState.x;
+        positionComponent.position.y = game.gameState.y;
+        positionComponent.map = game.gameState.map;
         ArrayMap<String, Animation<TextureRegion>> tmp = new ArrayMap<>();
         for (GameAssetManager.PlayerAnimation pa : GameAssetManager.PlayerAnimation.values()) {
             animationComponent.addAnimation(pa.getType(), new Animation<>(0.1f, assetManager.playerAnimationFrames.get(pa)));
@@ -80,27 +84,39 @@ public class GameScreen implements Screen {
         stateComponent.set("IDLE_FRONT");
         stateComponent.setLooping(true);
 
-        playerEntity.add(playerComponent);
-        playerEntity.add(positionComponent);
-        playerEntity.add(animationComponent);
-        playerEntity.add(textureComponent);
-        playerEntity.add(stateComponent);
+        playerEntity.add(playerComponent).add(positionComponent).add(animationComponent).add(textureComponent).add(renderableComponent).add(stateComponent);
         engine.addEntity(playerEntity);
 
         // Create HID entities
         Entity fpsEntity = engine.createEntity();
         FontComponent fontComponent = engine.createComponent(FontComponent.class);
+        RenderableComponent fpsrenderableComponent = engine.createComponent(RenderableComponent.class);
         fontComponent.font = new BitmapFont(); // use libGDX's default Arial font
-        fpsEntity.add(fontComponent);
+        fpsEntity.add(fontComponent).add(fpsrenderableComponent);
         engine.addEntity(fpsEntity);
 
-        // engine.addSystem(new RenderSystem());
-        InputMultiplexer multiplexer = new InputMultiplexer();
+        // Create Item entities
+        for (ItemComponent.ItemType itemType : ItemComponent.ItemType.values()) {
+            ItemComponent itemComponent = engine.createComponent(ItemComponent.class);
+            RenderableComponent itemRenderableComponent = engine.createComponent(RenderableComponent.class);
+            TextureComponent itemTextureComponent = engine.createComponent(TextureComponent.class);
+            PositionComponent itemPositionComponent = engine.createComponent(PositionComponent.class);
+            // TODO: Initialize items
+            Entity itemEntity = engine.createEntity();
+            itemEntity.add(itemComponent).add(itemRenderableComponent).add(itemTextureComponent).add(itemPositionComponent);
+            engine.addEntity(itemEntity);
+        }
+
+        // Create pause menu enitties
+
+
+        // Input
         GameInputProcessor gameInputProcessor = new GameInputProcessor();
-        multiplexer.addProcessor(gameInputProcessor);
-        gameInputProcessor.addKeyInputProcessor(playerSystem);
-        // multiplexer.addProcessor(new PauseInputProcessor());
-        Gdx.input.setInputProcessor(multiplexer);
+
+        gameInputProcessor.addKeyInputProcessor(pauseMenuSystem);
+        gameInputProcessor.addKeyInputProcessor(playerMovementSystem);
+
+        Gdx.input.setInputProcessor(gameInputProcessor);
 
     }
 
@@ -132,5 +148,7 @@ public class GameScreen implements Screen {
 
     @Override
     public void dispose() {
+        engine.removeAllEntities();
+        engine.removeAllSystems();
     }
 }

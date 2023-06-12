@@ -12,11 +12,12 @@ import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.math.Vector2;
 import com.yanglin.game.GameAssetManager;
 import com.yanglin.game.entity.EntityEngine;
+import com.yanglin.game.entity.MapManager;
 import com.yanglin.game.entity.component.*;
 import com.yanglin.game.input.GameInputProcessor;
 import com.yanglin.game.input.KeyInputListener;
 
-public class PlayerSystem extends IteratingSystem implements KeyInputListener {
+public class PlayerMovementSystem extends IteratingSystem implements KeyInputListener, MapManager.MapListener {
     private static final String TAG = Game.class.getSimpleName();
     private final OrthographicCamera camera;
     private FacingComponent.Facing currentFacing = FacingComponent.Facing.FRONT;
@@ -27,7 +28,7 @@ public class PlayerSystem extends IteratingSystem implements KeyInputListener {
 
     // private final ComponentMapper<AnimationComponent> am;
 
-    public PlayerSystem(OrthographicCamera camera, GameAssetManager assetManager) {
+    public PlayerMovementSystem(OrthographicCamera camera, GameAssetManager assetManager) {
         super(Family.all(PlayerComponent.class, PositionComponent.class, AnimationComponent.class).get());
         // am = ComponentMapper.getFor(AnimationComponent.class);
         this.camera = camera;
@@ -108,14 +109,12 @@ public class PlayerSystem extends IteratingSystem implements KeyInputListener {
         if (!collisionY) positionComponent.position.y += velocity.y;
 
         Vector2 cameraPos = new Vector2(entity.getComponent(PositionComponent.class).position);
-        // System.out.println(cameraPos.x);
-        // System.out.println(cameraPos.y);
         // TODO: Deal with samll tilemap
-        float zoom = 1;
-        float xmax = 47, ymax = 51;
+        float xmax = map.getProperties().get("width", Integer.class);
+        float ymax = map.getProperties().get("height", Integer.class);
         float w = Gdx.graphics.getWidth();
         float h = Gdx.graphics.getHeight();
-        float scaledViewportWidthHalfExtent = (w / h) * 20  * 0.5f;
+        float scaledViewportWidthHalfExtent = (w / h) * 20 * 0.5f;
         float scaledViewportHeightHalfExtent = 20 * 0.5f;
         // Horizontal
         if (cameraPos.x < scaledViewportWidthHalfExtent)
@@ -146,6 +145,7 @@ public class PlayerSystem extends IteratingSystem implements KeyInputListener {
 
     @Override
     public boolean keyDown(GameInputProcessor gameInputProcessor, int keycode) {
+        // TODO: Refactor moving logic
         switch (keycode) {
             case Input.Keys.RIGHT -> {
                 velocity.x = 0.1f;
@@ -174,29 +174,53 @@ public class PlayerSystem extends IteratingSystem implements KeyInputListener {
             case Input.Keys.RIGHT -> {
                 if (gameInputProcessor.isKeyDown(Input.Keys.LEFT)) {
                     velocity.x = -0.1f;
+                    currentFacing = FacingComponent.Facing.LEFT;
                 } else {
                     velocity.x = 0f;
+                    if (velocity.y > 0) {
+                        currentFacing = FacingComponent.Facing.BACK;
+                    } else if (velocity.y < 0) {
+                        currentFacing = FacingComponent.Facing.FRONT;
+                    }
                 }
             }
             case Input.Keys.LEFT -> {
                 if (gameInputProcessor.isKeyDown(Input.Keys.RIGHT)) {
                     velocity.x = 0.1f;
+                    currentFacing = FacingComponent.Facing.RIGHT;
                 } else {
                     velocity.x = 0f;
+                    if (velocity.y > 0) {
+                        currentFacing = FacingComponent.Facing.BACK;
+                    } else if (velocity.y < 0) {
+                        currentFacing = FacingComponent.Facing.FRONT;
+                    }
                 }
             }
             case Input.Keys.DOWN -> {
                 if (gameInputProcessor.isKeyDown(Input.Keys.UP)) {
                     velocity.y = 0.1f;
+                    currentFacing = FacingComponent.Facing.BACK;
                 } else {
                     velocity.y = 0f;
+                    if (velocity.x > 0) {
+                        currentFacing = FacingComponent.Facing.RIGHT;
+                    } else if (velocity.x < 0) {
+                        currentFacing = FacingComponent.Facing.LEFT;
+                    }
                 }
             }
             case Input.Keys.UP -> {
                 if (gameInputProcessor.isKeyDown(Input.Keys.UP)) {
                     velocity.y = -0.1f;
+                    currentFacing = FacingComponent.Facing.FRONT;
                 } else {
                     velocity.y = 0f;
+                    if (velocity.x > 0) {
+                        currentFacing = FacingComponent.Facing.RIGHT;
+                    } else if (velocity.x < 0) {
+                        currentFacing = FacingComponent.Facing.LEFT;
+                    }
                 }
             }
         }
@@ -207,5 +231,11 @@ public class PlayerSystem extends IteratingSystem implements KeyInputListener {
     @Override
     public boolean keyTyped(GameInputProcessor gameInputProcessor, char character) {
         return false;
+    }
+
+    @Override
+    public void mapChanged(MapManager.EMap EMap) {
+        // TODO: Reset player position
+
     }
 }

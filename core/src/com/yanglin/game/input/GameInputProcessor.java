@@ -1,6 +1,9 @@
 package com.yanglin.game.input;
 
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
+import com.yanglin.game.IWantToGraduate;
+import com.yanglin.game.views.GameScreen;
 
 import java.util.ArrayList;
 
@@ -40,26 +43,32 @@ public class GameInputProcessor implements InputProcessor {
     public boolean keyDown(int keycode) {
         keyState[keycode] = true;
         for (KeyInputListener processor : keyInputListeners) {
-            processor.keyDown(this, keycode);
+            if(processor.keyDown(this, keycode)){
+                return true;
+            }
         }
-        return true;
+        return false;
     }
 
     @Override
     public boolean keyUp(int keycode) {
         keyState[keycode] = false;
         for (KeyInputListener processor : keyInputListeners) {
-            processor.keyUp(this, keycode);
+            if(processor.keyUp(this, keycode)){
+                return true;
+            }
         }
-        return true;
+        return false;
     }
 
     @Override
     public boolean keyTyped(char character) {
         for (KeyInputListener processor : keyInputListeners) {
-            processor.keyTyped(this, character);
+            if(processor.keyTyped(this, character)){
+                return true;
+            }
         }
-        return true;
+        return false;
     }
 
     @Override

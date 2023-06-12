@@ -11,9 +11,6 @@ import com.badlogic.gdx.utils.reflect.ClassReflection;
 import com.badlogic.gdx.utils.reflect.ReflectionException;
 import com.yanglin.game.entity.MapManager;
 import com.yanglin.game.views.EScreen;
-import com.yanglin.game.views.LoadingScreen;
-import com.yanglin.game.views.GameScreen;
-import com.yanglin.game.views.MenuScreen;
 
 import java.util.EnumMap;
 
@@ -22,16 +19,16 @@ public class IWantToGraduate extends Game {
     // It allows fancier transition, but Game is sufficient for us.
     private static final String TAG = Game.class.getSimpleName();
     public Screen currentScreen;
-    private LoadingScreen loadingScreen;
-    private MenuScreen menuScreen;
-    private GameScreen gameScreen;
     private final EnumMap<EScreen, Screen> screenMap = new EnumMap<>(EScreen.class);
     public GameAssetManager assetManager = new GameAssetManager();
     public MapManager mapManager = new MapManager();
+    public GameState gameState;
 
     @Override
     public void create() {
         Gdx.app.setLogLevel(Application.LOG_DEBUG);
+        gameState = GameState.loadState();
+        mapManager.setCurrentMap(gameState.map);
         changeScreen(EScreen.LOADING);
     }
 
