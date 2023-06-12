@@ -2,8 +2,11 @@ package com.yanglin.game;
 
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGeneratorLoader;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 
@@ -39,6 +42,7 @@ public class GameAssetManager extends AssetManager {
     public GameAssetManager() {
         super();
         setLoader(TiledMap.class, new TmxMapLoader(new InternalFileHandleResolver()));
+        setLoader(FreeTypeFontGenerator.class, new FreeTypeFontGeneratorLoader(new InternalFileHandleResolver()));
     }
 
     public void loadTiledMap() {
@@ -50,6 +54,10 @@ public class GameAssetManager extends AssetManager {
         load("sprites/player.png", Texture.class);
         load("badlogic.jpg", Texture.class);
         load("tilesets/Modern_UI_Style_2_48x48.png", Texture.class);
+    }
+
+    public void loadFonts(){
+        load("fonts/title_font.otf", FreeTypeFontGenerator.class);
     }
 
     public void buildPlayerAnimationFrames() {
@@ -110,5 +118,9 @@ public class GameAssetManager extends AssetManager {
     public void loadAudio() {
         // libGDX support mp3, ogg and wav.
         // ogg is preferred in this project, since we are not targeting iOS platform.
+    }
+
+    public void dispose(){
+        // Should dispose font generator
     }
 }

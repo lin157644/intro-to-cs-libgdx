@@ -31,7 +31,7 @@ public class PlayerMovementSystem extends IteratingSystem implements KeyInputLis
 
     // private final ComponentMapper<AnimationComponent> am;
 
-    public PlayerMovementSystem(OrthographicCamera camera, GameAssetManager assetManager, MapManager mapManager) {
+    public PlayerMovementSystem(GameAssetManager assetManager, MapManager mapManager, OrthographicCamera camera) {
         super(Family.all(PlayerComponent.class, PositionComponent.class, AnimationComponent.class).get());
         // am = ComponentMapper.getFor(AnimationComponent.class);
         this.camera = camera;
@@ -243,8 +243,15 @@ public class PlayerMovementSystem extends IteratingSystem implements KeyInputLis
 
     @Override
     public void mapChanged(MapManager.EMap EMap) {
-        // TODO: Reset player position
+        // Change collision layer
         map = assetManager.get(mapManager.getCurrentMap().getFileName());
         collisionLayer = (TiledMapTileLayer) map.getLayers().get("collision");
+
+        // Reset player position
+        // TODO: Different position depends on source
+        PositionComponent pos = EntityEngine.positionComponentMapper.get(getEngine().getEntitiesFor(Family.all(PlayerComponent.class).get()).first());
+        pos.position.x = map.getProperties().get("spawnX", Integer.class);
+        pos.position.y = map.getProperties().get("spawnY", Integer.class);
+
     }
 }

@@ -5,34 +5,24 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Button;
-import com.badlogic.gdx.scenes.scene2d.ui.Container;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.ArrayMap;
 import com.badlogic.gdx.utils.ScreenUtils;
-import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.yanglin.game.IWantToGraduate;
 import com.yanglin.game.GameAssetManager;
 import com.yanglin.game.entity.EntityEngine;
+import com.yanglin.game.entity.MapManager;
 import com.yanglin.game.entity.component.*;
 import com.yanglin.game.entity.systems.*;
 import com.yanglin.game.input.GameInputProcessor;
-import com.yanglin.game.ui.PauseButton;
-import com.yanglin.game.ui.PauseToggle;
 
 public class GameScreen implements Screen {
     private final EntityEngine engine;
     private final GameAssetManager assetManager;
+    private final MapManager mapManager;
     private final IWantToGraduate game;
     private final OrthographicCamera camera;
     public Stage uistage;
@@ -49,6 +39,7 @@ public class GameScreen implements Screen {
         this.engine = new EntityEngine();
 
         this.assetManager = game.assetManager;
+        this.mapManager = game.mapManager;
 
         batch = new SpriteBatch();
 
@@ -66,20 +57,21 @@ public class GameScreen implements Screen {
     @Override
     public void show() {
         // Create systems
-        final RenderingSystem renderingSystem = new RenderingSystem(assetManager, camera, batch, game.mapManager);
-        final PlayerMovementSystem playerMovementSystem = new PlayerMovementSystem(camera, assetManager, game.mapManager);
+        final RenderingSystem renderingSystem = new RenderingSystem(assetManager, mapManager, camera, batch);
+        final PlayerMovementSystem playerMovementSystem = new PlayerMovementSystem(assetManager, mapManager, camera);
         final AnimationSystem playerAnimationSystem = new AnimationSystem(assetManager);
-        final PauseMenuSystem pauseMenuSystem = new PauseMenuSystem(assetManager, uistage, isPaused);
-        final PlayerInteractionSystem playerInteractionSystem = new PlayerInteractionSystem(assetManager, game.mapManager);
+        final HUDSystem HUDSystem = new HUDSystem(game, uistage, isPaused);
+        final PlayerInteractionSystem playerInteractionSystem = new PlayerInteractionSystem(assetManager, mapManager, game.gameState);
+        final TimeSystem timeSystem = new TimeSystem(game.gameState, isPaused);
+        final PlayerDialogSystem playerDialogSystem = new PlayerDialogSystem();
         // Add systems
         engine.addSystem(renderingSystem);
         engine.addSystem(playerMovementSystem);
         engine.addSystem(playerAnimationSystem);
-        engine.addSystem(pauseMenuSystem);
+        engine.addSystem(HUDSystem);
         engine.addSystem(playerInteractionSystem);
-
-        game.mapManager.addMapListener(playerInteractionSystem);
-        game.mapManager.addMapListener(renderingSystem);
+        engine.addSystem(timeSystem);
+        engine.addSystem(playerDialogSystem);
 
         // Create item entity
         for (ItemComponent.ItemType itemType : ItemComponent.ItemType.values()) {
@@ -113,14 +105,6 @@ public class GameScreen implements Screen {
         playerEntity.add(playerComponent).add(positionComponent).add(animationComponent).add(textureComponent).add(renderableComponent).add(stateComponent);
         engine.addEntity(playerEntity);
 
-        // Create HID entities
-        Entity fpsEntity = engine.createEntity();
-        FontComponent fontComponent = engine.createComponent(FontComponent.class);
-        RenderableComponent fpsrenderableComponent = engine.createComponent(RenderableComponent.class);
-        fontComponent.font = new BitmapFont(); // use libGDX's default Arial font
-        fpsEntity.add(fontComponent).add(fpsrenderableComponent);
-        engine.addEntity(fpsEntity);
-
         // Create Item entities
         for (ItemComponent.ItemType itemType : ItemComponent.ItemType.values()) {
             ItemComponent itemComponent = engine.createComponent(ItemComponent.class);
@@ -133,15 +117,16 @@ public class GameScreen implements Screen {
             engine.addEntity(itemEntity);
         }
 
-        // Create pause menu
-
-
         // Input
         InputMultiplexer inputMultiplexer = new InputMultiplexer();
         GameInputProcessor gameInputProcessor = new GameInputProcessor();
 
-        gameInputProcessor.addKeyInputProcessor(pauseMenuSystem);
+        // Priority: Pause -> Dialog -> Interaction(ZX + Force Event) ->  Movement(WASD)
+        gameInputProcessor.addKeyInputProcessor(HUDSystem);
+        gameInputProcessor.addKeyInputProcessor(playerDialogSystem);
+        gameInputProcessor.addKeyInputProcessor(playerInteractionSystem);
         gameInputProcessor.addKeyInputProcessor(playerMovementSystem);
+
 
         inputMultiplexer.addProcessor(uistage);
         inputMultiplexer.addProcessor(gameInputProcessor);

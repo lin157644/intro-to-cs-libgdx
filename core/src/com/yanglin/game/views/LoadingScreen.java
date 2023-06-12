@@ -18,13 +18,14 @@ public class LoadingScreen implements Screen {
     public void show() {
         assetManager.loadTiledMap();
         assetManager.loadImages();
+        assetManager.loadFonts();
     }
 
     @Override
     public void render(float delta) {
         if (assetManager.update(blockTime)) {
             assetManager.buildPlayerAnimationFrames();
-            game.changeScreen(EScreen.GAME);
+            game.changeScreen(EScreen.MENU);
         }
 
         float progress = assetManager.getProgress();

@@ -4,5 +4,5 @@ import com.badlogic.ashley.core.Component;
 import com.badlogic.gdx.utils.Array;
 
 public class DialogComponent implements Component {
-    public Array<String> dialog;
+    public Array<String> dialog = new Array<>();
 }

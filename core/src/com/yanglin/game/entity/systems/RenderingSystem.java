@@ -7,25 +7,21 @@ import com.badlogic.ashley.systems.SortedIteratingSystem;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.yanglin.game.GameAssetManager;
 import com.yanglin.game.entity.EntityEngine;
 import com.yanglin.game.entity.MapManager;
-import com.yanglin.game.entity.component.FontComponent;
 import com.yanglin.game.entity.component.PositionComponent;
-import com.yanglin.game.entity.component.RenderableComponent;
 import com.yanglin.game.entity.component.TextureComponent;
 import com.badlogic.gdx.utils.Array;
 
 import java.util.Comparator;
 
-public class RenderingSystem extends SortedIteratingSystem implements MapManager.MapListener{
+public class RenderingSystem extends SortedIteratingSystem implements MapManager.MapListener {
     private static final String TAG = Game.class.getSimpleName();
     private final ComponentMapper<TextureComponent> tm;
-    private final ComponentMapper<FontComponent> fm;
     private final ComponentMapper<PositionComponent> pm;
     private final OrthogonalTiledMapRenderer tiledMapRenderer;
     private OrthographicCamera camera;
@@ -39,7 +35,7 @@ public class RenderingSystem extends SortedIteratingSystem implements MapManager
     private GameAssetManager assetManager;
     private MapManager mapManager;
 
-    public RenderingSystem(GameAssetManager assetManager, OrthographicCamera camera, SpriteBatch batch, MapManager mapManager) {
+    public RenderingSystem(GameAssetManager assetManager, MapManager mapManager, OrthographicCamera camera, SpriteBatch batch) {
         // TODO: RenderableComponent cause white screen
         super(Family.all(PositionComponent.class, TextureComponent.class).get(), new ZComparator());
 
@@ -48,9 +44,10 @@ public class RenderingSystem extends SortedIteratingSystem implements MapManager
         this.assetManager = assetManager;
         this.mapManager = mapManager;
 
+        mapManager.addMapListener(this);
+
         tm = EntityEngine.textureComponentMapper;
         pm = EntityEngine.positionComponentMapper;
-        fm = EntityEngine.fontComponentMapper;
 
         renderQueue = new Array<Entity>();
 

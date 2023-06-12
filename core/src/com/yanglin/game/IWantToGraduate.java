@@ -13,6 +13,7 @@ import com.badlogic.gdx.utils.reflect.ClassReflection;
 import com.badlogic.gdx.utils.reflect.ReflectionException;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.yanglin.game.entity.MapManager;
+import com.yanglin.game.entity.component.ItemComponent;
 import com.yanglin.game.views.EScreen;
 
 import java.util.EnumMap;
@@ -31,7 +32,14 @@ public class IWantToGraduate extends Game {
     @Override
     public void create() {
         Gdx.app.setLogLevel(Application.LOG_DEBUG);
+
+        if (Gdx.app.getLogLevel() == Application.LOG_DEBUG){
+            GameState.clearSavedState();
+        }
+
         gameState = GameState.loadState();
+        GameState.saveState(gameState);
+
         mapManager.setCurrentMap(gameState.map);
         changeScreen(EScreen.LOADING);
         float w = Gdx.graphics.getWidth();

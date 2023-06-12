@@ -1,17 +1,22 @@
 package com.yanglin.game.entity;
 
+import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.Array;
 
 public class MapManager {
+    private static final String TAG = Game.class.getSimpleName();
     private final Array<MapListener> mapListeners;
 
     public enum EMap {
         SCHOOL_GATE("tilemaps/school_gate.tmx"),
-        DORM_AREA("tilemaps/.tmx"),
-        ENGINEERING_BUILDING("tilemaps/.tmx"),
-        OFFICE_STUDENT("tilemaps/.tmx"),
-        DORM_INTERNAL("tilemaps/dorm.tmx"),
-        LIBRARY_INTERNAL("tilemaps/.tmx");
+        DORM_EXTER("tilemaps/dorm_exterior.tmx"),
+        ENGINEER_V("tilemaps/engineering_building.tmx"),
+        ACAD_OFFICE("tilemaps/academic_office.tmx"),
+        LIBRARY_EXTER("tilemaps/library_exterior.tmx"),
+        INTERSEC("tilemaps/intersection.tmx"),
+        DORM_INTER("tilemaps/dorm.tmx"),
+        LIBRARY_INTER("tilemaps/library_interior.tmx");
 
         private final String fileName;
 
@@ -35,6 +40,7 @@ public class MapManager {
     }
 
     public void notifyMapListener(EMap EMap){
+        Gdx.app.debug(TAG, "Notifying map listeners");
         for (MapListener mapListener : mapListeners){
             mapListener.mapChanged(EMap);
         }

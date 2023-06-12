@@ -6,12 +6,17 @@ import com.badlogic.ashley.systems.IteratingSystem;
 import com.yanglin.game.entity.component.ItemComponent;
 import com.yanglin.game.entity.component.TextureComponent;
 
-public class InventorySystem extends IteratingSystem {
+public class InventorySystem extends IteratingSystem implements PlayerInteractionSystem.PlayerInteractionListener {
     public InventorySystem(){
         super(Family.all(TextureComponent.class, ItemComponent.class).get());
     }
     @Override
     protected void processEntity(Entity entity, float deltaTime) {
         // TODO:
+    }
+
+    @Override
+    public void triggerEvent(EventType eventType) {
+
     }
 }
