@@ -1,0 +1,62 @@
+
+title_skin.png
+size: 256, 256
+format: RGBA8888
+filter: Linear, Linear
+repeat: none
+menu_button_down
+  rotate: false
+  xy: 1, 50
+  size: 48, 47
+  orig: 48, 47
+  offset: 0, 0
+  index: -1
+menu_button_hover
+  rotate: false
+  xy: 99, 101
+  size: 48, 47
+  orig: 48, 47
+  offset: 0, 0
+  index: -1
+menu_button_on
+  rotate: false
+  xy: 99, 150
+  size: 48, 47
+  orig: 48, 47
+  offset: 0, 0
+  index: -1
+resume_button_down
+  rotate: false
+  xy: 149, 150
+  size: 48, 47
+  orig: 48, 47
+  offset: 0, 0
+  index: -1
+resume_button_over
+  rotate: false
+  xy: 1, 1
+  size: 48, 47
+  orig: 48, 47
+  offset: 0, 0
+  index: -1
+resume_button_up
+  rotate: false
+  xy: 149, 101
+  size: 48, 47
+  orig: 48, 47
+  offset: 0, 0
+  index: -1
+toggle_off
+  rotate: false
+  xy: 1, 149
+  size: 96, 48
+  orig: 96, 48
+  offset: 0, 0
+  index: -1
+toggle_on
+  rotate: false
+  xy: 1, 99
+  size: 96, 48
+  orig: 96, 48
+  offset: 0, 0
+  index: -1

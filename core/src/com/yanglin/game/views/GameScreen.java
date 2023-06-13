@@ -26,6 +26,7 @@ public class GameScreen implements Screen {
     private final IWantToGraduate game;
     private final OrthographicCamera camera;
     public Stage uistage;
+    public Stage dialogstage;
     private SpriteBatch batch;
     private Boolean playMusic = true;
     private Boolean playEffect = true;
@@ -49,8 +50,8 @@ public class GameScreen implements Screen {
         // Camera show a specific size of area in game world, which is independent to the window size.
         camera.setToOrtho(false, (w / h) * 20, 20);
 
-        // UI
         uistage = new Stage();
+        dialogstage = new Stage();
         // new FitViewport(1280, 720, new OrthographicCamera()), batch
     }
 
@@ -63,7 +64,7 @@ public class GameScreen implements Screen {
         final HUDSystem HUDSystem = new HUDSystem(game, uistage, isPaused);
         final PlayerInteractionSystem playerInteractionSystem = new PlayerInteractionSystem(assetManager, mapManager, game.gameState);
         final TimeSystem timeSystem = new TimeSystem(game.gameState, isPaused);
-        final DialogSystem dialogSystem = new DialogSystem();
+        final DialogSystem dialogSystem = new DialogSystem(game, dialogstage);
         // Add systems
         engine.addSystem(renderingSystem);
         engine.addSystem(playerMovementSystem);
@@ -141,8 +142,6 @@ public class GameScreen implements Screen {
     public void render(float delta) {
         ScreenUtils.clear(1.0f, 1.0f, 1.0f, 0.0f);
         engine.update(delta);
-        // uistage.act(delta);
-        // uistage.draw();
     }
 
     @Override

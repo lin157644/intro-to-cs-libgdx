@@ -70,6 +70,7 @@ public class GameAssetManager extends AssetManager {
         load("sprites/player.png", Texture.class);
         load("badlogic.jpg", Texture.class);
         load("tilesets/Modern_UI_Style_2_48x48.png", Texture.class);
+        load("ui/ui_pause_bg.png", Texture.class);
     }
 
     public void loadFonts(){

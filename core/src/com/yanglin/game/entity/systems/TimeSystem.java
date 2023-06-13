@@ -14,7 +14,7 @@ public class TimeSystem extends IntervalSystem {
     private Array<TimeSystemListener> listeners = new Array<>();
 
     public TimeSystem(GameState gameState, Boolean isPaused) {
-        super(10000);
+        super(1); // In second
         this.isPaused = isPaused;
         this.gameState = gameState;
     }
