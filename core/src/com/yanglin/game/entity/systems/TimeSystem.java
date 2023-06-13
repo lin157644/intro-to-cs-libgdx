@@ -5,23 +5,25 @@ import com.badlogic.ashley.systems.IntervalSystem;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.Array;
 import com.yanglin.game.GameState;
+import com.yanglin.game.views.GameScreen;
 
 public class TimeSystem extends IntervalSystem {
     private static String TAG = TimeSystem.class.getSimpleName();
     private Boolean isPaused;
     private GameState gameState;
+    private GameScreen gameScreen;
     public int hungerAccumulator = 0;
     private Array<TimeSystemListener> listeners = new Array<>();
 
-    public TimeSystem(GameState gameState, Boolean isPaused) {
+    public TimeSystem(GameState gameState, GameScreen gameScreen) {
         super(1); // In second
-        this.isPaused = isPaused;
+        this.gameScreen = gameScreen;
         this.gameState = gameState;
     }
 
     @Override
     protected void updateInterval() {
-        if (!isPaused) {
+        if (!gameScreen.isPaused) {
             switch (gameState.month) {
                 case 4, 6 -> {
                     // 30 days

@@ -30,8 +30,6 @@ public class GameScreen implements Screen {
     private SpriteBatch batch;
     private Boolean playMusic = true;
     private Boolean playEffect = true;
-
-
     public Boolean isPaused = false;
 
     public GameScreen(IWantToGraduate game) {
@@ -55,15 +53,19 @@ public class GameScreen implements Screen {
         // new FitViewport(1280, 720, new OrthographicCamera()), batch
     }
 
+    public void setPaused(Boolean isPaused){
+        this.isPaused = isPaused;
+    }
+
     @Override
     public void show() {
         // Create systems
         final RenderingSystem renderingSystem = new RenderingSystem(assetManager, mapManager, camera, batch);
         final PlayerMovementSystem playerMovementSystem = new PlayerMovementSystem(assetManager, mapManager, camera);
         final AnimationSystem playerAnimationSystem = new AnimationSystem(assetManager);
-        final HUDSystem HUDSystem = new HUDSystem(game, uistage, isPaused);
+        final HUDSystem HUDSystem = new HUDSystem(game, uistage, this);
         final PlayerInteractionSystem playerInteractionSystem = new PlayerInteractionSystem(assetManager, mapManager, game.gameState);
-        final TimeSystem timeSystem = new TimeSystem(game.gameState, isPaused);
+        final TimeSystem timeSystem = new TimeSystem(game.gameState, this);
         final DialogSystem dialogSystem = new DialogSystem(game, dialogstage);
         // Add systems
         engine.addSystem(renderingSystem);

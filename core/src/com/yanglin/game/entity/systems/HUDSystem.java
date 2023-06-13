@@ -9,38 +9,40 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Container;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.yanglin.game.IWantToGraduate;
 import com.yanglin.game.input.GameInputProcessor;
 import com.yanglin.game.input.KeyInputListener;
 import com.yanglin.game.views.EScreen;
+import com.yanglin.game.views.GameScreen;
 
 import java.awt.*;
 
 public class HUDSystem extends EntitySystem implements KeyInputListener {
     // Renderable entities in pause menu system should have a z level higher than 1;
     private static String TAG = HUDSystem.class.getSimpleName();
-    private Boolean isPaused;
     public Stage stage;
     private IWantToGraduate game;
-
     private OrthographicCamera hudCamera;
     private BitmapFont debugFont;
     private SpriteBatch debugBatch;
+    private GameScreen gameScreen;
 
-    public HUDSystem(IWantToGraduate game, Stage stage, Boolean isPaused) {
+    public HUDSystem(IWantToGraduate game, Stage stage, GameScreen gameScreen) {
         // Display pause menu, time, quest
         // Debug: display fps, hunger
         this.stage = stage;
-        this.isPaused = isPaused;
         this.game = game;
+        this.gameScreen = gameScreen;
 
         Gdx.app.debug(TAG, "HUDStage");
         debugBatch = new SpriteBatch();
@@ -74,6 +76,20 @@ public class HUDSystem extends EntitySystem implements KeyInputListener {
         resumeLabel.setPosition((float) (centerX - resumeLabel.getWidth() / 2 - uiTileSize * 3.5), (centerY - resumeLabel.getHeight() / 2 + uiTileSize * 2));
         menuLabel.setPosition((float) (centerX - menuLabel.getWidth() / 2 - uiTileSize * 3.85), (centerY - menuLabel.getHeight() / 2 + uiTileSize));
 
+        pauseMenu.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                game.changeScreen(EScreen.MENU);
+            }
+        });
+
+        pauseResume.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                gameScreen.setPaused(false);
+            }
+        });
+
         stage.addActor(pauseBG);
         stage.addActor(pauseMenu);
         stage.addActor(pauseResume);
@@ -86,7 +102,7 @@ public class HUDSystem extends EntitySystem implements KeyInputListener {
     @Override
     public void update(float deltaTime) {
         // Update
-        if (isPaused) {
+        if (gameScreen.isPaused) {
             // Change the menu to render
             stage.act(deltaTime);
             stage.draw();
@@ -101,7 +117,7 @@ public class HUDSystem extends EntitySystem implements KeyInputListener {
     @Override
     public boolean keyDown(GameInputProcessor gameInputProcessor, int keycode) {
         // Return true if event is handled
-        if (isPaused) {
+        if (gameScreen.isPaused) {
             switch (keycode) {
                 case Input.Keys.UP -> {
                     // Move
@@ -109,8 +125,7 @@ public class HUDSystem extends EntitySystem implements KeyInputListener {
                 case Input.Keys.DOWN -> {
                     //
                 }
-                case Input.Keys.Z -> {
-                    game.changeScreen(EScreen.MENU);
+                case Input.Keys.X -> {
                 }
             }
             return true;
@@ -120,16 +135,16 @@ public class HUDSystem extends EntitySystem implements KeyInputListener {
 
     @Override
     public boolean keyUp(GameInputProcessor gameInputProcessor, int keycode) {
-        if (isPaused) {
+        if (gameScreen.isPaused) {
             switch (keycode) {
                 case Input.Keys.ESCAPE -> {
-                    isPaused = false;
+                    gameScreen.isPaused = false;
                 }
             }
             return true;
         }
         if (keycode == Input.Keys.ESCAPE) {
-            isPaused = true;
+            gameScreen.isPaused = true;
         }
         return false;
     }

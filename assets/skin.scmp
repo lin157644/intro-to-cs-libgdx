@@ -193,6 +193,16 @@ jsonData: {
 				r: 1
 				g: 1
 				b: 1
+				a: 0.25000018
+			}
+			name: transWhite
+		}
+		{
+			class: com.ray3k.skincomposer.data.ColorData
+			color: {
+				r: 1
+				g: 1
+				b: 1
 				a: 1
 			}
 			name: white
@@ -202,6 +212,64 @@ jsonData: {
 	freeTypeFonts: [
 		{
 			class: com.ray3k.skincomposer.data.FreeTypeFontData
+			name: dialogFont
+			file: C:/Users/linxs/Desktop/intro-to-cs-final/assets/fonts/NotoSansTC-Medium.otf
+			previewTTF: IBMPlexSerif-Medium
+			useCustomSerializer: true
+			size: 20
+			mono: false
+			hinting: AutoMedium
+			color: black
+			gamma: 1.8
+			renderCount: 2
+			borderWidth: 0
+			borderColor: null
+			borderStraight: false
+			borderGamma: 1.8
+			shadowOffsetX: 0
+			shadowOffsetY: 0
+			shadowColor: null
+			spaceX: 0
+			spaceY: 0
+			characters: ""
+			kerning: true
+			flip: false
+			genMipMaps: false
+			minFilter: Nearest
+			magFilter: Linear
+			incremental: false
+		}
+		{
+			class: com.ray3k.skincomposer.data.FreeTypeFontData
+			name: menuSelectionFont
+			file: C:/Users/linxs/Desktop/intro-to-cs-final/assets/fonts/PressStart2P-Regular.ttf
+			previewTTF: IBMPlexSerif-Medium
+			useCustomSerializer: true
+			size: 24
+			mono: false
+			hinting: AutoMedium
+			color: white
+			gamma: 1.8
+			renderCount: 2
+			borderWidth: 0
+			borderColor: null
+			borderStraight: false
+			borderGamma: 1.8
+			shadowOffsetX: 0
+			shadowOffsetY: 0
+			shadowColor: null
+			spaceX: 0
+			spaceY: 0
+			characters: ""
+			kerning: true
+			flip: false
+			genMipMaps: false
+			minFilter: Nearest
+			magFilter: Nearest
+			incremental: false
+		}
+		{
+			class: com.ray3k.skincomposer.data.FreeTypeFontData
 			name: pauseLabelFont
 			file: C:/Users/linxs/Desktop/intro-to-cs-final/assets/fonts/PressStart2P-Regular.ttf
 			previewTTF: PressStart2P-Regular
@@ -209,7 +277,7 @@ jsonData: {
 			size: 16
 			mono: false
 			hinting: AutoMedium
-			color: black
+			color: pauseTheme
 			gamma: 1.8
 			renderCount: 2
 			borderWidth: 0
@@ -1267,7 +1335,7 @@ jsonData: {
 						type: com.badlogic.gdx.graphics.g2d.BitmapFont
 						name: font
 						optional: false
-						value: selection_font
+						value: menuSelectionFont
 					}
 					fontColor: {
 						type: com.badlogic.gdx.graphics.Color
@@ -1301,6 +1369,33 @@ jsonData: {
 						name: fontColor
 						optional: true
 						value: pauseTheme
+					}
+					background: {
+						type: com.badlogic.gdx.scenes.scene2d.utils.Drawable
+						name: background
+						optional: true
+						value: null
+					}
+				}
+				deletable: true
+				parent: null
+			}
+			{
+				class: com.ray3k.skincomposer.data.StyleData
+				name: menuTitle
+				clazz: com.badlogic.gdx.scenes.scene2d.ui.Label
+				properties: {
+					font: {
+						type: com.badlogic.gdx.graphics.g2d.BitmapFont
+						name: font
+						optional: false
+						value: title_font
+					}
+					fontColor: {
+						type: com.badlogic.gdx.graphics.Color
+						name: fontColor
+						optional: true
+						value: white
 					}
 					background: {
 						type: com.badlogic.gdx.scenes.scene2d.utils.Drawable

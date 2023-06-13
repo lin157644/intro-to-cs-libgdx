@@ -28,12 +28,14 @@ public class IWantToGraduate extends Game {
     public void create() {
         Gdx.app.setLogLevel(Application.LOG_DEBUG);
 
-        if (Gdx.app.getLogLevel() == Application.LOG_DEBUG){
+        if (Gdx.app.getLogLevel() == Application.LOG_DEBUG)
             GameState.clearSavedState();
-        }
 
         gameState = GameState.loadState();
-        GameState.saveState(gameState);
+
+        if (Gdx.app.getLogLevel() == Application.LOG_DEBUG)
+            GameState.saveState(gameState);
+
 
         mapManager.setCurrentMap(gameState.map);
         changeScreen(EScreen.LOADING);
@@ -48,6 +50,8 @@ public class IWantToGraduate extends Game {
     public void changeScreen(EScreen s) {
         if (currentScreen != null) {
             currentScreen.dispose();
+            screenMap.put(s, null);
+            Gdx.app.debug(TAG, "Disposed screen " + currentScreen.getClass().getSimpleName());
         }
         currentScreen = screenMap.get(s);
         if (currentScreen == null) {
