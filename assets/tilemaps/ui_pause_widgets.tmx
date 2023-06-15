@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.10" tiledversion="1.10.1" orientation="orthogonal" renderorder="right-down" width="20" height="20" tilewidth="48" tileheight="48" infinite="0" nextlayerid="3" nextobjectid="1">
  <tileset firstgid="1" source="../tilesets/Modern_UI_Style_2_48x48.tsx"/>
- <tileset firstgid="1667" source="../tilesets/Modern_UI_Style_2_48x48.tsx"/>
  <layer id="1" name="圖塊層 1" width="20" height="20">
   <data encoding="csv">
-2960,2961,1503,1504,1505,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-2962,2963,1593,1594,1595,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+1294,1295,1503,1504,1505,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+1296,1297,1593,1594,1595,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,

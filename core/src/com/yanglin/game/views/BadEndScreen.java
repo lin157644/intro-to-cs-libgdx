@@ -2,62 +2,86 @@ package com.yanglin.game.views;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
+import com.rafaskoberg.gdx.typinglabel.TypingLabel;
 import com.yanglin.game.IWantToGraduate;
 
 public class BadEndScreen implements Screen {
     private static String TAG = BadEndScreen.class.getSimpleName();
     private IWantToGraduate game;
+    private Stage stage = new Stage();
+    private TypingLabel reasonLabel;
     public BadEndScreen(IWantToGraduate game) {
         this.game = game;
+
+        Skin skin = game.assetManager.get("ui/skins/title_skin.json");
+
+        // TODO: Positioning, typing effect, back to menu listener, music
+
+        TypingLabel titleLabel = new TypingLabel("{SHAKE=1;1;1}大延畢{ENDSHAKE}", skin, "badEndTitle");
+        reasonLabel = new TypingLabel("", skin, "badEndReason");
+        Label label = new Label("大俠請重新來過", skin);
+
+        VerticalGroup vbox = new VerticalGroup();
+        vbox.addActor(titleLabel);
+        vbox.addActor(reasonLabel);
+        vbox.addActor(label);
+        vbox.space(30f);
+
+        stage.addActor(vbox);
     }
     @Override
     public void show() {
+        String reasonText = "";
         switch (game.ending) {
             case DEFAULT_BAD -> {
                 // Exit the school before finish all quest
-                String text = "你因為沒完成畢業前需要的手續就離開學校，沒能達到畢業證書，最終流落街頭。";
+                reasonText = "你因為沒完成畢業前需要的手續就離開學校，沒能拿到畢業證書，最終流落街頭。";
             }
             case AWKWARD_STORE -> {
                 // Did not bring money when go to store
-                String text = "你因為沒帶錢包結帳時付不出錢，極度的尷尬感使你社會性死亡。{BR}你的意志消沉，來不急辦完剩下的畢業手續。";
+                reasonText = "你因為沒帶錢包結帳時付不出錢，極度的尷尬感使你社會性死亡。\n你的意志消沉，來不急辦完剩下的畢業手續。";
 
             }
             case AWKWARD_BOOK -> {
                 // Did not bring money when returning book
-                String text = "你因為沒帶錢包繳不出逾期費，極度的尷尬感使你社會性死亡。{BR}你的意志消沉，來不急辦完剩下的畢業手續。";
+                reasonText = "你因為沒帶錢包繳不出逾期費，極度的尷尬感使你社會性死亡。\n你的意志消沉，來不急辦完剩下的畢業手續。";
 
             }
             case HUNGER -> {
                 // gameState.hunger > THRESHOLD
-                String text = "你因為極度挨餓倒在路上，醒來時已經來不急辦完剩下的畢業手續。";
+                reasonText = "你因為極度挨餓倒在路上，醒來時已經來不急辦完剩下的畢業手續。";
 
             }
             case OVERSLEEP -> {
-                String text = "睡過頭zzz";
+                reasonText = "睡過頭zzz";
 
             }
             case CAR_CRUSH -> {
-                String text = "你在學校遭遇了車禍，雖然在醫院休養了一陣子並沒有大礙，但是來不急辦完剩下的畢業手續。";
+                reasonText = "你在學校遭遇了車禍，雖然在醫院休養了一陣子並沒有大礙，\n但是仍然來不急辦完剩下的畢業手續。";
 
             }
             case DID_NOT_PASS -> {
                 // !gameState.items.contains(Items.APPLE)
-                String text = "教授覺平時老是翹課，誠摯地告訴你請大五再來。";
+                reasonText = "教授覺平時老是翹課，誠摯地告訴你請大五再來。";
 
             }
             case LOW_ENG_SCORE -> {
                 // gameState.hasWorshiped == false
-                String text = "你與畢業門檻之間差了5分，下次記得請佛祖保佑。";
-
+                reasonText = "你與畢業門檻之間差了5分，下次記得請佛祖保佑。";
             }
             default -> Gdx.app.log(TAG, "Unimplemented ending or null");
         }
-
+        reasonLabel.setText(reasonText);
     }
 
     @Override
     public void render(float delta) {
-
+        stage.act();
+        stage.draw();
     }
 
     @Override
@@ -82,6 +106,6 @@ public class BadEndScreen implements Screen {
 
     @Override
     public void dispose() {
-
+        stage.dispose();
     }
 }

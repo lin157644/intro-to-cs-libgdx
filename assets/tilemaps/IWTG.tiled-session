@@ -1,0 +1,168 @@
+{
+    "Map/SizeTest": {
+        "height": 4300,
+        "width": 2
+    },
+    "activeFile": "event_tileset.tsx",
+    "expandedProjectPaths": [
+        "."
+    ],
+    "file.lastUsedOpenFilter": "全部檔案 (*)",
+    "fileStates": {
+        "C:/Users/linxs/Desktop/intro-to-cs-final/assets/tilesets/GuttyKreum_UrbanAccessoriesv2.tsx": {
+            "scaleInDock": 1
+        },
+        "C:/Users/linxs/Desktop/intro-to-cs-final/assets/tilesets/Interiors_16x16.tsx": {
+            "scaleInDock": 1
+        },
+        "C:/Users/linxs/Desktop/intro-to-cs-final/assets/tilesets/Modern_Exteriors_Complete_Tileset.tsx": {
+            "scaleInDock": 1
+        },
+        "C:/Users/linxs/Desktop/intro-to-cs-final/assets/tilesets/Modern_UI_Style_1.tsx": {
+            "scaleInDock": 1
+        },
+        "C:/Users/linxs/Desktop/intro-to-cs-final/assets/tilesets/Modern_UI_Style_2_48x48.tsx": {
+            "scaleInDock": 1
+        },
+        "C:/Users/linxs/Desktop/intro-to-cs-final/assets/tilesets/Room_Builder_16x16.tsx": {
+            "scaleInDock": 1
+        },
+        "C:/Users/linxs/Desktop/intro-to-cs-final/assets/tilesets/event_tileset.tsx": {
+            "dynamicWrapping": false,
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "academic_office.tmx": {
+            "scale": 1,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 240,
+                "y": 238.5
+            }
+        },
+        "dialog_box.tmx": {
+            "scale": 1,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 360,
+                "y": 119.5
+            }
+        },
+        "dorm.tmx": {
+            "scale": 3,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 115.33333333333331,
+                "y": 174.5
+            }
+        },
+        "dorm_exterior.tmx": {
+            "scale": 1.78125,
+            "selectedLayer": 9,
+            "viewCenter": {
+                "x": 239.1578947368421,
+                "y": 247.859649122807
+            }
+        },
+        "engineering_building.tmx": {
+            "scale": 1.78125,
+            "selectedLayer": 5,
+            "viewCenter": {
+                "x": 239.1578947368421,
+                "y": 215.859649122807
+            }
+        },
+        "event_tileset.tsx": {
+            "dynamicWrapping": true,
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "intersection.tmx": {
+            "scale": 1.5,
+            "selectedLayer": 7,
+            "viewCenter": {
+                "x": 168.66666666666663,
+                "y": 269
+            }
+        },
+        "library_exterior.tmx": {
+            "scale": 1.78125,
+            "selectedLayer": 8,
+            "viewCenter": {
+                "x": 239.1578947368421,
+                "y": 239.43859649122805
+            }
+        },
+        "library_interior.tmx": {
+            "scale": 3,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 121.66666666666669,
+                "y": 101.83333333333333
+            }
+        },
+        "school_gate.tmx": {
+            "scale": 1,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 376,
+                "y": 441.5
+            }
+        },
+        "time_display.tmx": {
+            "scale": 1,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 143,
+                "y": 47.5
+            }
+        },
+        "ui_pause_bg.tmx": {
+            "scale": 1,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 359,
+                "y": 215.5
+            }
+        },
+        "ui_pause_widgets.tmx": {
+            "scale": 1.0143229166666665,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 372.6623876765084,
+                "y": 479.630295250321
+            }
+        }
+    },
+    "last.externalTilesetPath": "C:/Users/linxs/Desktop/intro-to-cs-final/assets/tilesets",
+    "openFiles": [
+        "academic_office.tmx",
+        "dialog_box.tmx",
+        "dorm.tmx",
+        "dorm_exterior.tmx",
+        "engineering_building.tmx",
+        "intersection.tmx",
+        "library_exterior.tmx",
+        "library_interior.tmx",
+        "school_gate.tmx",
+        "time_display.tmx",
+        "ui_pause_bg.tmx",
+        "ui_pause_widgets.tmx",
+        "event_tileset.tsx"
+    ],
+    "project": "IWTG.tiled-project",
+    "recentFiles": [
+        "academic_office.tmx",
+        "dialog_box.tmx",
+        "dorm.tmx",
+        "dorm_exterior.tmx",
+        "engineering_building.tmx",
+        "intersection.tmx",
+        "library_exterior.tmx",
+        "library_interior.tmx",
+        "school_gate.tmx",
+        "time_display.tmx",
+        "ui_pause_bg.tmx",
+        "ui_pause_widgets.tmx"
+    ]
+}

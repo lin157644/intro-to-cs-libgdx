@@ -7,7 +7,10 @@ import com.badlogic.ashley.systems.SortedIteratingSystem;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.maps.MapLayer;
+import com.badlogic.gdx.maps.objects.TextureMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.yanglin.game.GameAssetManager;
 import com.yanglin.game.entity.EntityEngine;
@@ -22,7 +25,7 @@ public class RenderingSystem extends SortedIteratingSystem implements MapManager
     private static final String TAG = RenderingSystem.class.getSimpleName();
     private final ComponentMapper<TextureComponent> tm;
     private final ComponentMapper<PositionComponent> pm;
-    private final OrthogonalTiledMapRenderer tiledMapRenderer;
+    private OrthogonalTiledMapRendererWithSprites tiledMapRenderer;
     private OrthographicCamera camera;
     private SpriteBatch batch;
 
@@ -33,6 +36,8 @@ public class RenderingSystem extends SortedIteratingSystem implements MapManager
 
     private GameAssetManager assetManager;
     private MapManager mapManager;
+
+    private TextureMapObject playerTextureObj = new TextureMapObject();;
 
     public RenderingSystem(GameAssetManager assetManager, MapManager mapManager, OrthographicCamera camera, SpriteBatch batch) {
         // TODO: RenderableComponent cause white screen
@@ -52,8 +57,14 @@ public class RenderingSystem extends SortedIteratingSystem implements MapManager
 
         TiledMap map = assetManager.get(mapManager.getCurrentMap().getFileName(), TiledMap.class);
         // unitScale = 1 / 16f; // Assume width and height are the same
+        MapLayer objectLayer = map.getLayers().get("playerLayer");
+        if(objectLayer != null) {
+            objectLayer.getObjects().add(playerTextureObj);
+        } else {
+            Gdx.app.log(TAG, "playerLayer is null in map: " + mapManager.getCurrentMap().name());
+        }
         unitScale = 1 / (float) map.getProperties().get("tilewidth", Integer.class);
-        tiledMapRenderer = new OrthogonalTiledMapRenderer(map, unitScale); // uniScale is necessary
+        tiledMapRenderer = new OrthogonalTiledMapRendererWithSprites(map, unitScale); // uniScale is necessary
         // ImmutableArray<Component> components = entity.getComponents();
     }
 
@@ -68,11 +79,17 @@ public class RenderingSystem extends SortedIteratingSystem implements MapManager
         batch.setProjectionMatrix(camera.combined);
         super.update(deltaTime);
         batch.begin();
+
         for (Entity entity : renderQueue) {
             TextureComponent tex = tm.get(entity);
             PositionComponent pos = pm.get(entity);
+            if(EntityEngine.playerComponentMapper.get(entity) != null){
+                playerTextureObj.setTextureRegion(tm.get(entity).region);
+                playerTextureObj.setX(pos.position.x);
+                playerTextureObj.setY(pos.position.y);
+            }
             if (tex.region != null) {
-                batch.draw(tex.region, pos.position.x, pos.position.y, 1, 2);
+                // batch.draw(tex.region, pos.position.x, pos.position.y, 1, 2);
             }
             // batch.draw(tex.region,
             //         t.position.x - originX + tex.offsetX,
@@ -87,10 +104,19 @@ public class RenderingSystem extends SortedIteratingSystem implements MapManager
 
     @Override
     public void mapChanged(MapManager.EMap EMap, float x, float y) {
-        Gdx.app.debug(TAG, "Changing map to: " + EMap.name());
+        // Gdx.app.debug(TAG, "Changing map to: " + EMap.name());
         TiledMap map = assetManager.get(mapManager.getCurrentMap().getFileName(), TiledMap.class);
         unitScale = 1 / (float) map.getProperties().get("tilewidth", Integer.class);
+
+        MapLayer objectLayer = map.getLayers().get("playerLayer");
+        if(objectLayer != null) {
+            objectLayer.getObjects().add(playerTextureObj);
+        } else {
+            Gdx.app.log(TAG, "playerLayer is null in map: " + mapManager.getCurrentMap().name());
+        }
+
         tiledMapRenderer.setMap(map);
+
     }
 
     private static class ZComparator implements Comparator<Entity> {

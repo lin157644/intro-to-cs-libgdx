@@ -90,6 +90,14 @@ public class PlayerInteractionSystem extends IteratingSystem implements MapManag
                 case "EVENT" -> {
                     String eventType = tile.getProperties().get("event", String.class);
                     switch (eventType) {
+                        case "SHOP" -> {
+                            if(!gameState.hasItem(ItemComponent.ItemType.WALLET)) {
+                                game.ending = Ending.AWKWARD_STORE;
+                                game.changeScreen(EScreen.BAD_END);
+                            } else {
+                                gameState.hasEaten = true;
+                            }
+                        }
                         case "BUS" -> {
                             // TODO: Play animation
                             // TODO: To bad end
@@ -111,7 +119,7 @@ public class PlayerInteractionSystem extends IteratingSystem implements MapManag
                             }
 
                         }
-                        case "GIFT2PROF" -> {
+                        case "GIFT_PROF" -> {
                             if (gameState.hasItem(ItemComponent.ItemType.APPLE)) {
                                 String text = "";
                                 // TODO: Trigger　Dialog
@@ -127,6 +135,9 @@ public class PlayerInteractionSystem extends IteratingSystem implements MapManag
                     }
                 }
                 case "ITEM", "DIALOG" -> {
+                }
+                case "EXIT" -> {
+
                 }
                 default -> Gdx.app.log(TAG, "Detect collision of unexpected type");
             }
@@ -155,7 +166,7 @@ public class PlayerInteractionSystem extends IteratingSystem implements MapManag
                             // 只能觸發一次
                             String testType = tile.getProperties().get("test", String.class);
                             switch (testType) {
-                                case "BOOK" -> {
+                                case "RETURN_BOOK" -> {
                                     // Interact with librarian
                                     if (!gameState.hasItem(ItemComponent.ItemType.BOOK)) {
                                         String text = "你依稀記得宿舍中有本書還沒還，書沒還可是必不了業的！";
@@ -192,7 +203,7 @@ public class PlayerInteractionSystem extends IteratingSystem implements MapManag
                                     // 線上畢業審核
                                     // TODO: Do examine and generate text
                                 }
-                                case "PROHIBIT" -> {
+                                case "EXHIBIT" -> {
                                     // 拿時數
                                     if (!gameState.hasEnoughHours) {
                                         // Only evoke dialog if not triggered before
@@ -207,7 +218,7 @@ public class PlayerInteractionSystem extends IteratingSystem implements MapManag
                                 }
                             }
                         }
-                        case "MAP", "EVENT" -> {
+                        case "MAP", "EVENT", "EXIT" -> {
                         }
                         default -> Gdx.app.log(TAG, "Detect dialog of unexpected type");
                     }
@@ -226,19 +237,13 @@ public class PlayerInteractionSystem extends IteratingSystem implements MapManag
         playerInteractionListeners.add(listener);
     }
 
-    private void notifyListeners(PlayerInteractionListener.EventType eventType) {
+    private void notifyDialogListeners(String text) {
         for (PlayerInteractionListener listener : playerInteractionListeners) {
-            listener.triggerEvent(eventType);
+            listener.onDialog("");
         }
     }
 
     public interface PlayerInteractionListener {
-        enum EventType {
-            ENTER_LANGUAGE_CENTER,
-            GIFT2PROF,
-        }
-
-        // Quest, Item, Dialog
-        void triggerEvent(EventType eventType);
+        void onDialog(String text);
     }
 }

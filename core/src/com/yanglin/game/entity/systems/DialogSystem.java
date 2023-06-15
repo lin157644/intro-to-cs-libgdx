@@ -1,10 +1,11 @@
 package com.yanglin.game.entity.systems;
 
 import com.badlogic.ashley.core.EntitySystem;
-import com.badlogic.gdx.Application;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.Array;
 import com.rafaskoberg.gdx.typinglabel.TypingLabel;
@@ -23,7 +24,8 @@ public class DialogSystem extends EntitySystem implements KeyInputListener, Play
     private final Stage stage;
     private Array<String> currentDialog;
     private Boolean inDialog = false;
-    private TypingLabel typingLabel;
+    private TypingLabel dialogLabel;
+    private Image dialogBackground;
 
     public DialogSystem(IWantToGraduate game, Stage stage) {
         // Initialize dialog
@@ -33,14 +35,20 @@ public class DialogSystem extends EntitySystem implements KeyInputListener, Play
         Skin skin = game.assetManager.get("ui/skins/title_skin.json");
 
         // Dialog background
+        dialogBackground = new Image((Texture) game.assetManager.get("ui/dialog_box.png"));
 
-        String testDialog = "Test{NEXT}Dialog";
-        testDialog = testDialog.replace("{BR}", "\n");
-        currentDialog = new Array<>(testDialog.split("\\{NEXT}"));
+        dialogLabel = new TypingLabel("Hello world!", skin, "dialogLabel");
 
+        dialogLabel.setVisible(false);
 
-        typingLabel = new TypingLabel("Hello world!", skin, "dialogLabel");
-        stage.addActor(typingLabel);
+        Group dialogGroup = new Group();
+
+        stage.addActor(dialogLabel);
+        stage.addActor(dialogBackground);
+    }
+
+    public void setDialog(String text){
+        currentDialog = new Array<>(text.replace("{BR}", "\n").split("\\{NEXT}"));
     }
 
     @Override
@@ -59,7 +67,7 @@ public class DialogSystem extends EntitySystem implements KeyInputListener, Play
             switch (keycode) {
                 case Input.Keys.L -> {
                     if(currentDialog.size > 0) {
-                        typingLabel.setText(currentDialog.pop());
+                        dialogLabel.setText(currentDialog.pop());
                     } else {
                         inDialog = false;
                     }
@@ -81,15 +89,6 @@ public class DialogSystem extends EntitySystem implements KeyInputListener, Play
     }
 
     @Override
-    public void triggerEvent(EventType eventType) {
-        switch (eventType) {
-            case GIFT2PROF -> {
-                this.inDialog = true;
-            }
-        }
-    }
-
-    @Override
     public void onMonthUpdate(int month) {
     }
 
@@ -100,5 +99,11 @@ public class DialogSystem extends EntitySystem implements KeyInputListener, Play
             game.ending = Ending.HUNGER;
             game.changeScreen(EScreen.BAD_END);
         }
+    }
+
+    @Override
+    public void onDialog(String text) {
+        inDialog = true;
+        setDialog(text);
     }
 }

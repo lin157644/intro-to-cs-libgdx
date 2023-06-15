@@ -80,6 +80,7 @@ public class GameAssetManager extends AssetManager {
         load("ui/book.png", Texture.class);
         load("ui/wallet.png", Texture.class);
         load("ui/english.png", Texture.class);
+        load("ui/dialog_box.png", Texture.class);
     }
 
     public void loadFonts(){
