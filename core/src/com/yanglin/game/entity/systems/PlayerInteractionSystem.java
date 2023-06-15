@@ -130,7 +130,6 @@ public class PlayerInteractionSystem extends EntitySystem implements MapManager.
                             case "BUS" -> {
                                 hasTriggeredDialog = true;
                                 // TODO: Play animation
-                                // TODO: To bad end
                                 game.ending = Ending.CAR_CRUSH;
                                 game.changeScreen(EScreen.BAD_END);
                                 return;
@@ -155,7 +154,7 @@ public class PlayerInteractionSystem extends EntitySystem implements MapManager.
                             }
                             case "GIFT_PROF" -> {
                                 hasTriggeredDialog = true;
-                                if(!gameState.hasMeetProf){
+                                if (!gameState.hasMeetProf) {
                                     if (gameState.hasItem(ItemComponent.ItemType.APPLE)) {
                                         String text = "教授覺得你上課認真，決定同情你讓你畢業。";
                                         notifyDialogListeners(text, true);
@@ -170,16 +169,14 @@ public class PlayerInteractionSystem extends EntitySystem implements MapManager.
                             }
                             case "ACAD_PROC" -> {
                                 hasTriggeredDialog = true;
-                                if(game.gameState.hasWorshiped && game.gameState.hasPassEnglish && game.gameState.hasEnoughHours){
+                                if (game.gameState.hasWorshiped && game.gameState.hasPassEnglish && game.gameState.hasEnoughHours) {
                                     game.gameState.hasFinishedProcedure = true;
                                     String text = "你已經完成離校手續領到了學位證書，可以正式告別中央了。";
-                                    // TODO: Trigger dialog
-                                    notifyDialogListeners(text + getHintDialog(), true);
+                                    notifyDialogListeners(text, true);
 
                                 } else {
-                                    String text = "看來你距離畢業還有些事情沒做。";
-                                    // TODO: Trigger dialog
-                                    notifyDialogListeners(text, true);
+                                    String text = "看來你距離畢業還有些事情沒做。{NEXT}";
+                                    notifyDialogListeners(text + getHintDialog(), true);
                                 }
                             }
                             default -> {
@@ -190,7 +187,7 @@ public class PlayerInteractionSystem extends EntitySystem implements MapManager.
                     case "ITEM", "DIALOG", "TEST", "DEBUG" -> {
                     }
                     case "EXIT" -> {
-                        if(game.gameState.canGraduate()) {
+                        if (game.gameState.canGraduate()) {
                             game.ending = Ending.GOOD_END;
                             game.changeScreen(EScreen.GOOD_END);
                             return;
@@ -275,10 +272,6 @@ public class PlayerInteractionSystem extends EntitySystem implements MapManager.
                                         Gdx.app.log(TAG, gameState.items.toString());
                                     }
                                 }
-                                case "COMPUTER" -> {
-                                    // 線上畢業審核
-                                    // TODO: Do examine and generate text
-                                }
                                 case "EXHIBIT" -> {
                                     // 拿時數
                                     if (!gameState.hasEnoughHours) {
@@ -288,7 +281,7 @@ public class PlayerInteractionSystem extends EntitySystem implements MapManager.
                                     }
                                 }
                                 case "WORSHIP" -> {
-                                    if(!gameState.hasWorshiped) {
+                                    if (!gameState.hasWorshiped) {
                                         gameState.hasWorshiped = true;
                                         notifyDialogListeners(dialogText, true);
                                     }
@@ -319,28 +312,29 @@ public class PlayerInteractionSystem extends EntitySystem implements MapManager.
         return false;
     }
 
-    public String getHintDialog(){
-        if(!game.gameState.hasPassEnglish) {
-            if(!game.gameState.hasItem(ItemComponent.ItemType.ENGLISH))
-                return "宿舍有多益成績單";
-            if(!game.gameState.hasWorshiped)
-                return "最好祈求佛祖保佑";
-            return  "去語言中心";
+    public String getHintDialog() {
+        // 看來你距離畢業還有些事情沒做。
+        if (!game.gameState.hasPassEnglish) {
+            if (!game.gameState.hasItem(ItemComponent.ItemType.ENGLISH))
+                return "宿舍有張多益成績單，應該可以用來通過畢業門檻。";
+            if (!game.gameState.hasWorshiped)
+                return "多益的分數好像低空飛過畢業門檻，最好拜拜一下保佑平安畢業。";
+            return "把成績單帶去語言中心申請畢業門檻。";
         }
         if (!game.gameState.hasMeetProf) {
-            if(!game.gameState.hasItem(ItemComponent.ItemType.APPLE))
-                return "還有一科沒過，找找適合見面禮";
-            return "工程五館找教授";
+            if (!game.gameState.hasItem(ItemComponent.ItemType.APPLE))
+                return "還有一科必修沒過，看來需要與教授好好求情，{BR}不知道有沒有適合送給教授的見面禮。";
+            return "教授的實驗室在工程五館，最好趕緊過去。";
         }
         if (!game.gameState.hasEnoughHours) {
-            return "聽說圖書館正在舉辦書展，";
+            return "聽說圖書館正在舉辦書展，服務學習時數就差一點，{BR}應該可以好好利用。";
         }
         if (!game.gameState.hasReturnBook) {
-            if(!game.gameState.hasItem(ItemComponent.ItemType.BOOK))
-                return "宿舍有書";
-            if(!game.gameState.hasItem(ItemComponent.ItemType.WALLET))
-                return "書逾期好久了，宿舍拿錢包";
-            return "要還書才能畢業";
+            if (!game.gameState.hasItem(ItemComponent.ItemType.BOOK))
+                return "宿舍還有逾期還沒歸還的書，再不還荷包就要大失血了";
+            if (!game.gameState.hasItem(ItemComponent.ItemType.WALLET))
+                return "書逾期好久了，記得到帶著錢包到圖書館。";
+            return "還需要前往圖書館還書才能申請離校手續。";
         }
         if (!game.gameState.hasFinishedProcedure) {
             return "看起來事情都完成得差不多了，註冊組辦理手續吧。";

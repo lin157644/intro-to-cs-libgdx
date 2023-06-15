@@ -11,7 +11,7 @@ import com.yanglin.game.entity.component.AnimationComponent;
 import com.yanglin.game.entity.component.StateComponent;
 import com.yanglin.game.entity.component.TextureComponent;
 
-public class AnimationSystem extends IteratingSystem  {
+public class AnimationSystem extends IteratingSystem {
 
     private ComponentMapper<TextureComponent> tm;
     private ComponentMapper<AnimationComponent> am;

@@ -10,27 +10,27 @@ public class StateComponent implements Component, Pool.Poolable {
     public float time = 0.0f;
     public boolean isLooping = false;
 
-    public static StateComponent create(Engine engine){
-        if(engine instanceof PooledEngine){
-            return ((PooledEngine)engine).createComponent(StateComponent.class);
-        }else {
+    public static StateComponent create(Engine engine) {
+        if (engine instanceof PooledEngine) {
+            return ((PooledEngine) engine).createComponent(StateComponent.class);
+        } else {
             return new StateComponent();
         }
     }
 
-    //Creating Chainable Component Setters to make building easier
-    public StateComponent set(String newState){
+    // Creating Chainable Component Setters to make building easier
+    public StateComponent set(String newState) {
         state = newState;
         time = 0.0f;
         return this;
     }
 
-    public StateComponent setLooping(boolean isLooping){
+    public StateComponent setLooping(boolean isLooping) {
         this.isLooping = isLooping;
         return this;
     }
 
-    public String get(){
+    public String get() {
         return state;
     }
 

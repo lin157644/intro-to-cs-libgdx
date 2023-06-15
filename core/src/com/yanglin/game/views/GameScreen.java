@@ -6,14 +6,17 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ArrayMap;
 import com.badlogic.gdx.utils.ScreenUtils;
-import com.yanglin.game.IWantToGraduate;
 import com.yanglin.game.GameAssetManager;
+import com.yanglin.game.IWantToGraduate;
 import com.yanglin.game.MusicManager;
 import com.yanglin.game.entity.EntityEngine;
 import com.yanglin.game.entity.MapManager;
@@ -81,7 +84,7 @@ public class GameScreen implements Screen {
     public void show() {
         Gdx.app.debug(TAG, "Showed");
 
-        if (game.gameState.month <6)
+        if (game.gameState.month < 6)
             game.musicManager.setBGM(MusicManager.BGM.GAME, true);
         else
             game.musicManager.setBGM(MusicManager.BGM.GAME_JUNE, true);
@@ -145,16 +148,34 @@ public class GameScreen implements Screen {
         playerEntity.add(playerComponent).add(positionComponent).add(animationComponent).add(textureComponent).add(renderableComponent).add(stateComponent);
         engine.addEntity(playerEntity);
 
+        Array<Texture> itemTextures = new Array<>();
+        itemTextures.add(game.assetManager.get("ui/wallet.png"), game.assetManager.get("ui/apple_basket.png"), game.assetManager.get("ui/english.png"), game.assetManager.get("ui/book.png"));
+        Array<Vector2> itemPositions = new Array<Vector2>();
+
+        float pauseTileUnit = 48f;
+        float centerX = uistage.getWidth() / 2;
+        float centerY = uistage.getHeight() / 2;
+        itemPositions.add(new Vector2(centerX + pauseTileUnit * -0.5f, centerY + pauseTileUnit * 0.5f),
+                new Vector2(centerX + pauseTileUnit * 1.5f, centerY + pauseTileUnit * 0.5f),
+                new Vector2(centerX + pauseTileUnit * 3.5f, centerY + pauseTileUnit * 0.5f),
+                new Vector2(centerX + pauseTileUnit * -0.5f, centerY + pauseTileUnit * -1.5f));
         // Create Item entities
+        int index = 0;
         for (ItemComponent.ItemType itemType : ItemComponent.ItemType.values()) {
             ItemComponent itemComponent = engine.createComponent(ItemComponent.class);
             RenderableComponent itemRenderableComponent = engine.createComponent(RenderableComponent.class);
             TextureComponent itemTextureComponent = engine.createComponent(TextureComponent.class);
             PositionComponent itemPositionComponent = engine.createComponent(PositionComponent.class);
-            // TODO: Initialize items
+
+            itemComponent.type = itemType;
+            itemPositionComponent.position.set(itemPositions.get(index));
+            itemTextureComponent.region = new TextureRegion(itemTextures.get(index));
+            // renderableComponent.isVisible = false;
+
             Entity itemEntity = engine.createEntity();
             itemEntity.add(itemComponent).add(itemRenderableComponent).add(itemTextureComponent).add(itemPositionComponent);
             engine.addEntity(itemEntity);
+            index++;
         }
 
         // Input
@@ -177,7 +198,7 @@ public class GameScreen implements Screen {
         EntityEngine.positionComponentMapper.get(player).position.x = game.gameState.x;
         EntityEngine.positionComponentMapper.get(player).position.y = game.gameState.y;
 
-        if(!game.gameState.hasPlayedIntroDialog){
+        if (!game.gameState.hasPlayedIntroDialog) {
             dialogSystem.onDialog("{SLOWER}11X年的夏天，我在校園裡的路X莎喝著咖啡，大學生活真輕鬆啊{EVENT=stopDialogEffect}\n{WAIT}什{EVENT=playDialogEffect}麼?已經到了要畢業的時間了???{EVENT=stopDialogEffect}\n這{EVENT=playDialogEffect}可不行，得趕緊回宿舍準備需要的東西!", false);
             game.gameState.hasPlayedIntroDialog = true;
         }

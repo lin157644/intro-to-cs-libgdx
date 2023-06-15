@@ -1,6 +1,5 @@
 package com.yanglin.game.entity.systems;
 
-import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.systems.IntervalSystem;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.Array;
@@ -51,7 +50,7 @@ public class TimeSystem extends IntervalSystem {
                         // 30 days
                         if (gameState.date == 30) {
                             if (gameState.month == 6) {
-                                if(gameState.canGraduate()){
+                                if (gameState.canGraduate()) {
                                     game.ending = Ending.GOOD_END;
                                     game.changeScreen(EScreen.GOOD_END);
                                 } else {
@@ -105,6 +104,7 @@ public class TimeSystem extends IntervalSystem {
 
     interface TimeSystemListener {
         void onMonthUpdate(int month);
+
         void onDayUpdate(int day);
     }
 }

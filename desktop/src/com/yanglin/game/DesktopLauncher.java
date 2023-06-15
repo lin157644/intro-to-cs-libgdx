@@ -12,6 +12,7 @@ public class DesktopLauncher {
 		config.setTitle("I Want To Graduate");
 		config.setForegroundFPS(60);
 		config.setWindowedMode(1280, 720);
+		// config.setWindowIcon("img/icon.jpg");
 
 		// TexturePacker.Settings settings = new TexturePacker.Settings();
 		// settings.maxWidth = 512;

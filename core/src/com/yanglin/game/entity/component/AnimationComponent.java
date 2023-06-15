@@ -12,25 +12,25 @@ public class AnimationComponent implements Component, Pool.Poolable {
     public boolean isPaused = false;
     public boolean shouldClearOnBlankState = false;
 
-    public static AnimationComponent create(Engine engine){
-        if(engine instanceof PooledEngine){
-            return ((PooledEngine)engine).createComponent(AnimationComponent.class);
-        }else {
+    public static AnimationComponent create(Engine engine) {
+        if (engine instanceof PooledEngine) {
+            return ((PooledEngine) engine).createComponent(AnimationComponent.class);
+        } else {
             return new AnimationComponent();
         }
     }
 
-    public AnimationComponent addAnimation(String stateName, Animation animation){
+    public AnimationComponent addAnimation(String stateName, Animation animation) {
         this.animations.put(stateName, animation);
         return this;
     }
 
-    public AnimationComponent setPaused(boolean isPaused){
+    public AnimationComponent setPaused(boolean isPaused) {
         this.isPaused = isPaused;
         return this;
     }
 
-    public AnimationComponent setShouldClearOnBlankState(boolean shouldClear){
+    public AnimationComponent setShouldClearOnBlankState(boolean shouldClear) {
         this.shouldClearOnBlankState = shouldClear;
         return this;
     }

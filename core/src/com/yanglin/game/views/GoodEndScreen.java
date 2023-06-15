@@ -3,10 +3,8 @@ package com.yanglin.game.views;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -53,24 +51,24 @@ public class GoodEndScreen implements Screen {
 
         float certScale = -0.5f;
         cert.scaleBy(certScale);
-        cert.setPosition((stage.getWidth() - cert.getWidth() * (1 + certScale)) / 2 + 15 , (stage.getHeight() - cert.getHeight() * (1 + certScale)) / 2);
+        cert.setPosition((stage.getWidth() - cert.getWidth() * (1 + certScale)) / 2 + 15, (stage.getHeight() - cert.getHeight() * (1 + certScale)) / 2);
 
         stage.addActor(spinner);
         stage.addActor(title);
         stage.addActor(happyMan);
         stage.addActor(cert);
 
-        stage.addListener(new InputListener(){
+        stage.addListener(new InputListener() {
             @Override
-            public boolean keyUp (InputEvent event, int keycode) {
-                if(keycode == Input.Keys.Z) {
+            public boolean keyUp(InputEvent event, int keycode) {
+                if (keycode == Input.Keys.Z) {
                     game.changeScreen(EScreen.MENU);
                 }
                 return false;
             }
         });
 
-        // game.musicManager.setBGM(MusicManager.BGM.GOOD_END, true);
+        game.musicManager.setBGM(MusicManager.BGM.GOOD_END, true);
     }
 
     @Override

@@ -3,7 +3,6 @@ package com.yanglin.game.entity.systems;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -120,7 +119,7 @@ public class PlayerMovementSystem extends IteratingSystem implements KeyInputLis
             collisionY = collisionLayer.getCell((int) (targetX + 0.7), (int) (targetY)) != null;
         }
 
-        if (!collisionX){
+        if (!collisionX) {
             positionComponent.position.x += velocity.x;
             gameState.x = positionComponent.position.x;
         }
@@ -131,7 +130,6 @@ public class PlayerMovementSystem extends IteratingSystem implements KeyInputLis
 
         cameraPos.set(entity.getComponent(PositionComponent.class).position);
 
-        // TODO: Deal with samll tilemap
         float xmax = map.getProperties().get("width", Integer.class);
         float ymax = map.getProperties().get("height", Integer.class);
         float w = Gdx.graphics.getWidth();
@@ -139,7 +137,7 @@ public class PlayerMovementSystem extends IteratingSystem implements KeyInputLis
 
         float scaledViewportWidthHalfExtent = (w / h) * viewPortHeight * 0.5f;
 
-        if(xmax > scaledViewportWidthHalfExtent*2){
+        if (xmax > scaledViewportWidthHalfExtent * 2) {
             // Horizontal
             if (cameraPos.x < scaledViewportWidthHalfExtent)
                 cameraPos.x = scaledViewportWidthHalfExtent;
@@ -149,14 +147,14 @@ public class PlayerMovementSystem extends IteratingSystem implements KeyInputLis
             cameraPos.x = xmax / 2;
         }
         float scaledViewportHeightHalfExtent = viewPortHeight * 0.5f;
-        if(ymax > scaledViewportHeightHalfExtent*2) {
+        if (ymax > scaledViewportHeightHalfExtent * 2) {
             // Vertical
             if (cameraPos.y < scaledViewportHeightHalfExtent)
                 cameraPos.y = scaledViewportHeightHalfExtent;
             else if (cameraPos.y > ymax - scaledViewportHeightHalfExtent)
                 cameraPos.y = ymax - scaledViewportHeightHalfExtent;
         } else {
-           cameraPos.y  = ymax / 2;
+            cameraPos.y = ymax / 2;
         }
 
         camera.position.set(cameraPos, 0);
@@ -279,7 +277,7 @@ public class PlayerMovementSystem extends IteratingSystem implements KeyInputLis
 
     @Override
     public void onMonthUpdate(int month) {
-        if(month==6) {
+        if (month == 6) {
             accleration.set(0.2f, 0.2f);
         } else {
             accleration.set(0.1f, 0.1f);

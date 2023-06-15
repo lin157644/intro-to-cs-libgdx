@@ -31,11 +31,12 @@ public class GameState {
     public final Array<ItemComponent.ItemType> items = new Array<>();
 
     public boolean hasPlayedIntroDialog = false;
-    public boolean canGraduate(){
+
+    public boolean canGraduate() {
         return hasPassEnglish && hasMeetProf && hasEnoughHours && hasFinishedProcedure && hasReturnBook;
     }
 
-    public void addItem(ItemComponent.ItemType itemType){
+    public void addItem(ItemComponent.ItemType itemType) {
         if (!items.contains(itemType, true))
             items.add(itemType);
         Gdx.app.log(TAG, "New item added: " + itemType + " Current items: " + items);
@@ -49,7 +50,7 @@ public class GameState {
         File file = new File("graduate.save");
         if (file.exists() && !file.isDirectory()) {
             Gdx.app.debug(TAG, "Old save exist. Read from old save file.");
-            try (Scanner scanner = new Scanner(file)){
+            try (Scanner scanner = new Scanner(file)) {
                 Json json = new Json();
                 return json.fromJson(GameState.class, scanner.nextLine());
             } catch (Exception ignored) {
@@ -68,7 +69,7 @@ public class GameState {
         return file.exists() && !file.isDirectory();
     }
 
-    public static Boolean clearSavedState(){
+    public static Boolean clearSavedState() {
         File file = new File("graduate.save");
         return file.delete();
     }

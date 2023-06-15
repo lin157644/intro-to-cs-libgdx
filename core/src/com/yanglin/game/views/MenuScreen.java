@@ -1,22 +1,26 @@
 package com.yanglin.game.views;
 
-import com.badlogic.gdx.*;
-import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.graphics.Cursor;
-import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.scenes.scene2d.*;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.actions.RepeatAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Null;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.rafaskoberg.gdx.typinglabel.TypingLabel;
@@ -51,12 +55,73 @@ public class MenuScreen implements Screen {
 
         Label continueLabel = new Label("Continue", skin, "menuSelection");
         continueLabel.setName("continue");
+        continueLabel.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                game.gameState = GameState.loadState();
+                game.changeScreen(EScreen.GAME);
+            }
+
+            @Override
+            public void enter(InputEvent event, float x, float y, int pointer, @Null Actor fromActor) {
+                super.enter(event, x, y, pointer, fromActor);
+                currSel = continueLabel;
+                updateSignPosition();
+            }
+        });
+
+
         Label startLabel = new Label("Start", skin, "menuSelection");
         startLabel.setName("start");
+        startLabel.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                if (GameState.clearSavedState()) {
+                    Gdx.app.log(TAG, "Start the game: Successfully removed old file.");
+                }
+                game.gameState = GameState.loadState();
+                game.changeScreen(EScreen.GAME);
+            }
+
+            @Override
+            public void enter(InputEvent event, float x, float y, int pointer, @Null Actor fromActor) {
+                super.enter(event, x, y, pointer, fromActor);
+                currSel = startLabel;
+                updateSignPosition();
+            }
+        });
+
         Label creditLabel = new Label("Credit", skin, "menuSelection");
         creditLabel.setName("credit");
+        creditLabel.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+            }
+
+            @Override
+            public void enter(InputEvent event, float x, float y, int pointer, @Null Actor fromActor) {
+                super.enter(event, x, y, pointer, fromActor);
+                currSel = creditLabel;
+                updateSignPosition();
+            }
+        });
+
+
         Label exitLabel = new Label("Exit", skin, "menuSelection");
         exitLabel.setName("exit");
+        exitLabel.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                Gdx.app.exit();
+            }
+
+            @Override
+            public void enter(InputEvent event, float x, float y, int pointer, @Null Actor fromActor) {
+                super.enter(event, x, y, pointer, fromActor);
+                currSel = exitLabel;
+                updateSignPosition();
+            }
+        });
 
         // continueLabel.addAction(Actions.sequence(Actions.delay(2), Actions.fadeIn(1f)));
         // startLabel.addAction(Actions.sequence(Actions.delay(2.5f), Actions.fadeIn(1f)));

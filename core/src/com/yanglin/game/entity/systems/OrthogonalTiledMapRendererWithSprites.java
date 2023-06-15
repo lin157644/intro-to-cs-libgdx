@@ -12,9 +12,8 @@ public class OrthogonalTiledMapRendererWithSprites extends OrthogonalTiledMapRen
 
     @Override
     public void renderObject(MapObject object) {
-        if(object instanceof TextureMapObject) {
-            TextureMapObject textureObj = (TextureMapObject) object;
-            if(textureObj.getTextureRegion() != null)
+        if (object instanceof TextureMapObject textureObj) {
+            if (textureObj.getTextureRegion() != null)
                 this.getBatch().draw(textureObj.getTextureRegion(), textureObj.getX(), textureObj.getY(), 1, 2);
         }
     }

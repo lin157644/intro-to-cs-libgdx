@@ -11,4 +11,7 @@ public class EntityEngine extends PooledEngine {
     public static final ComponentMapper<FacingComponent> facingComponentMapper = ComponentMapper.getFor(FacingComponent.class);
     public static final ComponentMapper<StateComponent> stateComponentMapper = ComponentMapper.getFor(StateComponent.class);
     public static final ComponentMapper<TextureComponent> textureComponentMapper = ComponentMapper.getFor(TextureComponent.class);
+    public static final ComponentMapper<RenderableComponent> renderableComponentMapper = ComponentMapper.getFor(RenderableComponent.class);
+    public static final ComponentMapper<ItemComponent> itemComponentMapper = ComponentMapper.getFor(ItemComponent.class);
+
 }

@@ -9,5 +9,6 @@ public class ItemComponent implements Component {
         ENGLISH,
         BOOK,
     }
+
     public ItemType type;
 }

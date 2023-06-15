@@ -4,7 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -23,6 +22,7 @@ public class BadEndScreen implements Screen {
     private IWantToGraduate game;
     private Stage stage = new Stage();
     private TypingLabel reasonLabel;
+
     public BadEndScreen(IWantToGraduate game) {
         this.game = game;
 
@@ -41,12 +41,12 @@ public class BadEndScreen implements Screen {
         vbox.addActor(returnToMenuLabel);
         vbox.space(30f);
 
-        vbox.setPosition((float) (Gdx.graphics.getWidth() - vbox.getWidth()) / 2 , (float) Gdx.graphics.getHeight() / 2 + 200);
+        vbox.setPosition((float) (Gdx.graphics.getWidth() - vbox.getWidth()) / 2, (float) Gdx.graphics.getHeight() / 2 + 200);
 
-        stage.addListener(new InputListener(){
+        stage.addListener(new InputListener() {
             @Override
-            public boolean keyUp (InputEvent event, int keycode) {
-                if(keycode == Input.Keys.Z) {
+            public boolean keyUp(InputEvent event, int keycode) {
+                if (keycode == Input.Keys.Z) {
                     game.changeScreen(EScreen.MENU);
                 }
                 return false;
@@ -57,6 +57,7 @@ public class BadEndScreen implements Screen {
 
         stage.addActor(vbox);
     }
+
     @Override
     public void show() {
 

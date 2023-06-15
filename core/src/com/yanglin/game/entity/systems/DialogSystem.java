@@ -3,8 +3,6 @@ package com.yanglin.game.entity.systems;
 import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -12,10 +10,8 @@ import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.ScreenUtils;
 import com.rafaskoberg.gdx.typinglabel.TypingAdapter;
 import com.rafaskoberg.gdx.typinglabel.TypingLabel;
-import com.rafaskoberg.gdx.typinglabel.TypingListener;
 import com.yanglin.game.IWantToGraduate;
 import com.yanglin.game.input.GameInputProcessor;
 import com.yanglin.game.input.KeyInputListener;
@@ -90,7 +86,7 @@ public class DialogSystem extends EntitySystem implements KeyInputListener, Play
     @Override
     public void onDialog(String text, boolean withTransition) {
         inDialog = true;
-        if(withTransition){
+        if (withTransition) {
             // TODO: Use action pool
             transitionImg.addAction(Actions.sequence(Actions.visible(true), Actions.fadeIn(0.25f), Actions.fadeOut(0.25f), Actions.visible(false)));
             dialogBackground.addAction(Actions.sequence(Actions.visible(false), Actions.delay(0.6f), Actions.visible(true)));
@@ -102,7 +98,7 @@ public class DialogSystem extends EntitySystem implements KeyInputListener, Play
         currentDialog = new Array<>(text.replace("{BR}", "\n").split("\\{NEXT}"));
         currentDialog.reverse();
         if (currentDialog.size > 0) {
-            if(withTransition)
+            if (withTransition)
                 dialogLabel.setText(" {WAIT=0.65}{EVENT=playDialogEffect}" + currentDialog.pop());
             else
                 dialogLabel.setText(currentDialog.pop());
@@ -179,7 +175,6 @@ public class DialogSystem extends EntitySystem implements KeyInputListener, Play
 
     @Override
     public void onDayUpdate(int day) {
-        // TODO: Check hunger
         if (game.gameState.hunger > 50) {
             game.ending = Ending.HUNGER;
             game.changeScreen(EScreen.BAD_END);

@@ -2,23 +2,18 @@ package com.yanglin.game;
 
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.FileHandleResolver;
-import com.badlogic.gdx.assets.loaders.SkinLoader;
 import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGeneratorLoader;
 import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.utils.ObjectMap;
 import com.ray3k.stripe.FreeTypeSkinLoader;
 import com.yanglin.game.entity.MapManager;
 
@@ -93,9 +88,10 @@ public class GameAssetManager extends AssetManager {
         load("img/transition.png", Texture.class);
     }
 
-    public void loadFonts(){
+    public void loadFonts() {
         load("fonts/title_font.otf", FreeTypeFontGenerator.class);
     }
+
     public void loadSkins() {
         load("ui/skins/title_skin.json", Skin.class);
     }
@@ -103,7 +99,7 @@ public class GameAssetManager extends AssetManager {
     public void loadAudios() {
         load("audio/music/menu_bgm.ogg", Music.class);
         load("audio/music/game_bgm.ogg", Music.class);
-        // load("audio/music/ge_bgm.ogg", Music.class);
+        load("audio/music/ge_bgm.ogg", Music.class);
         load("audio/music/be_bgm.ogg", Music.class);
         load("audio/music/june_bgm.ogg", Music.class);
 
@@ -182,7 +178,7 @@ public class GameAssetManager extends AssetManager {
         // ogg is preferred in this project, since we are not targeting iOS platform.
     }
 
-    public void dispose(){
+    public void dispose() {
         // Should dispose font generator
     }
 

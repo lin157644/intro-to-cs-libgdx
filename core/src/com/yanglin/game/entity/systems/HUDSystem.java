@@ -1,6 +1,9 @@
 package com.yanglin.game.entity.systems;
 
+import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntitySystem;
+import com.badlogic.ashley.core.Family;
+import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -8,26 +11,23 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
-import com.badlogic.gdx.scenes.scene2d.ui.Container;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
-import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.viewport.Viewport;
 import com.yanglin.game.GameState;
 import com.yanglin.game.IWantToGraduate;
+import com.yanglin.game.entity.EntityEngine;
+import com.yanglin.game.entity.component.ItemComponent;
+import com.yanglin.game.entity.component.PositionComponent;
+import com.yanglin.game.entity.component.TextureComponent;
 import com.yanglin.game.input.GameInputProcessor;
 import com.yanglin.game.input.KeyInputListener;
 import com.yanglin.game.views.EScreen;
 import com.yanglin.game.views.GameScreen;
-
-import java.awt.*;
 
 public class HUDSystem extends EntitySystem implements KeyInputListener {
     // Renderable entities in pause menu system should have a z level higher than 1;
@@ -36,10 +36,11 @@ public class HUDSystem extends EntitySystem implements KeyInputListener {
     private IWantToGraduate game;
     private OrthographicCamera hudCamera;
     private BitmapFont debugFont;
-    private SpriteBatch debugBatch;
+    private SpriteBatch batch;
     private GameScreen gameScreen;
     private Group pauseMenuGroup = new Group();
     private Group timeDisplayGroup = new Group();
+    private Family pauseItemFamily;
 
     public HUDSystem(IWantToGraduate game, Stage stage, GameScreen gameScreen) {
         // Display pause menu, time, quest
@@ -48,8 +49,10 @@ public class HUDSystem extends EntitySystem implements KeyInputListener {
         this.game = game;
         this.gameScreen = gameScreen;
 
+        pauseItemFamily = Family.all(ItemComponent.class, PositionComponent.class).get();
+
         Gdx.app.debug(TAG, "HUDStage");
-        debugBatch = new SpriteBatch();
+        batch = new SpriteBatch();
         debugFont = new BitmapFont();
         hudCamera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         hudCamera.position.set(hudCamera.viewportWidth / 2.0f, hudCamera.viewportHeight / 2.0f, 1.0f);
@@ -123,7 +126,7 @@ public class HUDSystem extends EntitySystem implements KeyInputListener {
         stage.addActor(pauseMenuGroup);
 
         Image timeImage = new Image((Texture) game.assetManager.get("ui/time_display.png"));
-        // TODO: Fix time label position
+
         timeImage.setPosition(stage.getWidth() - timeImage.getWidth(), stage.getHeight() - timeImage.getHeight());
         Label timeLabel = new Label("5月1日", skin, "timeLabel");
         timeLabel.setPosition(timeImage.getX() + timeImage.getWidth() / 2 - timeLabel.getWidth() / 2,
@@ -150,11 +153,24 @@ public class HUDSystem extends EntitySystem implements KeyInputListener {
         stage.act(deltaTime);
         stage.draw();
 
+        batch.begin();
         if (Gdx.app.getLogLevel() == Application.LOG_DEBUG) {
-            debugBatch.begin();
-            debugFont.draw(debugBatch, "FPS=" + Gdx.graphics.getFramesPerSecond() + " Hunger: " + game.gameState.hunger, 0, hudCamera.viewportHeight);
-            debugBatch.end();
+            debugFont.draw(batch, "FPS=" + Gdx.graphics.getFramesPerSecond() + " Hunger: " + game.gameState.hunger, 0, hudCamera.viewportHeight);
         }
+        if (gameScreen.isPaused) {
+            ImmutableArray<Entity> entities = getEngine().getEntitiesFor(pauseItemFamily);
+            for (Entity itemEntity : entities) {
+                ItemComponent itemComponent = EntityEngine.itemComponentMapper.get(itemEntity);
+                TextureComponent tex = EntityEngine.textureComponentMapper.get(itemEntity);
+                PositionComponent pos = EntityEngine.positionComponentMapper.get(itemEntity);
+                if (game.gameState.hasItem(itemComponent.type)) {
+                    batch.draw(tex.region, pos.position.x, pos.position.y);
+                }
+            }
+        }
+        batch.end();
+
+
     }
 
     @Override

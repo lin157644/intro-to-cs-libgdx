@@ -9,14 +9,15 @@ import com.badlogic.gdx.utils.Pool;
 public class TextureComponent implements Component, Pool.Poolable {
     public TextureRegion region = null;
 
-    public static TextureComponent create(Engine engine){
-        if(engine instanceof PooledEngine){
-            return ((PooledEngine)engine).createComponent(TextureComponent.class);
-        }else {
+    public static TextureComponent create(Engine engine) {
+        if (engine instanceof PooledEngine) {
+            return ((PooledEngine) engine).createComponent(TextureComponent.class);
+        } else {
             return new TextureComponent();
         }
     }
-    public TextureComponent setRegion(TextureRegion region){
+
+    public TextureComponent setRegion(TextureRegion region) {
         this.region = region;
         return this;
     }

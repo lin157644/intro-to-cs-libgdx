@@ -1,6 +1,5 @@
 package com.yanglin.game;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 
@@ -57,7 +56,7 @@ public class MusicManager {
     }
 
     public void setBGM(BGM bgm, boolean playBGM) {
-        if(currBGM!=null) {
+        if (currBGM != null) {
             currBGM.stop();
         }
         Music newBGM = game.assetManager.get(bgm.getPath());
@@ -90,7 +89,7 @@ public class MusicManager {
     }
 
     public void stopDialog() {
-        if(dialogEffect != null)
+        if (dialogEffect != null)
             dialogEffect.stop();
     }
 
