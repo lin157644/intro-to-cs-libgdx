@@ -50,7 +50,6 @@ public class GameScreen implements Screen {
 
         uistage = new Stage();
         dialogstage = new Stage();
-        // new FitViewport(1280, 720, new OrthographicCamera()), batch
     }
 
     public void setPaused(Boolean isPaused){
@@ -64,7 +63,7 @@ public class GameScreen implements Screen {
         final PlayerMovementSystem playerMovementSystem = new PlayerMovementSystem(assetManager, mapManager, camera);
         final AnimationSystem playerAnimationSystem = new AnimationSystem(assetManager);
         final HUDSystem HUDSystem = new HUDSystem(game, uistage, this);
-        final PlayerInteractionSystem playerInteractionSystem = new PlayerInteractionSystem(assetManager, mapManager, game.gameState);
+        final PlayerInteractionSystem playerInteractionSystem = new PlayerInteractionSystem(game);
         final TimeSystem timeSystem = new TimeSystem(game.gameState, this);
         final DialogSystem dialogSystem = new DialogSystem(game, dialogstage);
         // Add systems

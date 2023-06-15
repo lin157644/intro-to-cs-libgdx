@@ -7,5 +7,7 @@ public enum Ending {
     OVERSLEEP,
     LOW_ENG_SCORE,
     HUNGER,
+    AWKWARD_STORE,
+    AWKWARD_BOOK,
     DEFAULT_BAD;
 }

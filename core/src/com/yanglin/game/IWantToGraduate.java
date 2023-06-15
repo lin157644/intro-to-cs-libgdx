@@ -4,6 +4,8 @@ import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Cursor;
+import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.badlogic.gdx.utils.reflect.ClassReflection;
 import com.badlogic.gdx.utils.reflect.ReflectionException;
@@ -36,8 +38,7 @@ public class IWantToGraduate extends Game {
         if (Gdx.app.getLogLevel() == Application.LOG_DEBUG)
             GameState.saveState(gameState);
 
-
-        mapManager.setCurrentMap(gameState.map);
+        mapManager.setCurrentMap(gameState.map, 24, 20);
         changeScreen(EScreen.LOADING);
         float w = Gdx.graphics.getWidth();
         float h = Gdx.graphics.getHeight();

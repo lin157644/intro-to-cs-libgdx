@@ -34,13 +34,12 @@ public class DialogSystem extends EntitySystem implements KeyInputListener, Play
 
         // Dialog background
 
-        currentDialog = new Array<>();
-        currentDialog.add("Test dialog 1");
-        currentDialog.add("Test dialog 2");
+        String testDialog = "Test{NEXT}Dialog";
+        testDialog = testDialog.replace("{BR}", "\n");
+        currentDialog = new Array<>(testDialog.split("\\{NEXT}"));
 
-        ;
 
-        typingLabel = new TypingLabel("Hello world!", skin);
+        typingLabel = new TypingLabel("Hello world!", skin, "dialogLabel");
         stage.addActor(typingLabel);
     }
 

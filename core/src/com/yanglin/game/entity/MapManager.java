@@ -1,6 +1,5 @@
 package com.yanglin.game.entity;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.Array;
 
@@ -39,20 +38,20 @@ public class MapManager {
         mapListeners.add(mapListener);
     }
 
-    public void notifyMapListener(EMap EMap){
+    public void notifyMapListener(EMap EMap, float x, float y){
         Gdx.app.debug(TAG, "Notifying map listeners");
         for (MapListener mapListener : mapListeners){
-            mapListener.mapChanged(EMap);
+            mapListener.mapChanged(EMap, x, y);
         }
     }
 
     public interface MapListener {
-        void mapChanged(final EMap EMap);
+        void mapChanged(final EMap EMap, float x, float y);
     }
 
-    public void setCurrentMap(EMap map){
+    public void setCurrentMap(EMap map, float x, float y){
         this.currentMap = map;
-        notifyMapListener(map);
+        notifyMapListener(map, x, y);
     }
 
     public EMap getCurrentMap() {

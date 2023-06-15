@@ -3,7 +3,6 @@ package com.yanglin.game.entity.systems;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.maps.tiled.TiledMap;
@@ -12,6 +11,7 @@ import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.utils.Array;
 import com.yanglin.game.GameAssetManager;
 import com.yanglin.game.GameState;
+import com.yanglin.game.IWantToGraduate;
 import com.yanglin.game.entity.EntityEngine;
 import com.yanglin.game.entity.MapManager;
 import com.yanglin.game.entity.component.ItemComponent;
@@ -19,6 +19,8 @@ import com.yanglin.game.entity.component.PlayerComponent;
 import com.yanglin.game.entity.component.PositionComponent;
 import com.yanglin.game.input.GameInputProcessor;
 import com.yanglin.game.input.KeyInputListener;
+import com.yanglin.game.views.EScreen;
+import com.yanglin.game.views.Ending;
 
 public class PlayerInteractionSystem extends IteratingSystem implements MapManager.MapListener, KeyInputListener {
     // Player <-> Item
@@ -28,14 +30,15 @@ public class PlayerInteractionSystem extends IteratingSystem implements MapManag
     private MapManager mapManager;
     private GameAssetManager assetManager;
     private GameState gameState;
+    private IWantToGraduate game;
     private final Array<PlayerInteractionListener> playerInteractionListeners = new Array<>();
 
-    public PlayerInteractionSystem(GameAssetManager assetManager, MapManager mapManager, GameState gameState) {
+    public PlayerInteractionSystem(IWantToGraduate game) {
         super(Family.all(PlayerComponent.class, PositionComponent.class).get());
 
-        this.assetManager = assetManager;
-        this.mapManager = mapManager;
-        this.gameState = gameState;
+        this.assetManager = game.assetManager;
+        this.mapManager = game.mapManager;
+        this.gameState = game.gameState;
         mapManager.addMapListener(this);
 
         TiledMap tiledMap = assetManager.get(mapManager.getCurrentMap().getFileName());
@@ -43,7 +46,7 @@ public class PlayerInteractionSystem extends IteratingSystem implements MapManag
     }
 
     @Override
-    public void mapChanged(MapManager.EMap EMap) {
+    public void mapChanged(MapManager.EMap EMap, float x, float y) {
         TiledMap tiledMap = assetManager.get(EMap.getFileName());
         objectLayer = (TiledMapTileLayer) tiledMap.getLayers().get("obj");
     }
@@ -74,9 +77,11 @@ public class PlayerInteractionSystem extends IteratingSystem implements MapManag
                 // Collide with map changing area
                 case "MAP" -> {
                     String mapDest = tile.getProperties().get("dest", String.class);
+                    float x = tile.getProperties().get("x", Float.class);
+                    float y = tile.getProperties().get("y", Float.class);
                     if (mapDest != null) {
                         Gdx.app.debug(TAG, "Detect collision of map type, Dest: " + mapDest);
-                        mapManager.setCurrentMap(MapManager.EMap.valueOf(mapDest));
+                        mapManager.setCurrentMap(MapManager.EMap.valueOf(mapDest), x, y);
                     } else {
                         Gdx.app.log(TAG, "Detect map destination of null");
                     }
@@ -88,20 +93,41 @@ public class PlayerInteractionSystem extends IteratingSystem implements MapManag
                         case "BUS" -> {
                             // TODO: Play animation
                             // TODO: To bad end
+                            game.ending = Ending.CAR_CRUSH;
+                            game.changeScreen(EScreen.BAD_END);
                         }
                         case "LANGUAGE" -> {
-                            // TODO: Trigger QuestSystem
+                            if (!gameState.hasItem(ItemComponent.ItemType.ENGLISH)) {
+                                // TODO: Trigger dialog
+                                String text = "你連成績單都沒帶就想要畢業，回去宿舍找找吧！";
+
+                            } else if (!gameState.hasWorshiped) {
+                                // Fail text won't be use here
+                                game.ending = Ending.LOW_ENG_SCORE;
+                                game.changeScreen(EScreen.BAD_END);
+                            } else {
+                                String text = "你顫抖得將多益成績單交給了語言中心服務人員 {NEXT} 在填寫了資料後，申請通過畢業門檻。";
+                                // TODO: Trigger　Dialog
+                            }
 
                         }
                         case "GIFT2PROF" -> {
-                            // TODO: Trigger QuestSystem
+                            if (gameState.hasItem(ItemComponent.ItemType.APPLE)) {
+                                String text = "";
+                                // TODO: Trigger　Dialog
+                            } else {
+                                // Fail text won't be use here
+                                game.ending = Ending.DID_NOT_PASS;
+                                game.changeScreen(EScreen.BAD_END);
+                            }
                         }
                         default -> {
                             Gdx.app.log(TAG, "Detect item of unexpected type");
                         }
                     }
                 }
-                case "ITEM", "DIALOG" -> {}
+                case "ITEM", "DIALOG" -> {
+                }
                 default -> Gdx.app.log(TAG, "Detect collision of unexpected type");
             }
         }
@@ -125,42 +151,65 @@ public class PlayerInteractionSystem extends IteratingSystem implements MapManag
                     String type = tile.getProperties().get("type", String.class);
                     switch (type) {
                         // Collide with pick-up-able item
-                        case "ITEM" -> {
-                            String itemType = tile.getProperties().get("item", String.class);
-                            switch (itemType) {
+                        case "TEST" -> {
+                            // 只能觸發一次
+                            String testType = tile.getProperties().get("test", String.class);
+                            switch (testType) {
+                                case "BOOK" -> {
+                                    // Interact with librarian
+                                    if (!gameState.hasItem(ItemComponent.ItemType.BOOK)) {
+                                        String text = "你依稀記得宿舍中有本書還沒還，書沒還可是必不了業的！";
+                                        // TODO: Trigger　Dialog
+                                    } else if (!gameState.hasItem(ItemComponent.ItemType.WALLET)) {
+                                        game.ending = Ending.AWKWARD_STORE;
+                                        game.changeScreen(EScreen.BAD_END);
+                                    } else {
+                                        String text = "你將書交還給並繳交了逾期費，離畢業又更近了一步 (要有書和錢包)";
+                                        // TODO: Trigger　Dialog
+                                    }
+
+                                }
+                            }
+                        }
+                        // Collide with dialogable area
+                        case "DIALOG" -> {
+                            // 不會失敗，可能需要處理邏輯
+                            String dialogType = tile.getProperties().get("dialog", String.class);
+                            String text = tile.getProperties().get("text", String.class);
+                            switch (dialogType) {
                                 case "APPLE", "BOOK", "ENGLISH", "WALLET" -> {
                                     // Pickup the apple under the tree in school gate
                                     // Pickup the book in dorm room
                                     // Get english transcript in dorm room
                                     // Get wallet in dorm room
-                                    gameState.addItem(ItemComponent.ItemType.valueOf(itemType));
-                                    Gdx.app.log(TAG, "Item \"" + itemType + "\" added to gameState");
-                                    // TODO: Trigger Dialog
-                                }
-                                default -> Gdx.app.log(TAG, "Detect item of unexpected type");
-                            }
-                        }
-                        // Collide with dialogable area
-                        case "DIALOG" -> {
-                            String dialogType = tile.getProperties().get("dialog", String.class);
-                            switch (dialogType) {
-                                case "LIBRARIAN" -> {
-                                    // Interact with librarian
-                                    // TODO: Trigger dialog
+                                    if (!gameState.hasItem(ItemComponent.ItemType.valueOf(dialogType))) {
+                                        gameState.addItem(ItemComponent.ItemType.valueOf(dialogType));
+                                        Gdx.app.log(TAG, "Item \"" + dialogType + "\" added to gameState");
+                                        // TODO: Dialog with text
+                                    }
                                 }
                                 case "COMPUTER" -> {
                                     // 線上畢業審核
-                                    // TODO: Trigger dialog
+                                    // TODO: Do examine and generate text
                                 }
                                 case "PROHIBIT" -> {
                                     // 拿時數
-                                    // TODO: Trigger dialog
+                                    if (!gameState.hasEnoughHours) {
+                                        // Only evoke dialog if not triggered before
+                                        // TODO: Trigger dialog
+
+                                        gameState.hasEnoughHours = true;
+                                    }
                                 }
-                                default -> Gdx.app.log(TAG, "Detect dialog of unexpected type");
+                                default -> {
+                                    // 不須處理邏輯的對話，可以在Tiled中直接設定
+
+                                }
                             }
                         }
-                        case "MAP", "EVENT" -> {}
-                        default -> Gdx.app.log(TAG, "Detect collision of unexpected type");
+                        case "MAP", "EVENT" -> {
+                        }
+                        default -> Gdx.app.log(TAG, "Detect dialog of unexpected type");
                     }
                 }
             }
@@ -188,6 +237,7 @@ public class PlayerInteractionSystem extends IteratingSystem implements MapManag
             ENTER_LANGUAGE_CENTER,
             GIFT2PROF,
         }
+
         // Quest, Item, Dialog
         void triggerEvent(EventType eventType);
     }

@@ -9,6 +9,8 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.Action;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
@@ -18,7 +20,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.yanglin.game.GameState;
 import com.yanglin.game.IWantToGraduate;
 import com.yanglin.game.input.GameInputProcessor;
 import com.yanglin.game.input.KeyInputListener;
@@ -36,6 +40,7 @@ public class HUDSystem extends EntitySystem implements KeyInputListener {
     private BitmapFont debugFont;
     private SpriteBatch debugBatch;
     private GameScreen gameScreen;
+    private Array<Actor> pauseActors = new Array<>();
 
     public HUDSystem(IWantToGraduate game, Stage stage, GameScreen gameScreen) {
         // Display pause menu, time, quest
@@ -79,6 +84,7 @@ public class HUDSystem extends EntitySystem implements KeyInputListener {
         pauseMenu.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                GameState.saveState(game.gameState);
                 game.changeScreen(EScreen.MENU);
             }
         });
@@ -90,6 +96,14 @@ public class HUDSystem extends EntitySystem implements KeyInputListener {
             }
         });
 
+
+        Image timeImage = new Image((Texture) game.assetManager.get("ui/time_display.png"));
+        timeImage.setPosition(stage.getWidth() - timeImage.getWidth(), stage.getHeight() - timeImage.getHeight());
+        Label timeLabel = new Label("5月1日", skin, "timeLabel");
+        timeLabel.setPosition(timeImage.getX(), timeImage.getY());
+        timeLabel.setName("");
+        // timeLabel.setVisible(true);
+
         stage.addActor(pauseBG);
         stage.addActor(pauseMenu);
         stage.addActor(pauseResume);
@@ -97,16 +111,28 @@ public class HUDSystem extends EntitySystem implements KeyInputListener {
         stage.addActor(effectToggle);
         stage.addActor(resumeLabel);
         stage.addActor(menuLabel);
+        this.pauseActors.addAll(pauseBG, pauseMenu, pauseResume, musicToggle, effectToggle, resumeLabel, menuLabel);
+        for (Actor actor : pauseActors) {
+            actor.setVisible(false);
+        }
+
+        stage.addActor(timeImage);
+        stage.addActor(timeLabel);
+        timeLabel.addAction(new Action() {
+            @Override
+            public boolean act(float delta) {
+                ((Label) getActor()).setText( game.gameState.month + "月" + game.gameState.date + "日");
+                return false;
+            }
+        });
+        // TODO: Fix time label position
     }
 
     @Override
     public void update(float deltaTime) {
-        // Update
-        if (gameScreen.isPaused) {
-            // Change the menu to render
-            stage.act(deltaTime);
-            stage.draw();
-        }
+        stage.act(deltaTime);
+        stage.draw();
+
         if (Gdx.app.getLogLevel() == Application.LOG_DEBUG) {
             debugBatch.begin();
             debugFont.draw(debugBatch, "FPS=" + Gdx.graphics.getFramesPerSecond() + " Hunger: " + game.gameState.hunger, 0, hudCamera.viewportHeight);
@@ -139,12 +165,18 @@ public class HUDSystem extends EntitySystem implements KeyInputListener {
             switch (keycode) {
                 case Input.Keys.ESCAPE -> {
                     gameScreen.isPaused = false;
+                    for (Actor actor : pauseActors) {
+                        actor.setVisible(false);
+                    }
                 }
             }
             return true;
         }
         if (keycode == Input.Keys.ESCAPE) {
             gameScreen.isPaused = true;
+            for (Actor actor : pauseActors) {
+                actor.setVisible(true);
+            }
         }
         return false;
     }

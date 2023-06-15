@@ -4,7 +4,6 @@ import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.SortedIteratingSystem;
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -87,7 +86,7 @@ public class RenderingSystem extends SortedIteratingSystem implements MapManager
     }
 
     @Override
-    public void mapChanged(MapManager.EMap EMap) {
+    public void mapChanged(MapManager.EMap EMap, float x, float y) {
         Gdx.app.debug(TAG, "Changing map to: " + EMap.name());
         TiledMap map = assetManager.get(mapManager.getCurrentMap().getFileName(), TiledMap.class);
         unitScale = 1 / (float) map.getProperties().get("tilewidth", Integer.class);

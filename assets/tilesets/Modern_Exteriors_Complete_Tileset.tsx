@@ -149,6 +149,8 @@
   <properties>
    <property name="dest" value="DORM_INTER"/>
    <property name="type" value="MAP"/>
+   <property name="x" type="float" value="9"/>
+   <property name="y" type="float" value="9"/>
   </properties>
  </tile>
  <tile id="42">

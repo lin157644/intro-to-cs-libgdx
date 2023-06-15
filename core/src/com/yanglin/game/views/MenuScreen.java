@@ -1,6 +1,8 @@
 package com.yanglin.game.views;
 
 import com.badlogic.gdx.*;
+import com.badlogic.gdx.graphics.Cursor;
+import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
@@ -26,7 +28,7 @@ public class MenuScreen implements Screen {
     private final Label ltSign;
     private final Stage stage = new Stage(new ExtendViewport(1280, 720), batch);
     private final Array<Actor> menuSelectionList = new Array<>();
-    private int currSel = 0;
+    private Label currSel;
 
     public MenuScreen(IWantToGraduate game) {
         this.game = game;
@@ -38,14 +40,18 @@ public class MenuScreen implements Screen {
 
         Skin skin = game.assetManager.get("ui/skins/title_skin.json");
 
-        TypingLabel titleLabel = new TypingLabel("{SHAKE=1;1;1}I Want To Graduate{ENDSHAKE}", skin, "menuTitle");
+        TypingLabel titleLabel = new TypingLabel("{SHAKE=1;1;1}大延畢{ENDSHAKE}", skin, "menuTitle");
         // Label titleLabel = new Label("I Want To Graduate", skin, "menuTitle");
         // titleLabel.setPosition((float) (Gdx.graphics.getWidth() - titleLabel.getWidth()) / 2 + 300, (float) Gdx.graphics.getHeight() / 2 + titleLabel.getHeight());
 
         Label continueLabel = new Label("Continue", skin, "menuSelection");
+        continueLabel.setName("continue");
         Label startLabel = new Label("Start", skin, "menuSelection");
+        startLabel.setName("start");
         Label creditLabel = new Label("Credit", skin, "menuSelection");
+        creditLabel.setName("credit");
         Label exitLabel = new Label("Exit", skin, "menuSelection");
+        exitLabel.setName("exit");
 
         // continueLabel.addAction(Actions.sequence(Actions.delay(2), Actions.fadeIn(1f)));
         // startLabel.addAction(Actions.sequence(Actions.delay(2.5f), Actions.fadeIn(1f)));
@@ -77,11 +83,11 @@ public class MenuScreen implements Screen {
         vbox.setPosition((float) (Gdx.graphics.getWidth() - vbox.getWidth()) / 2 , (float) Gdx.graphics.getHeight() / 2 + startLabel.getHeight() * 2 + titleLabel.getHeight()/2 + 60);
 
         float signOffset = 20f;
-        Actor currSelActor = menuSelectionList.get(currSel);
-        Vector2 currSelVec = currSelActor.localToStageCoordinates(new Vector2(0,0));
+        currSel = (Label) menuSelectionList.get(0);
+        Vector2 currSelVec = currSel.localToStageCoordinates(new Vector2(0,0));
         // 第一次取的currSelVec會是VBox的
-        gtSign.setPosition(currSelVec.x - currSelActor.getWidth() / 2 - gtSign.getWidth() - signOffset, currSelVec.y - titleLabel.getHeight() -30 - currSelActor.getHeight());
-        ltSign.setPosition(currSelVec.x + currSelActor.getWidth() / 2 + signOffset, currSelVec.y - titleLabel.getHeight() -30 - currSelActor.getHeight());
+        gtSign.setPosition(currSelVec.x - currSel.getWidth() / 2 - gtSign.getWidth() - signOffset, currSelVec.y - titleLabel.getHeight() -30 - currSel.getHeight());
+        ltSign.setPosition(currSelVec.x + currSel.getWidth() / 2 + signOffset, currSelVec.y - titleLabel.getHeight() -30 - currSel.getHeight());
 
         stage.addActor(vbox);
         stage.addActor(gtSign);
@@ -94,30 +100,20 @@ public class MenuScreen implements Screen {
                 switch (keycode) {
                     case Input.Keys.Z -> {
                         if(GameState.saveExist()){
-                            switch (currSel){
-                                case 0 -> {
+                            switch (currSel.getName()){
+                                case "continue" -> {
+                                    // Game state already loaded in IWantToGraduate
                                     game.changeScreen(EScreen.GAME);
                                 }
-                                case 1 -> {
+                                case "start" -> {
                                     GameState.clearSavedState();
                                     game.gameState = GameState.loadState();
-                                }
-                                case 2 -> {
-                                    // TODO: Credit
-                                }
-                                case 3 -> {
-                                    Gdx.app.exit();
-                                }
-                            }
-                        } else {
-                            switch (currSel) {
-                                case 0 -> {
                                     game.changeScreen(EScreen.GAME);
                                 }
-                                case 1 -> {
+                                case "credit" -> {
                                     // TODO: Credit
                                 }
-                                case 2 -> {
+                                case "exit" -> {
                                     Gdx.app.exit();
                                 }
                             }
@@ -125,11 +121,16 @@ public class MenuScreen implements Screen {
                         return true;
                     }
                     case Input.Keys.UP -> {
-                        currSel = currSel == 0 ? menuSelectionList.size -1 : currSel - 1;
+                        // identity = true: use == to compare
+                        int currSelIndex = menuSelectionList.indexOf(currSel, true);
+                        currSelIndex = currSelIndex == 0 ? menuSelectionList.size -1 : currSelIndex - 1;
+                        currSel = (Label)menuSelectionList.get(currSelIndex);
                         updateSignPosition();
                     }
                     case Input.Keys.DOWN -> {
-                        currSel = currSel == menuSelectionList.size - 1 ? 0 : currSel + 1;
+                        int currSelIndex = menuSelectionList.indexOf(currSel, true);
+                        currSelIndex = currSelIndex == menuSelectionList.size - 1 ? 0 : currSelIndex + 1;
+                        currSel = (Label)menuSelectionList.get(currSelIndex);
                         updateSignPosition();
                     }
                 }
@@ -141,13 +142,12 @@ public class MenuScreen implements Screen {
 
     private void updateSignPosition(){
         float signOffset = 20f;
-        Actor currSelActor = menuSelectionList.get(currSel);
-        Vector2 currSelVec = currSelActor.localToStageCoordinates(new Vector2(0, 0));
+        Vector2 currSelVec = currSel.localToStageCoordinates(new Vector2(0, 0));
         gtSign.setPosition(currSelVec.x - gtSign.getWidth() - signOffset, currSelVec.y);
-        ltSign.setPosition(currSelVec.x + currSelActor.getWidth() + signOffset, currSelVec.y);
-        System.out.println(currSelVec.x);
-        System.out.println(currSelVec.y);
-        System.out.println( currSelActor.getHeight());
+        ltSign.setPosition(currSelVec.x + currSel.getWidth() + signOffset, currSelVec.y);
+        // System.out.println(currSelVec.x);
+        // System.out.println(currSelVec.y);
+        // System.out.println( currSelActor.getHeight());
     }
 
     @Override

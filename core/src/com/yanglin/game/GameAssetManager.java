@@ -17,6 +17,7 @@ import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.ray3k.stripe.FreeTypeSkinLoader;
+import com.yanglin.game.entity.MapManager;
 
 import java.util.EnumMap;
 
@@ -64,6 +65,9 @@ public class GameAssetManager extends AssetManager {
     public void loadTiledMap() {
         load("tilemaps/school_gate.tmx", TiledMap.class);
         load("tilemaps/dorm.tmx", TiledMap.class);
+        for (MapManager.EMap map : MapManager.EMap.values()) {
+            load(map.getFileName(), TiledMap.class);
+        }
     }
 
     public void loadImages() {
@@ -71,6 +75,11 @@ public class GameAssetManager extends AssetManager {
         load("badlogic.jpg", Texture.class);
         load("tilesets/Modern_UI_Style_2_48x48.png", Texture.class);
         load("ui/ui_pause_bg.png", Texture.class);
+        load("ui/time_display.png", Texture.class);
+        load("ui/apple_basket.png", Texture.class);
+        load("ui/book.png", Texture.class);
+        load("ui/wallet.png", Texture.class);
+        load("ui/english.png", Texture.class);
     }
 
     public void loadFonts(){

@@ -36,6 +36,10 @@ public class GameState {
         Gdx.app.log(TAG, "New item added: " + itemType + " Current items: " + items);
     }
 
+    public boolean hasItem(ItemComponent.ItemType itemType) {
+        return items.contains(itemType, true);
+    }
+
     public static GameState loadState() {
         File file = new File("graduate.save");
         if (file.exists() && !file.isDirectory()) {

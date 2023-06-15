@@ -3,7 +3,6 @@ package com.yanglin.game.entity.systems;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -243,16 +242,15 @@ public class PlayerMovementSystem extends IteratingSystem implements KeyInputLis
     }
 
     @Override
-    public void mapChanged(MapManager.EMap EMap) {
+    public void mapChanged(MapManager.EMap EMap, float x, float y) {
         // Change collision layer
         map = assetManager.get(mapManager.getCurrentMap().getFileName());
         collisionLayer = (TiledMapTileLayer) map.getLayers().get("collision");
 
         // Reset player position
-        // TODO: Different position depends on source
         PositionComponent pos = EntityEngine.positionComponentMapper.get(getEngine().getEntitiesFor(Family.all(PlayerComponent.class).get()).first());
-        pos.position.x = map.getProperties().get("spawnX", Integer.class);
-        pos.position.y = map.getProperties().get("spawnY", Integer.class);
+        pos.position.x = x;
+        pos.position.y = y;
 
     }
 
