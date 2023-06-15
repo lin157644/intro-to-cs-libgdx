@@ -29,7 +29,8 @@ public class TimeSystem extends IntervalSystem {
 
     @Override
     protected void updateInterval() {
-        if (!gameScreen.isPaused) {
+        boolean inDialog = getEngine().getSystem(DialogSystem.class).getInDialog();
+        if (!gameScreen.isPaused && !inDialog) {
             switch (gameState.month) {
                 case 4, 6 -> {
                     // 30 days

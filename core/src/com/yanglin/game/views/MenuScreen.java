@@ -77,20 +77,22 @@ public class MenuScreen implements Screen {
         if (GameState.saveExist()){
             menuSelectionList.add(continueLabel);
         }
+        vbox.addActor(new Actor());
         menuSelectionList.add(startLabel, creditLabel, exitLabel);
         for(Actor actor : menuSelectionList) {
             vbox.addActor(actor);
         }
 
         vbox.space(30f);
-        vbox.setPosition((float) (Gdx.graphics.getWidth() - vbox.getWidth()) / 2 , (float) Gdx.graphics.getHeight() / 2 + startLabel.getHeight() * 2 + titleLabel.getHeight()/2 + 60);
+
+        vbox.setPosition((float) (Gdx.graphics.getWidth() - vbox.getWidth()) / 2 , (float) Gdx.graphics.getHeight() / 2 + startLabel.getHeight() * 2 + titleLabel.getHeight()/2 + 90);
 
         float signOffset = 20f;
         currSel = (Label) menuSelectionList.get(0);
         Vector2 currSelVec = currSel.localToStageCoordinates(new Vector2(0,0));
         // 第一次取的currSelVec會是VBox的
-        gtSign.setPosition(currSelVec.x - currSel.getWidth() / 2 - gtSign.getWidth() - signOffset, currSelVec.y - titleLabel.getHeight() -30 - currSel.getHeight());
-        ltSign.setPosition(currSelVec.x + currSel.getWidth() / 2 + signOffset, currSelVec.y - titleLabel.getHeight() -30 - currSel.getHeight());
+        gtSign.setPosition(currSelVec.x - currSel.getWidth() / 2 - gtSign.getWidth() - signOffset, currSelVec.y - titleLabel.getHeight() -60 - currSel.getHeight());
+        ltSign.setPosition(currSelVec.x + currSel.getWidth() / 2 + signOffset, currSelVec.y - titleLabel.getHeight() -60 - currSel.getHeight());
 
         stage.addActor(vbox);
         stage.addActor(gtSign);
@@ -129,6 +131,7 @@ public class MenuScreen implements Screen {
                     case Input.Keys.UP -> {
                         // identity = true: use == to compare
                         game.musicManager.playEffect(MusicManager.Effect.MENU_SELECT);
+
                         int currSelIndex = menuSelectionList.indexOf(currSel, true);
                         currSelIndex = currSelIndex == 0 ? menuSelectionList.size -1 : currSelIndex - 1;
                         currSel = (Label)menuSelectionList.get(currSelIndex);
@@ -136,6 +139,7 @@ public class MenuScreen implements Screen {
                     }
                     case Input.Keys.DOWN -> {
                         game.musicManager.playEffect(MusicManager.Effect.MENU_SELECT);
+
                         int currSelIndex = menuSelectionList.indexOf(currSel, true);
                         currSelIndex = currSelIndex == menuSelectionList.size - 1 ? 0 : currSelIndex + 1;
                         currSel = (Label)menuSelectionList.get(currSelIndex);

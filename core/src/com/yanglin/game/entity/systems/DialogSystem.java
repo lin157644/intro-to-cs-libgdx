@@ -77,6 +77,9 @@ public class DialogSystem extends EntitySystem implements KeyInputListener, Play
         stage.addActor(dialogGroup);
     }
 
+    public Boolean getInDialog() {
+        return inDialog;
+    }
 
     @Override
     public void onDialog(String text) {
