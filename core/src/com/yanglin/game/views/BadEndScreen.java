@@ -28,8 +28,6 @@ public class BadEndScreen implements Screen {
 
         Skin skin = game.assetManager.get("ui/skins/title_skin.json");
 
-        // TODO: Positioning, typing effect, back to menu listener, music
-
         TypingLabel titleLabel = new TypingLabel("{SHAKE=1;1;1}大延畢{ENDSHAKE}", skin, "badEndTitle");
         reasonLabel = new TypingLabel("", skin, "badEndReason");
         Label label = new Label("大俠請重新來過", skin, "badEndReason");
@@ -43,7 +41,7 @@ public class BadEndScreen implements Screen {
         vbox.addActor(returnToMenuLabel);
         vbox.space(30f);
 
-        vbox.setPosition((float) (Gdx.graphics.getWidth() - vbox.getWidth()) / 2 , (float) Gdx.graphics.getHeight() / 2 + 300);
+        vbox.setPosition((float) (Gdx.graphics.getWidth() - vbox.getWidth()) / 2 , (float) Gdx.graphics.getHeight() / 2 + 200);
 
         stage.addListener(new InputListener(){
             @Override

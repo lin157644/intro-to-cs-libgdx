@@ -89,6 +89,8 @@ public class GameAssetManager extends AssetManager {
         load("img/cert.png", Texture.class);
         load("img/the_wall.jpg", Texture.class);
         load("img/spinner.png", Texture.class);
+
+        load("img/transition.png", Texture.class);
     }
 
     public void loadFonts(){

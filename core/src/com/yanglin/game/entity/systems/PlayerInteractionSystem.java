@@ -123,7 +123,7 @@ public class PlayerInteractionSystem extends EntitySystem implements MapManager.
                                     } else {
                                         gameState.hasEaten = true;
                                         String text = "你到超商買了些東西，填飽了肚子才有力氣忙畢業嘛。";
-                                        notifyDialogListeners(text);
+                                        notifyDialogListeners(text, true);
                                     }
                                 }
                             }
@@ -139,7 +139,7 @@ public class PlayerInteractionSystem extends EntitySystem implements MapManager.
                                 hasTriggeredDialog = true;
                                 if (!gameState.hasItem(ItemComponent.ItemType.ENGLISH)) {
                                     String text = "你連成績單都沒帶就想要畢業，回去宿舍找找吧！";
-                                    notifyDialogListeners(text);
+                                    notifyDialogListeners(text, true);
 
                                 } else if (!gameState.hasWorshiped) {
                                     // Fail text won't be use here
@@ -149,7 +149,7 @@ public class PlayerInteractionSystem extends EntitySystem implements MapManager.
                                 } else {
                                     String text = "你顫抖得將多益成績單交給了語言中心服務人員 {NEXT} 在填寫了資料後，申請通過畢業門檻。";
                                     game.gameState.hasPassEnglish = true;
-                                    notifyDialogListeners(text);
+                                    notifyDialogListeners(text, true);
                                 }
 
                             }
@@ -158,7 +158,7 @@ public class PlayerInteractionSystem extends EntitySystem implements MapManager.
                                 if(!gameState.hasMeetProf){
                                     if (gameState.hasItem(ItemComponent.ItemType.APPLE)) {
                                         String text = "教授覺得你上課認真，決定同情你讓你畢業。";
-                                        notifyDialogListeners(text);
+                                        notifyDialogListeners(text, true);
                                         gameState.hasMeetProf = true;
                                     } else {
                                         // Fail text won't be use here
@@ -174,12 +174,12 @@ public class PlayerInteractionSystem extends EntitySystem implements MapManager.
                                     game.gameState.hasFinishedProcedure = true;
                                     String text = "你已經完成離校手續領到了學位證書，可以正式告別中央了。";
                                     // TODO: Trigger dialog
-                                    notifyDialogListeners(text + getHintDialog());
+                                    notifyDialogListeners(text + getHintDialog(), true);
 
                                 } else {
                                     String text = "看來你距離畢業還有些事情沒做。";
                                     // TODO: Trigger dialog
-                                    notifyDialogListeners(text);
+                                    notifyDialogListeners(text, true);
                                 }
                             }
                             default -> {
@@ -240,13 +240,13 @@ public class PlayerInteractionSystem extends EntitySystem implements MapManager.
                                     // Interact with librarian
                                     if (!gameState.hasItem(ItemComponent.ItemType.BOOK)) {
                                         String text = "你依稀記得宿舍中有本書還沒還，書沒還可是必不了業的！";
-                                        notifyDialogListeners(text);
+                                        notifyDialogListeners(text, false);
                                     } else if (!gameState.hasItem(ItemComponent.ItemType.WALLET)) {
                                         game.ending = Ending.AWKWARD_STORE;
                                         game.changeScreen(EScreen.BAD_END);
                                     } else {
                                         String text = "你將書交還給並繳交了逾期費，離畢業又更近了一步。";
-                                        notifyDialogListeners(text);
+                                        notifyDialogListeners(text, false);
                                         game.gameState.hasReturnBook = true;
                                     }
 
@@ -268,7 +268,7 @@ public class PlayerInteractionSystem extends EntitySystem implements MapManager.
                                     if (!gameState.hasItem(ItemComponent.ItemType.valueOf(dialogType))) {
                                         gameState.addItem(ItemComponent.ItemType.valueOf(dialogType));
                                         Gdx.app.log(TAG, "Item \"" + dialogType + "\" added to gameState");
-                                        notifyDialogListeners(dialogText);
+                                        notifyDialogListeners(dialogText, false);
                                         game.musicManager.playEffect(MusicManager.Effect.GET_ITEM);
                                     } else {
                                         Gdx.app.log(TAG, "Item \"" + dialogType + "\" already exist.");
@@ -284,18 +284,18 @@ public class PlayerInteractionSystem extends EntitySystem implements MapManager.
                                     if (!gameState.hasEnoughHours) {
                                         // Only evoke dialog if not triggered before
                                         gameState.hasEnoughHours = true;
-                                        notifyDialogListeners(dialogText);
+                                        notifyDialogListeners(dialogText, true);
                                     }
                                 }
                                 case "WORSHIP" -> {
                                     if(!gameState.hasWorshiped) {
                                         gameState.hasWorshiped = true;
-                                        notifyDialogListeners(dialogText);
+                                        notifyDialogListeners(dialogText, true);
                                     }
                                 }
                                 default -> {
                                     // 不須處理邏輯的對話，可以在Tiled中直接設定
-                                    notifyDialogListeners(dialogText);
+                                    notifyDialogListeners(dialogText, false);
                                 }
                             }
                         }
@@ -357,13 +357,13 @@ public class PlayerInteractionSystem extends EntitySystem implements MapManager.
         playerInteractionListeners.add(listener);
     }
 
-    private void notifyDialogListeners(String text) {
+    private void notifyDialogListeners(String text, boolean withTransition) {
         for (PlayerInteractionListener listener : playerInteractionListeners) {
-            listener.onDialog(text);
+            listener.onDialog(text, withTransition);
         }
     }
 
     public interface PlayerInteractionListener {
-        void onDialog(String text);
+        void onDialog(String text, boolean withTransition);
     }
 }

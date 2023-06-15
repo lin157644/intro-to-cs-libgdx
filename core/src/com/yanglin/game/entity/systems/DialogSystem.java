@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.Array;
@@ -31,6 +32,7 @@ public class DialogSystem extends EntitySystem implements KeyInputListener, Play
     private TypingLabel dialogLabel;
     private Image dialogBackground;
     GameScreen gameScreen;
+    private Image transitionImg;
 
     public DialogSystem(IWantToGraduate game, Stage stage, GameScreen gameScreen) {
         // Initialize dialog
@@ -74,6 +76,10 @@ public class DialogSystem extends EntitySystem implements KeyInputListener, Play
             }
         });
 
+        transitionImg = new Image((Texture) game.assetManager.get("img/transition.png"));
+        transitionImg.setVisible(false);
+
+        stage.addActor(transitionImg);
         stage.addActor(dialogGroup);
     }
 
@@ -82,19 +88,27 @@ public class DialogSystem extends EntitySystem implements KeyInputListener, Play
     }
 
     @Override
-    public void onDialog(String text) {
+    public void onDialog(String text, boolean withTransition) {
         inDialog = true;
-        setDialog(text);
+        if(withTransition){
+            // TODO: Use action pool
+            transitionImg.addAction(Actions.sequence(Actions.visible(true), Actions.fadeIn(0.25f), Actions.fadeOut(0.25f), Actions.visible(false)));
+            dialogBackground.addAction(Actions.sequence(Actions.visible(false), Actions.delay(0.6f), Actions.visible(true)));
+        }
+        setDialog(text, withTransition);
     }
 
-    public void setDialog(String text) {
+    public void setDialog(String text, boolean withTransition) {
         currentDialog = new Array<>(text.replace("{BR}", "\n").split("\\{NEXT}"));
         currentDialog.reverse();
         if (currentDialog.size > 0) {
-            dialogLabel.setText(currentDialog.pop());
+            if(withTransition)
+                dialogLabel.setText(" {WAIT=0.65}{EVENT=playDialogEffect}" + currentDialog.pop());
+            else
+                dialogLabel.setText(currentDialog.pop());
             setDialogLabelY();
             dialogLabel.restart();
-            if (gameScreen.getPlayEffect()) {
+            if (gameScreen.getPlayEffect() && !withTransition) {
                 game.musicManager.playDialog();
             }
         }

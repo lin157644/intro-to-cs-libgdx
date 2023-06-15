@@ -178,7 +178,7 @@ public class GameScreen implements Screen {
         EntityEngine.positionComponentMapper.get(player).position.y = game.gameState.y;
 
         if(!game.gameState.hasPlayedIntroDialog){
-            dialogSystem.onDialog("{SLOWER}11X年的夏天，我在校園裡的路X莎喝著咖啡，大學生活真輕鬆啊{EVENT=stopDialogEffect}\n{WAIT}什{EVENT=playDialogEffect}麼?已經到了要畢業的時間了???{EVENT=stopDialogEffect}\n這{EVENT=playDialogEffect}可不行，得趕緊回宿舍準備需要的東西!");
+            dialogSystem.onDialog("{SLOWER}11X年的夏天，我在校園裡的路X莎喝著咖啡，大學生活真輕鬆啊{EVENT=stopDialogEffect}\n{WAIT}什{EVENT=playDialogEffect}麼?已經到了要畢業的時間了???{EVENT=stopDialogEffect}\n這{EVENT=playDialogEffect}可不行，得趕緊回宿舍準備需要的東西!", false);
             game.gameState.hasPlayedIntroDialog = true;
         }
     }

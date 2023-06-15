@@ -1,11 +1,14 @@
 package com.yanglin.game.views;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.actions.RepeatAction;
@@ -56,6 +59,16 @@ public class GoodEndScreen implements Screen {
         stage.addActor(title);
         stage.addActor(happyMan);
         stage.addActor(cert);
+
+        stage.addListener(new InputListener(){
+            @Override
+            public boolean keyUp (InputEvent event, int keycode) {
+                if(keycode == Input.Keys.Z) {
+                    game.changeScreen(EScreen.MENU);
+                }
+                return false;
+            }
+        });
 
         // game.musicManager.setBGM(MusicManager.BGM.GOOD_END, true);
     }
