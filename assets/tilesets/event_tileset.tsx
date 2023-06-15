@@ -51,6 +51,12 @@
    <property name="type" value="EVENT"/>
   </properties>
  </tile>
+ <tile id="11">
+  <properties>
+   <property name="event" value="SHOP"/>
+   <property name="type" value="EVENT"/>
+  </properties>
+ </tile>
  <tile id="20">
   <properties>
    <property name="dest" value="SCHOOL_GATE"/>

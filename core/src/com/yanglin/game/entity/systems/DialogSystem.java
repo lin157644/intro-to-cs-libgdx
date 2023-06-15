@@ -30,11 +30,13 @@ public class DialogSystem extends EntitySystem implements KeyInputListener, Play
     private Boolean inDialog = false;
     private TypingLabel dialogLabel;
     private Image dialogBackground;
+    GameScreen gameScreen;
 
-    public DialogSystem(IWantToGraduate game, Stage stage) {
+    public DialogSystem(IWantToGraduate game, Stage stage, GameScreen gameScreen) {
         // Initialize dialog
         this.game = game;
         this.stage = stage;
+        this.gameScreen = gameScreen;
 
         Skin skin = game.assetManager.get("ui/skins/title_skin.json");
 
@@ -60,7 +62,9 @@ public class DialogSystem extends EntitySystem implements KeyInputListener, Play
                         Gdx.app.log(TAG, "Dialog effect stopped");
                     }
                     case "playDialogEffect" -> {
-                        game.musicManager.playDialog();
+                        if (gameScreen.getPlayEffect()) {
+                            game.musicManager.playDialog();
+                        }
                         Gdx.app.log(TAG, "Dialog effect played");
                     }
                     default -> {
@@ -86,11 +90,13 @@ public class DialogSystem extends EntitySystem implements KeyInputListener, Play
             dialogLabel.setText(currentDialog.pop());
             setDialogLabelY();
             dialogLabel.restart();
-            game.musicManager.playDialog();
+            if (gameScreen.getPlayEffect()) {
+                game.musicManager.playDialog();
+            }
         }
     }
 
-    private void setDialogLabelY(){
+    private void setDialogLabelY() {
         dialogLabel.setY(dialogBackground.getHeight() - dialogLabel.getHeight() - 100);
     }
 

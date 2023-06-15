@@ -102,28 +102,28 @@ public class MenuScreen implements Screen {
                 Gdx.app.debug(TAG, "Received keycode: " + keycode);
                 switch (keycode) {
                     case Input.Keys.Z -> {
-                        if(GameState.saveExist()){
-                            switch (currSel.getName()){
-                                case "continue" -> {
-                                    // Game state already loaded in IWantToGraduate
-                                    game.gameState = GameState.loadState();
-                                    game.changeScreen(EScreen.GAME);
+                        switch (currSel.getName()){
+                            case "continue" -> {
+                                // Game state already loaded in IWantToGraduate
+                                game.gameState = GameState.loadState();
+                                game.changeScreen(EScreen.GAME);
+                            }
+                            case "start" -> {
+                                if(GameState.clearSavedState()){
+                                    Gdx.app.log(TAG, "Start the game: Successfully removed old file.");
                                 }
-                                case "start" -> {
-                                    if(GameState.clearSavedState()){
-                                        Gdx.app.log(TAG, "Start the game: Successfully removed old file.");
-                                    }
-                                    game.gameState = GameState.loadState();
-                                    game.changeScreen(EScreen.GAME);
-                                }
-                                case "credit" -> {
-                                    // TODO: Credit
-                                }
-                                case "exit" -> {
-                                    Gdx.app.exit();
-                                }
+                                game.gameState = GameState.loadState();
+                                game.changeScreen(EScreen.GAME);
+                            }
+                            case "credit" -> {
+                                // TODO: Credit
+                            }
+                            case "exit" -> {
+                                Gdx.app.exit();
                             }
                         }
+                        // if(GameState.saveExist()){
+                        // }
                         return true;
                     }
                     case Input.Keys.UP -> {

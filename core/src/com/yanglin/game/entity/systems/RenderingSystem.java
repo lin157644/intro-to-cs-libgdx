@@ -7,6 +7,7 @@ import com.badlogic.ashley.systems.SortedIteratingSystem;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.maps.Map;
 import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.objects.TextureMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
@@ -106,6 +107,11 @@ public class RenderingSystem extends SortedIteratingSystem implements MapManager
     @Override
     public void mapChanged(MapManager.EMap EMap, float x, float y) {
         // Gdx.app.debug(TAG, "Changing map to: " + EMap.name());
+        MapLayer oldObjectLayer = tiledMapRenderer.getMap().getLayers().get("playerLayer");
+        if(oldObjectLayer != null) {
+            oldObjectLayer.getObjects().remove(playerTextureObj);
+        }
+
         TiledMap map = assetManager.get(mapManager.getCurrentMap().getFileName(), TiledMap.class);
         unitScale = 1 / (float) map.getProperties().get("tilewidth", Integer.class);
 
@@ -122,6 +128,15 @@ public class RenderingSystem extends SortedIteratingSystem implements MapManager
 
     @Override
     public void dispose() {
+        // This is redundant since we already do clean up when map changed.
+        // for(MapManager.EMap emap : MapManager.EMap.values()){
+        //     TiledMap map = assetManager.get(emap.getFileName(), TiledMap.class);
+        //     MapLayer objectLayer = map.getLayers().get("playerLayer");
+        //     if(objectLayer != null) {
+        //         objectLayer.getObjects().remove(playerTextureObj);
+        //     }
+        // }
+
         TiledMap map = assetManager.get(mapManager.getCurrentMap().getFileName(), TiledMap.class);
         MapLayer objectLayer = map.getLayers().get("playerLayer");
         if(objectLayer != null) {

@@ -30,6 +30,8 @@ public class GameState {
     public int hunger = 0;
     public final Array<ItemComponent.ItemType> items = new Array<>();
 
+    public boolean hasPlayedIntroDialog = false;
+
     public void addItem(ItemComponent.ItemType itemType){
         if (!items.contains(itemType, true))
             items.add(itemType);

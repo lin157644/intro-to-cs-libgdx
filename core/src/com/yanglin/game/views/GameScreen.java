@@ -53,7 +53,9 @@ public class GameScreen implements Screen {
 
     public void setPlayMusic(boolean playMusic) {
         this.playMusic = playMusic;
-        if (!playMusic) {
+        if (playMusic) {
+            game.musicManager.playBGM();
+        } else {
             game.musicManager.pauseBGM();
         }
     }
@@ -97,7 +99,7 @@ public class GameScreen implements Screen {
         final HUDSystem HUDSystem = new HUDSystem(game, uistage, this);
         final PlayerInteractionSystem playerInteractionSystem = new PlayerInteractionSystem(game);
         final TimeSystem timeSystem = new TimeSystem(game, this);
-        final DialogSystem dialogSystem = new DialogSystem(game, dialogstage);
+        final DialogSystem dialogSystem = new DialogSystem(game, dialogstage, this);
         // Add systems
         engine.addSystem(renderingSystem);
         engine.addSystem(playerMovementSystem);
@@ -174,8 +176,10 @@ public class GameScreen implements Screen {
         EntityEngine.positionComponentMapper.get(player).position.x = game.gameState.x;
         EntityEngine.positionComponentMapper.get(player).position.y = game.gameState.y;
 
-
-        dialogSystem.onDialog("{SLOWER}11X年的夏天，我在校園裡的路X莎喝著咖啡，大學生活真輕鬆啊{EVENT=stopDialogEffect}\n{WAIT}什{EVENT=playDialogEffect}麼?已經到了要畢業的時間了???{EVENT=stopDialogEffect}\n這{EVENT=playDialogEffect}可不行，得趕緊回宿舍準備需要的東西!");
+        if(!game.gameState.hasPlayedIntroDialog){
+            dialogSystem.onDialog("{SLOWER}11X年的夏天，我在校園裡的路X莎喝著咖啡，大學生活真輕鬆啊{EVENT=stopDialogEffect}\n{WAIT}什{EVENT=playDialogEffect}麼?已經到了要畢業的時間了???{EVENT=stopDialogEffect}\n這{EVENT=playDialogEffect}可不行，得趕緊回宿舍準備需要的東西!");
+            game.gameState.hasPlayedIntroDialog = true;
+        }
     }
 
     @Override

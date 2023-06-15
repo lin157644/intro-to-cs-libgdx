@@ -36,8 +36,8 @@ public class IWantToGraduate extends Game {
 
         gameState = GameState.loadState();
 
-        if (Gdx.app.getLogLevel() == Application.LOG_DEBUG)
-            GameState.saveState(gameState);
+        // if (Gdx.app.getLogLevel() == Application.LOG_DEBUG)
+        //     GameState.saveState(gameState);
 
         musicManager = new MusicManager(this);
 
