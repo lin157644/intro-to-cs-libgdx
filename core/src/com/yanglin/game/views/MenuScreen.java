@@ -1,8 +1,6 @@
 package com.yanglin.game.views;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
-import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
@@ -27,6 +25,7 @@ import com.rafaskoberg.gdx.typinglabel.TypingLabel;
 import com.yanglin.game.GameState;
 import com.yanglin.game.IWantToGraduate;
 import com.yanglin.game.MusicManager;
+import com.yanglin.game.input.CursorProcessor;
 
 public class MenuScreen implements Screen {
     private static final String TAG = MenuScreen.class.getSimpleName();
@@ -37,6 +36,8 @@ public class MenuScreen implements Screen {
     private final Stage stage = new Stage(new ExtendViewport(1280, 720), batch);
     private final Array<Actor> menuSelectionList = new Array<>();
     private Label currSel;
+
+    private InputMultiplexer inputMultiplexer = new InputMultiplexer();
 
 
     public MenuScreen(IWantToGraduate game) {
@@ -232,7 +233,10 @@ public class MenuScreen implements Screen {
 
     @Override
     public void show() {
-        Gdx.input.setInputProcessor(stage);
+        InputProcessor cursorProcessor = new CursorProcessor(game);
+        inputMultiplexer.addProcessor(cursorProcessor);
+        inputMultiplexer.addProcessor(stage);
+        Gdx.input.setInputProcessor(inputMultiplexer);
         game.musicManager.setBGM(MusicManager.BGM.MENU, true);
     }
 

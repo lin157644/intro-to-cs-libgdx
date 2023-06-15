@@ -90,7 +90,7 @@
  <tile id="26">
   <properties>
    <property name="dialog" value="APPLE"/>
-   <property name="text" value="取得了&quot;水果籃&quot; 聽說教授很喜歡蘋果。"/>
+   <property name="text" value="取得了&quot;水果籃&quot; ，聽說教授很喜歡水果，希望能留下好印象。"/>
    <property name="type" value="DIALOG"/>
   </properties>
  </tile>

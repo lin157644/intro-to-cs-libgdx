@@ -4,6 +4,8 @@ import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Cursor;
+import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.badlogic.gdx.utils.reflect.ClassReflection;
 import com.badlogic.gdx.utils.reflect.ReflectionException;
@@ -24,13 +26,15 @@ public class IWantToGraduate extends Game {
     public GameState gameState;
     public MusicManager musicManager;
     public Ending ending;
+    public Cursor cursor;
+    public Cursor cursor_pressed;
 
     @Override
     public void create() {
-        Gdx.app.setLogLevel(Application.LOG_DEBUG);
+        Gdx.app.setLogLevel(Application.LOG_NONE);
 
-        if (Gdx.app.getLogLevel() == Application.LOG_NONE)
-            GameState.clearSavedState();
+        // if (Gdx.app.getLogLevel() == Application.LOG_DEBUG)
+        //     GameState.clearSavedState();
 
         gameState = GameState.loadState();
 
@@ -44,6 +48,16 @@ public class IWantToGraduate extends Game {
         changeScreen(EScreen.LOADING);
         float w = Gdx.graphics.getWidth();
         float h = Gdx.graphics.getHeight();
+
+        Pixmap pixmap = new Pixmap(Gdx.files.internal("sprites/cursor_3.png"));
+        Pixmap pixmap_pressed = new Pixmap(Gdx.files.internal("sprites/cursor_4.png"));
+        // Set hotspot to the middle of it (0,0 would be the top-left corner)
+        int xHotspot = 3, yHotspot = 5;
+        cursor = Gdx.graphics.newCursor(pixmap, xHotspot, yHotspot);
+        cursor_pressed = Gdx.graphics.newCursor(pixmap_pressed, xHotspot, yHotspot);
+        pixmap.dispose(); // We don't need the pixmap anymore
+        pixmap_pressed.dispose();
+        Gdx.graphics.setCursor(cursor);
     }
 
     public void setEnding(Ending ending) {

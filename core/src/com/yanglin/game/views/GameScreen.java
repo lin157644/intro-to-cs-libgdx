@@ -4,6 +4,7 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -22,7 +23,9 @@ import com.yanglin.game.entity.EntityEngine;
 import com.yanglin.game.entity.MapManager;
 import com.yanglin.game.entity.component.*;
 import com.yanglin.game.entity.systems.*;
+import com.yanglin.game.input.CursorProcessor;
 import com.yanglin.game.input.GameInputProcessor;
+import com.yanglin.game.input.MouseInputProcessor;
 
 public class GameScreen implements Screen {
     private static final String TAG = GameScreen.class.getSimpleName();
@@ -188,7 +191,8 @@ public class GameScreen implements Screen {
         gameInputProcessor.addKeyInputProcessor(playerInteractionSystem);
         gameInputProcessor.addKeyInputProcessor(playerMovementSystem);
 
-
+        InputProcessor cursorProcessor = new CursorProcessor(game);
+        inputMultiplexer.addProcessor(cursorProcessor);
         inputMultiplexer.addProcessor(uistage);
         inputMultiplexer.addProcessor(gameInputProcessor);
 
