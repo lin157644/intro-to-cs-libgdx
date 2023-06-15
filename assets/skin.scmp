@@ -180,6 +180,26 @@ jsonData: {
 		{
 			class: com.ray3k.skincomposer.data.ColorData
 			color: {
+				r: 1
+				g: 0.34117648
+				b: 0.20784314
+				a: 1
+			}
+			name: goodEndTitleBorder
+		}
+		{
+			class: com.ray3k.skincomposer.data.ColorData
+			color: {
+				r: 0.92941177
+				g: 0.54509807
+				b: 0
+				a: 1
+			}
+			name: goodEndTitleColor
+		}
+		{
+			class: com.ray3k.skincomposer.data.ColorData
+			color: {
 				r: 0.22745098
 				g: 0.22745098
 				b: 0.3137255
@@ -261,6 +281,35 @@ jsonData: {
 			spaceX: 0
 			spaceY: 0
 			characters: "\t\"chartes: ABCDEFGHIJKLMNOPQRSTUVWXYZbdfgijklmnopquvwxyz1234567890\\!`?'.,;()[]{}<>|/@^$€-%+=#_&~* ¡¢£¤¥¦§¨©ª«¬­®¯°±²³´µ¶·¸¹º»¼½¾¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõö÷øùúûüýþÿ•⌘大延畢岩壁繼續月日取得了錢包底沒有什麼，但是填飽肚子還足夠的前一段時間參加校內多益不知道達到業門檻希望佛祖保佑水果籃聽說教授很喜歡蘋你將書交給並繳逾期費離又更近步要和尷尬致死顫抖成績單語言中心服務人員在寫資料後申請通過。與之差分下次覺上課認真決定同情讓平老翹五再來檢視哪些條件列出閱讀完產覽拿小藝文數好搶連都帶就想回去宿舍找吧！　只能觸發依稀記本可必會失敗需處理邏輯線審核須對話以直接設未籍忘歸看納年夏天我園裡路莎喝著咖啡學生活輕鬆啊已經這行趕緊準備東西\r\n"
+			kerning: true
+			flip: false
+			genMipMaps: false
+			minFilter: Nearest
+			magFilter: Linear
+			incremental: false
+		}
+		{
+			class: com.ray3k.skincomposer.data.FreeTypeFontData
+			name: goodEndTitleFont
+			file: C:/Users/linxs/Desktop/intro-to-cs-final/assets/fonts/NotoSansTC-Bold.otf
+			previewTTF: IBMPlexSerif-Medium
+			useCustomSerializer: true
+			size: 128
+			mono: false
+			hinting: AutoMedium
+			color: goodEndTitleColor
+			gamma: 1.8
+			renderCount: 2
+			borderWidth: 5
+			borderColor: goodEndTitleBorder
+			borderStraight: true
+			borderGamma: 1.8
+			shadowOffsetX: 0
+			shadowOffsetY: 0
+			shadowColor: null
+			spaceX: 0
+			spaceY: 0
+			characters: "\t\"chartes: \\ABCDEFGHIJKLMNOPQRSTUVWXYZbdfgijklmnopquvwxyz1234567890!`?'.,;()[]{}<>|/@^$€-%+=#_&~* ¡¢£¤¥¦§¨©ª«¬­®¯°±²³´µ¶·¸¹º»¼½¾¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõö÷øùúûüýþÿ•⌘大延畢岩壁繼續月日取得了錢包底沒有什麼，但是填飽肚子還足夠的前一段時間參加校內多益不知道達到業門檻希望佛祖保佑水果籃聽說教授很喜歡蘋你將書交給並繳逾期費離又更近步要和尷尬致死顫抖成績單語言中心服務人員在寫資料後申請通過。與之差分下次覺上課認真決定同情讓平老翹五再來檢視哪些條件列出閱讀完產覽拿小藝文數好搶連都帶就想回去宿舍找吧！　只能觸發依稀記本可必會失敗需處理邏輯線審核須對話以直接設未籍忘歸看納年夏天我園裡路莎喝著咖啡學生活輕鬆啊已經這行趕緊準備東西遺憾及限俠重新因為手開證最終流落街頭結帳付極度感使社性亡意志消沉急辦剩挨餓倒醒睡遭遇車禍雖然醫院休養陣礙仍誠摯地告訴按主畫面\r\n"
 			kerning: true
 			flip: false
 			genMipMaps: false
@@ -1139,6 +1188,33 @@ jsonData: {
 						name: fontColor
 						optional: true
 						value: white
+					}
+					background: {
+						type: com.badlogic.gdx.scenes.scene2d.utils.Drawable
+						name: background
+						optional: true
+						value: null
+					}
+				}
+				deletable: true
+				parent: null
+			}
+			{
+				class: com.ray3k.skincomposer.data.StyleData
+				name: goodEndTitle
+				clazz: com.badlogic.gdx.scenes.scene2d.ui.Label
+				properties: {
+					font: {
+						type: com.badlogic.gdx.graphics.g2d.BitmapFont
+						name: font
+						optional: false
+						value: goodEndTitleFont
+					}
+					fontColor: {
+						type: com.badlogic.gdx.graphics.Color
+						name: fontColor
+						optional: true
+						value: goodEndTitleColor
 					}
 					background: {
 						type: com.badlogic.gdx.scenes.scene2d.utils.Drawable

@@ -61,11 +61,11 @@
             }
         },
         "dorm_exterior.tmx": {
-            "scale": 1.78125,
-            "selectedLayer": 10,
+            "scale": 4,
+            "selectedLayer": 9,
             "viewCenter": {
-                "x": 285.7543859649123,
-                "y": 171.50877192982455
+                "x": 121,
+                "y": 300.375
             }
         },
         "engineering_building.tmx": {
@@ -93,7 +93,7 @@
             "scale": 1.78125,
             "selectedLayer": 8,
             "viewCenter": {
-                "x": 330.1052631578947,
+                "x": 329.5438596491228,
                 "y": 186.10526315789474
             }
         },

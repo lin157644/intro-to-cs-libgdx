@@ -56,12 +56,12 @@ public class PlayerInteractionSystem extends EntitySystem implements MapManager.
     }
 
     @Override
-    public void addedToEngine (Engine engine) {
+    public void addedToEngine(Engine engine) {
         entities = engine.getEntitiesFor(family);
     }
 
     @Override
-    public void removedFromEngine (Engine engine) {
+    public void removedFromEngine(Engine engine) {
         entities = null;
     }
 
@@ -111,13 +111,13 @@ public class PlayerInteractionSystem extends EntitySystem implements MapManager.
                     }
                     // Collide with event (e.g. bus)
                     case "EVENT" -> {
-                        if(hasTriggeredDialog) break;
+                        if (hasTriggeredDialog) break;
                         String eventType = tile.getProperties().get("event", String.class);
                         switch (eventType) {
                             case "SHOP" -> {
                                 hasTriggeredDialog = true;
-                                if(!gameState.hasEaten){
-                                    if(!gameState.hasItem(ItemComponent.ItemType.WALLET)) {
+                                if (!gameState.hasEaten) {
+                                    if (!gameState.hasItem(ItemComponent.ItemType.WALLET)) {
                                         game.ending = Ending.AWKWARD_STORE;
                                         game.changeScreen(EScreen.BAD_END);
                                         return;
@@ -170,10 +170,14 @@ public class PlayerInteractionSystem extends EntitySystem implements MapManager.
                             }
                         }
                     }
-                    case "ITEM", "DIALOG", "TEST"-> {
+                    case "ITEM", "DIALOG", "TEST", "DEBUG" -> {
                     }
                     case "EXIT" -> {
-
+                        // TODO: Check requirement
+                        if(false) {
+                            game.ending = Ending.GOOD_END;
+                            game.changeScreen(EScreen.GOOD_END);
+                        }
                     }
                     default -> {
                         Gdx.app.log(TAG, "Detect collision of unexpected type");
@@ -201,7 +205,7 @@ public class PlayerInteractionSystem extends EntitySystem implements MapManager.
                 TiledMapTile tile;
                 if ((tile = collideWithObject(positionComponent.position.x, positionComponent.position.y)) != null) {
                     Gdx.app.log(TAG, "Collide with something...");
-                    if(hasTriggeredDialog) break;
+                    if (hasTriggeredDialog) break;
                     hasTriggeredDialog = true;
                     // What do player collide
                     String type = tile.getProperties().get("type", String.class);
@@ -269,6 +273,16 @@ public class PlayerInteractionSystem extends EntitySystem implements MapManager.
                             }
                         }
                         case "MAP", "EVENT", "EXIT" -> {
+                        }
+                        case "DEBUG" -> {
+                            Gdx.app.log(TAG, "DEBUG Tile: To good end");
+                            String debugType = tile.getProperties().get("debug", String.class);
+                            switch (debugType) {
+                                case "GOOD_END" -> {
+                                    game.ending = Ending.GOOD_END;
+                                    game.changeScreen(EScreen.GOOD_END);
+                                }
+                            }
                         }
                         default -> Gdx.app.log(TAG, "Detect dialog of unexpected type");
                     }

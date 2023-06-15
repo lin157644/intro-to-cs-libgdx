@@ -291,6 +291,12 @@
    <property name="type" value="EXIT"/>
   </properties>
  </tile>
+ <tile id="126">
+  <properties>
+   <property name="debug" value="GOOD_END"/>
+   <property name="type" value="DEBUG"/>
+  </properties>
+ </tile>
  <tile id="140">
   <properties>
    <property name="dest" value="LIBRARY_EXTER"/>
