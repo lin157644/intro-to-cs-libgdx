@@ -50,7 +50,7 @@ public class BadEndScreen implements Screen {
                 reasonText = "你因為沒完成畢業前需要的手續就離開學校，沒能拿到畢業證書，最終流落街頭。";
             }
             case TIME_OUT -> {
-
+                reasonText = "很遺憾的，你來不及在時限前畢業，下一年會更好。";
             }
             case AWKWARD_STORE -> {
                 // Did not bring money when go to store

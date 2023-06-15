@@ -6,6 +6,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.Array;
 import com.yanglin.game.GameState;
 import com.yanglin.game.IWantToGraduate;
+import com.yanglin.game.MusicManager;
 import com.yanglin.game.views.EScreen;
 import com.yanglin.game.views.Ending;
 import com.yanglin.game.views.GameScreen;
@@ -54,6 +55,7 @@ public class TimeSystem extends IntervalSystem {
                         gameState.date = 1;
                         notifyMonthUpdate(gameState.month);
                         notifyDayUpdate(gameState.date);
+                        game.musicManager.setBGM(MusicManager.BGM.GAME_JUNE, true);
                     } else {
                         gameState.date += 1;
                         notifyDayUpdate(gameState.date);

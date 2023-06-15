@@ -20,6 +20,7 @@ public class LoadingScreen implements Screen {
         assetManager.loadImages();
         assetManager.loadFonts();
         assetManager.loadSkins();
+        assetManager.loadAudios();
     }
 
     @Override

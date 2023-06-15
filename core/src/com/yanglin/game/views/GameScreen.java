@@ -14,6 +14,7 @@ import com.badlogic.gdx.utils.ArrayMap;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.yanglin.game.IWantToGraduate;
 import com.yanglin.game.GameAssetManager;
+import com.yanglin.game.MusicManager;
 import com.yanglin.game.entity.EntityEngine;
 import com.yanglin.game.entity.MapManager;
 import com.yanglin.game.entity.component.*;
@@ -30,8 +31,8 @@ public class GameScreen implements Screen {
     public Stage uistage;
     public Stage dialogstage;
     private SpriteBatch batch;
-    public Boolean playMusic = true;
-    public Boolean playEffect = true;
+    private Boolean playMusic = true;
+    private Boolean playEffect = true;
     public Boolean isPaused = false;
 
     public GameScreen(IWantToGraduate game) {
@@ -50,13 +51,37 @@ public class GameScreen implements Screen {
         dialogstage = new Stage();
     }
 
-    public void setPaused(Boolean isPaused){
+    public void setPlayMusic(boolean playMusic) {
+        this.playMusic = playMusic;
+        if (!playMusic) {
+            game.musicManager.pauseBGM();
+        }
+    }
+
+    public Boolean getPlayMusic() {
+        return playMusic;
+    }
+
+    public void setPlayEffect(Boolean playEffect) {
+        this.playEffect = playEffect;
+    }
+
+    public Boolean getPlayEffect() {
+        return playEffect;
+    }
+
+    public void setPaused(Boolean isPaused) {
         this.isPaused = isPaused;
     }
 
     @Override
     public void show() {
         Gdx.app.debug(TAG, "Showed");
+
+        if (game.gameState.month <6)
+            game.musicManager.setBGM(MusicManager.BGM.GAME, true);
+        else
+            game.musicManager.setBGM(MusicManager.BGM.GAME_JUNE, true);
 
         this.engine = new EntityEngine();
         this.assetManager = game.assetManager;
@@ -148,6 +173,9 @@ public class GameScreen implements Screen {
         Entity player = engine.getEntitiesFor(Family.all(PlayerComponent.class).get()).first();
         EntityEngine.positionComponentMapper.get(player).position.x = game.gameState.x;
         EntityEngine.positionComponentMapper.get(player).position.y = game.gameState.y;
+
+
+        dialogSystem.onDialog("{SLOWER}11X年的夏天，我在校園裡的路X莎喝著咖啡，大學生活真輕鬆啊{EVENT=stopDialogEffect}\n{WAIT}什{EVENT=playDialogEffect}麼?已經到了要畢業的時間了???{EVENT=stopDialogEffect}\n這{EVENT=playDialogEffect}可不行，得趕緊回宿舍準備需要的東西!");
     }
 
     @Override

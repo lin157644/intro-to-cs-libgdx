@@ -1,8 +1,11 @@
 package com.yanglin.game.entity.systems;
 
+import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
+import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
+import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.maps.tiled.TiledMap;
@@ -12,6 +15,7 @@ import com.badlogic.gdx.utils.Array;
 import com.yanglin.game.GameAssetManager;
 import com.yanglin.game.GameState;
 import com.yanglin.game.IWantToGraduate;
+import com.yanglin.game.MusicManager;
 import com.yanglin.game.entity.EntityEngine;
 import com.yanglin.game.entity.MapManager;
 import com.yanglin.game.entity.component.ItemComponent;
@@ -22,7 +26,7 @@ import com.yanglin.game.input.KeyInputListener;
 import com.yanglin.game.views.EScreen;
 import com.yanglin.game.views.Ending;
 
-public class PlayerInteractionSystem extends IteratingSystem implements MapManager.MapListener, KeyInputListener {
+public class PlayerInteractionSystem extends EntitySystem implements MapManager.MapListener, KeyInputListener {
     // Player <-> Item
     // Use tiled object layer
     private static final String TAG = PlayerInteractionSystem.class.getSimpleName();
@@ -32,11 +36,14 @@ public class PlayerInteractionSystem extends IteratingSystem implements MapManag
     private GameState gameState;
     private IWantToGraduate game;
     private final Array<PlayerInteractionListener> playerInteractionListeners = new Array<>();
+    private Family family;
+    private ImmutableArray<Entity> entities;
 
     private boolean hasTriggeredDialog = false;
 
     public PlayerInteractionSystem(IWantToGraduate game) {
-        super(Family.all(PlayerComponent.class, PositionComponent.class).get());
+        super(0);
+        this.family = Family.all(PlayerComponent.class, PositionComponent.class).get();
 
         this.game = game;
         this.assetManager = game.assetManager;
@@ -46,6 +53,16 @@ public class PlayerInteractionSystem extends IteratingSystem implements MapManag
 
         TiledMap tiledMap = assetManager.get(mapManager.getCurrentMap().getFileName());
         objectLayer = (TiledMapTileLayer) tiledMap.getLayers().get("obj");
+    }
+
+    @Override
+    public void addedToEngine (Engine engine) {
+        entities = engine.getEntitiesFor(family);
+    }
+
+    @Override
+    public void removedFromEngine (Engine engine) {
+        entities = null;
     }
 
     @Override
@@ -69,91 +86,100 @@ public class PlayerInteractionSystem extends IteratingSystem implements MapManag
     }
 
     @Override
-    protected void processEntity(Entity entity, float deltaTime) {
-        PositionComponent positionComponent = EntityEngine.positionComponentMapper.get(entity);
-        // Do player collide with object?
-        TiledMapTile tile;
-        if ((tile = collideWithObject(positionComponent.position.x, positionComponent.position.y)) != null) {
-            // What do player collide
-            String type = tile.getProperties().get("type", String.class);
-            switch (type) {
-                // Collide with map changing area
-                case "MAP" -> {
-                    String mapDest = tile.getProperties().get("dest", String.class);
-                    float x = tile.getProperties().get("x", Float.class);
-                    float y = tile.getProperties().get("y", Float.class);
-                    if (mapDest != null) {
-                        Gdx.app.debug(TAG, "Detect collision of map type, Dest: " + mapDest);
-                        mapManager.setCurrentMap(MapManager.EMap.valueOf(mapDest), x, y);
-                    } else {
-                        Gdx.app.log(TAG, "Detect map destination of null");
-                    }
-                }
-                // Collide with event (e.g. bus)
-                case "EVENT" -> {
-                    if(hasTriggeredDialog) break;
-                    String eventType = tile.getProperties().get("event", String.class);
-                    switch (eventType) {
-                        case "SHOP" -> {
-                            hasTriggeredDialog = true;
-                            if(!gameState.hasItem(ItemComponent.ItemType.WALLET)) {
-                                game.ending = Ending.AWKWARD_STORE;
-                                game.changeScreen(EScreen.BAD_END);
-                            } else {
-                                gameState.hasEaten = true;
-                            }
-                        }
-                        case "BUS" -> {
-                            hasTriggeredDialog = true;
-                            // TODO: Play animation
-                            // TODO: To bad end
-                            game.ending = Ending.CAR_CRUSH;
-                            game.changeScreen(EScreen.BAD_END);
-                        }
-                        case "GIVE_ENGLISH" -> {
-                            hasTriggeredDialog = true;
-                            if (!gameState.hasItem(ItemComponent.ItemType.ENGLISH)) {
-                                String text = "你連成績單都沒帶就想要畢業，回去宿舍找找吧！";
-                                notifyDialogListeners(text);
-
-                            } else if (!gameState.hasWorshiped) {
-                                // Fail text won't be use here
-                                game.ending = Ending.LOW_ENG_SCORE;
-                                game.changeScreen(EScreen.BAD_END);
-                            } else {
-                                String text = "你顫抖得將多益成績單交給了語言中心服務人員 {NEXT} 在填寫了資料後，申請通過畢業門檻。";
-                                notifyDialogListeners(text);
-                            }
-
-                        }
-                        case "GIFT_PROF" -> {
-                            hasTriggeredDialog = true;
-                            if (gameState.hasItem(ItemComponent.ItemType.APPLE)) {
-                                String text = "";
-                                // TODO: Trigger　Dialog
-                            } else {
-                                // Fail text won't be use here
-                                game.ending = Ending.DID_NOT_PASS;
-                                game.changeScreen(EScreen.BAD_END);
-                            }
-                        }
-                        default -> {
-                            Gdx.app.log(TAG, "Detect item of unexpected type");
+    public void update(float deltaTime) {
+        // Change screen 後需加上return?
+        for (int i = 0; i < entities.size(); ++i) {
+            Entity entity = entities.get(i);
+            PositionComponent positionComponent = EntityEngine.positionComponentMapper.get(entity);
+            // Do player collide with object?
+            TiledMapTile tile;
+            if ((tile = collideWithObject(positionComponent.position.x, positionComponent.position.y)) != null) {
+                // What do player collide
+                String type = tile.getProperties().get("type", String.class);
+                switch (type) {
+                    // Collide with map changing area
+                    case "MAP" -> {
+                        String mapDest = tile.getProperties().get("dest", String.class);
+                        float x = tile.getProperties().get("x", Float.class);
+                        float y = tile.getProperties().get("y", Float.class);
+                        if (mapDest != null) {
+                            Gdx.app.debug(TAG, "Detect collision of map type, Dest: " + mapDest);
+                            mapManager.setCurrentMap(MapManager.EMap.valueOf(mapDest), x, y);
+                        } else {
+                            Gdx.app.log(TAG, "Detect map destination of null");
                         }
                     }
-                }
-                case "ITEM", "DIALOG", "TEST"-> {
-                }
-                case "EXIT" -> {
+                    // Collide with event (e.g. bus)
+                    case "EVENT" -> {
+                        if(hasTriggeredDialog) break;
+                        String eventType = tile.getProperties().get("event", String.class);
+                        switch (eventType) {
+                            case "SHOP" -> {
+                                hasTriggeredDialog = true;
+                                if(!gameState.hasItem(ItemComponent.ItemType.WALLET)) {
+                                    game.ending = Ending.AWKWARD_STORE;
+                                    game.changeScreen(EScreen.BAD_END);
+                                    return;
+                                } else {
+                                    gameState.hasEaten = true;
+                                }
+                            }
+                            case "BUS" -> {
+                                hasTriggeredDialog = true;
+                                // TODO: Play animation
+                                // TODO: To bad end
+                                game.ending = Ending.CAR_CRUSH;
+                                game.changeScreen(EScreen.BAD_END);
+                                return;
+                            }
+                            case "GIVE_ENGLISH" -> {
+                                hasTriggeredDialog = true;
+                                if (!gameState.hasItem(ItemComponent.ItemType.ENGLISH)) {
+                                    String text = "你連成績單都沒帶就想要畢業，回去宿舍找找吧！";
+                                    notifyDialogListeners(text);
 
+                                } else if (!gameState.hasWorshiped) {
+                                    // Fail text won't be use here
+                                    game.ending = Ending.LOW_ENG_SCORE;
+                                    game.changeScreen(EScreen.BAD_END);
+                                    return;
+                                } else {
+                                    String text = "你顫抖得將多益成績單交給了語言中心服務人員 {NEXT} 在填寫了資料後，申請通過畢業門檻。";
+                                    notifyDialogListeners(text);
+                                }
+
+                            }
+                            case "GIFT_PROF" -> {
+                                hasTriggeredDialog = true;
+                                if (gameState.hasItem(ItemComponent.ItemType.APPLE)) {
+                                    String text = "";
+                                    // TODO: Trigger　Dialog
+                                } else {
+                                    // Fail text won't be use here
+                                    game.ending = Ending.DID_NOT_PASS;
+                                    game.changeScreen(EScreen.BAD_END);
+                                    return;
+                                }
+                            }
+                            default -> {
+                                Gdx.app.log(TAG, "Detect item of unexpected type");
+                            }
+                        }
+                    }
+                    case "ITEM", "DIALOG", "TEST"-> {
+                    }
+                    case "EXIT" -> {
+
+                    }
+                    default -> {
+                        Gdx.app.log(TAG, "Detect collision of unexpected type");
+                    }
                 }
-                default -> {
-                    Gdx.app.log(TAG, "Detect collision of unexpected type");
-                }
+            } else {
+                hasTriggeredDialog = false;
             }
-        } else {
-            hasTriggeredDialog = false;
         }
+
     }
 
     @Override
@@ -165,7 +191,7 @@ public class PlayerInteractionSystem extends IteratingSystem implements MapManag
     public boolean keyUp(GameInputProcessor gameInputProcessor, int keycode) {
         switch (keycode) {
             case Input.Keys.Z -> {
-                Entity entity = getEngine().getEntitiesFor(getFamily()).first();
+                Entity entity = getEngine().getEntitiesFor(family).first();
                 PositionComponent positionComponent = EntityEngine.positionComponentMapper.get(entity);
                 // Do player collide with object?
                 TiledMapTile tile;
@@ -202,7 +228,7 @@ public class PlayerInteractionSystem extends IteratingSystem implements MapManag
                             Gdx.app.log(TAG, "Collide with DIALOG");
                             // 不會失敗，可能需要處理邏輯
                             String dialogType = tile.getProperties().get("dialog", String.class);
-                            String text = tile.getProperties().get("text", String.class);
+                            String dialogText = tile.getProperties().get("text", String.class);
                             switch (dialogType) {
                                 case "APPLE", "BOOK", "ENGLISH", "WALLET" -> {
                                     // Pickup the apple under the tree in school gate
@@ -212,7 +238,8 @@ public class PlayerInteractionSystem extends IteratingSystem implements MapManag
                                     if (!gameState.hasItem(ItemComponent.ItemType.valueOf(dialogType))) {
                                         gameState.addItem(ItemComponent.ItemType.valueOf(dialogType));
                                         Gdx.app.log(TAG, "Item \"" + dialogType + "\" added to gameState");
-                                        notifyDialogListeners(text);
+                                        notifyDialogListeners(dialogText);
+                                        game.musicManager.playEffect(MusicManager.Effect.GET_ITEM);
                                     } else {
                                         Gdx.app.log(TAG, "Item \"" + dialogType + "\" already exist.");
                                         Gdx.app.log(TAG, gameState.items.toString());
@@ -226,14 +253,14 @@ public class PlayerInteractionSystem extends IteratingSystem implements MapManag
                                     // 拿時數
                                     if (!gameState.hasEnoughHours) {
                                         // Only evoke dialog if not triggered before
-                                        // TODO: Trigger dialog
-
                                         gameState.hasEnoughHours = true;
+                                        String exhibitText = "你在閱讀完展覽後填寫了心得，拿到了一小時的藝文時數{BR}OS:還好之前有搶到CPR";
+                                        notifyDialogListeners(exhibitText);
                                     }
                                 }
                                 default -> {
                                     // 不須處理邏輯的對話，可以在Tiled中直接設定
-                                    notifyDialogListeners(text);
+                                    notifyDialogListeners(dialogText);
                                 }
                             }
                         }

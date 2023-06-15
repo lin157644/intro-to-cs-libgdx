@@ -1,6 +1,7 @@
 package com.yanglin.game.entity.systems;
 
 import com.badlogic.ashley.core.EntitySystem;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
@@ -11,18 +12,18 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
+import com.rafaskoberg.gdx.typinglabel.TypingAdapter;
 import com.rafaskoberg.gdx.typinglabel.TypingLabel;
+import com.rafaskoberg.gdx.typinglabel.TypingListener;
 import com.yanglin.game.IWantToGraduate;
 import com.yanglin.game.input.GameInputProcessor;
 import com.yanglin.game.input.KeyInputListener;
 import com.yanglin.game.views.EScreen;
 import com.yanglin.game.views.Ending;
+import com.yanglin.game.views.GameScreen;
 
 public class DialogSystem extends EntitySystem implements KeyInputListener, PlayerInteractionSystem.PlayerInteractionListener, TimeSystem.TimeSystemListener {
-    // Player <-> NPC
-    // Player get item
-    // Time pass
-    //...
+    private static final String TAG = DialogSystem.class.getSimpleName();
     private final IWantToGraduate game;
     private final Stage stage;
     private Array<String> currentDialog;
@@ -42,12 +43,32 @@ public class DialogSystem extends EntitySystem implements KeyInputListener, Play
         dialogBackground.setPosition((stage.getWidth() - dialogBackground.getWidth()) / 2, 0);
 
         dialogLabel = new TypingLabel("", skin, "dialogLabel");
-        dialogLabel.setPosition(dialogBackground.getX() + 80, dialogBackground.getHeight() - 80);
+        dialogLabel.setX(dialogBackground.getX() + 80);
+        setDialogLabelY();
 
         Group dialogGroup = new Group();
         dialogGroup.addActor(dialogBackground);
         dialogGroup.addActor(dialogLabel);
         // dialogGroup.setVisible(false);
+
+        dialogLabel.setTypingListener(new TypingAdapter() {
+            @Override
+            public void event(String event) {
+                switch (event) {
+                    case "stopDialogEffect" -> {
+                        game.musicManager.stopDialog();
+                        Gdx.app.log(TAG, "Dialog effect stopped");
+                    }
+                    case "playDialogEffect" -> {
+                        game.musicManager.playDialog();
+                        Gdx.app.log(TAG, "Dialog effect played");
+                    }
+                    default -> {
+                        Gdx.app.log(TAG, "Unknown event in dialog.");
+                    }
+                }
+            }
+        });
 
         stage.addActor(dialogGroup);
     }
@@ -59,12 +80,18 @@ public class DialogSystem extends EntitySystem implements KeyInputListener, Play
         setDialog(text);
     }
 
-    public void setDialog(String text){
+    public void setDialog(String text) {
         currentDialog = new Array<>(text.replace("{BR}", "\n").split("\\{NEXT}"));
-        if(currentDialog.size>0){
+        if (currentDialog.size > 0) {
             dialogLabel.setText(currentDialog.pop());
+            setDialogLabelY();
             dialogLabel.restart();
+            game.musicManager.playDialog();
         }
+    }
+
+    private void setDialogLabelY(){
+        dialogLabel.setY(dialogBackground.getHeight() - dialogLabel.getHeight() - 100);
     }
 
     @Override
@@ -72,6 +99,10 @@ public class DialogSystem extends EntitySystem implements KeyInputListener, Play
         // Update
         // Change the menu to render
         if (inDialog) {
+            if (dialogLabel.hasEnded()) {
+                game.musicManager.stopDialog();
+            }
+            // if(dialogLabel)
             stage.act(deltaTime);
             stage.draw();
         }
@@ -80,14 +111,19 @@ public class DialogSystem extends EntitySystem implements KeyInputListener, Play
     @Override
     public boolean keyDown(GameInputProcessor gameInputProcessor, int keycode) {
         // Dialog system must block the input before dialog ends
-        if(inDialog){
+        if (inDialog) {
             switch (keycode) {
                 case Input.Keys.Z -> {
-                    if(currentDialog.size > 0) {
+                    if (currentDialog.size > 0) {
                         dialogLabel.setText(currentDialog.pop());
+                        setDialogLabelY();
                     } else {
                         inDialog = false;
+                        game.musicManager.stopDialog();
                     }
+                    return true;
+                }
+                case Input.Keys.UP, Input.Keys.DOWN, Input.Keys.LEFT, Input.Keys.RIGHT -> {
                     return true;
                 }
             }
@@ -97,6 +133,14 @@ public class DialogSystem extends EntitySystem implements KeyInputListener, Play
 
     @Override
     public boolean keyUp(GameInputProcessor gameInputProcessor, int keycode) {
+        if (inDialog) {
+            switch (keycode) {
+                case Input.Keys.UP, Input.Keys.DOWN, Input.Keys.LEFT, Input.Keys.RIGHT -> {
+                    return true;
+                }
+            }
+        }
+
         return false;
     }
 

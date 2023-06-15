@@ -1,6 +1,7 @@
 package com.yanglin.game.views;
 
 import com.badlogic.gdx.*;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Cursor;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -19,6 +20,7 @@ import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.rafaskoberg.gdx.typinglabel.TypingLabel;
 import com.yanglin.game.GameState;
 import com.yanglin.game.IWantToGraduate;
+import com.yanglin.game.MusicManager;
 
 public class MenuScreen implements Screen {
     private static final String TAG = MenuScreen.class.getSimpleName();
@@ -29,6 +31,7 @@ public class MenuScreen implements Screen {
     private final Stage stage = new Stage(new ExtendViewport(1280, 720), batch);
     private final Array<Actor> menuSelectionList = new Array<>();
     private Label currSel;
+
 
     public MenuScreen(IWantToGraduate game) {
         this.game = game;
@@ -125,12 +128,14 @@ public class MenuScreen implements Screen {
                     }
                     case Input.Keys.UP -> {
                         // identity = true: use == to compare
+                        game.musicManager.playEffect(MusicManager.Effect.MENU_SELECT);
                         int currSelIndex = menuSelectionList.indexOf(currSel, true);
                         currSelIndex = currSelIndex == 0 ? menuSelectionList.size -1 : currSelIndex - 1;
                         currSel = (Label)menuSelectionList.get(currSelIndex);
                         updateSignPosition();
                     }
                     case Input.Keys.DOWN -> {
+                        game.musicManager.playEffect(MusicManager.Effect.MENU_SELECT);
                         int currSelIndex = menuSelectionList.indexOf(currSel, true);
                         currSelIndex = currSelIndex == menuSelectionList.size - 1 ? 0 : currSelIndex + 1;
                         currSel = (Label)menuSelectionList.get(currSelIndex);
@@ -148,14 +153,12 @@ public class MenuScreen implements Screen {
         Vector2 currSelVec = currSel.localToStageCoordinates(new Vector2(0, 0));
         gtSign.setPosition(currSelVec.x - gtSign.getWidth() - signOffset, currSelVec.y);
         ltSign.setPosition(currSelVec.x + currSel.getWidth() + signOffset, currSelVec.y);
-        // System.out.println(currSelVec.x);
-        // System.out.println(currSelVec.y);
-        // System.out.println( currSelActor.getHeight());
     }
 
     @Override
     public void show() {
         Gdx.input.setInputProcessor(stage);
+        game.musicManager.setBGM(MusicManager.BGM.MENU, true);
     }
 
     @Override

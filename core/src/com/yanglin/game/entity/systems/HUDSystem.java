@@ -99,16 +99,16 @@ public class HUDSystem extends EntitySystem implements KeyInputListener {
         musicToggle.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                gameScreen.playMusic = !gameScreen.playMusic;
-                Gdx.app.log(TAG, "Change play music toggle: " + gameScreen.playMusic);
+                gameScreen.setPlayMusic(!gameScreen.getPlayMusic());
+                Gdx.app.log(TAG, "Change play music toggle: " + gameScreen.getPlayMusic());
             }
         });
 
         effectToggle.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                gameScreen.playEffect = !gameScreen.playEffect;
-                Gdx.app.log(TAG, "Change play effect toggle: " + gameScreen.playEffect);
+                gameScreen.setPlayEffect(!gameScreen.getPlayEffect());
+                Gdx.app.log(TAG, "Change play effect toggle: " + gameScreen.getPlayEffect());
             }
         });
 

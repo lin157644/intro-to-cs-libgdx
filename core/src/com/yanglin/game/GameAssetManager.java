@@ -4,6 +4,8 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.FileHandleResolver;
 import com.badlogic.gdx.assets.loaders.SkinLoader;
 import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
+import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -88,6 +90,28 @@ public class GameAssetManager extends AssetManager {
     }
     public void loadSkins() {
         load("ui/skins/title_skin.json", Skin.class);
+    }
+
+    public void loadAudios() {
+        load("audio/music/menu_bgm.ogg", Music.class);
+        load("audio/music/game_bgm.ogg", Music.class);
+        // load("audio/music/ge_bgm.ogg", Music.class);
+        load("audio/music/be_bgm.ogg", Music.class);
+        load("audio/music/june_bgm.ogg", Music.class);
+
+        // load("audio/music/dorm_bgm.ogg, Music.class);
+        // load("audio/music/library_bgm.ogg, Music.class);
+
+        load("audio/effect/menu_select.wav", Sound.class);
+
+        load("audio/effect/get_item.wav", Sound.class);
+
+        load("audio/effect/dialog.wav", Sound.class);
+
+        // load("audio/effect/open_menu.ogg", Music.class);
+        // load("audio/effect/close_menu.ogg", Music.class);
+        // load("audio/effect/change_map.ogg", Music.class);
+
     }
 
     public void buildPlayerAnimationFrames() {

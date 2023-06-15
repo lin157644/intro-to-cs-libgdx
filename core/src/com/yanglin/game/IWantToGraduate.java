@@ -24,6 +24,7 @@ public class IWantToGraduate extends Game {
     public GameAssetManager assetManager = new GameAssetManager();
     public MapManager mapManager;
     public GameState gameState;
+    public MusicManager musicManager;
     public Ending ending;
 
     @Override
@@ -38,6 +39,8 @@ public class IWantToGraduate extends Game {
         if (Gdx.app.getLogLevel() == Application.LOG_DEBUG)
             GameState.saveState(gameState);
 
+        musicManager = new MusicManager(this);
+
         mapManager = new MapManager(this);
 
         changeScreen(EScreen.LOADING);
@@ -50,6 +53,8 @@ public class IWantToGraduate extends Game {
     }
 
     public void changeScreen(EScreen s) {
+        musicManager.stopBGM();
+        musicManager.stopDialog();
         if (currentScreen != null) {
             currentScreen.dispose();
             screenMap.put(s, null);
