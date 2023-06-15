@@ -5,6 +5,9 @@ import com.badlogic.ashley.systems.IntervalSystem;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.Array;
 import com.yanglin.game.GameState;
+import com.yanglin.game.IWantToGraduate;
+import com.yanglin.game.views.EScreen;
+import com.yanglin.game.views.Ending;
 import com.yanglin.game.views.GameScreen;
 
 public class TimeSystem extends IntervalSystem {
@@ -14,11 +17,13 @@ public class TimeSystem extends IntervalSystem {
     private GameScreen gameScreen;
     public int hungerAccumulator = 0;
     private Array<TimeSystemListener> listeners = new Array<>();
+    private IWantToGraduate game;
 
-    public TimeSystem(GameState gameState, GameScreen gameScreen) {
+    public TimeSystem(IWantToGraduate game, GameScreen gameScreen) {
         super(1); // In second
+        this.game = game;
         this.gameScreen = gameScreen;
-        this.gameState = gameState;
+        this.gameState = game.gameState;
     }
 
     @Override
@@ -30,6 +35,8 @@ public class TimeSystem extends IntervalSystem {
                     if (gameState.date == 30) {
                         if (gameState.month == 6) {
                             Gdx.app.log(TAG, "Time over!");
+                            game.ending = Ending.TIME_OUT;
+                            game.changeScreen(EScreen.BAD_END);
                         }
                         gameState.month += 1;
                         gameState.date = 1;

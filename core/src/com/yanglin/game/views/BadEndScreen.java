@@ -2,10 +2,12 @@ package com.yanglin.game.views;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
+import com.badlogic.gdx.utils.ScreenUtils;
 import com.rafaskoberg.gdx.typinglabel.TypingLabel;
 import com.yanglin.game.IWantToGraduate;
 
@@ -23,7 +25,8 @@ public class BadEndScreen implements Screen {
 
         TypingLabel titleLabel = new TypingLabel("{SHAKE=1;1;1}大延畢{ENDSHAKE}", skin, "badEndTitle");
         reasonLabel = new TypingLabel("", skin, "badEndReason");
-        Label label = new Label("大俠請重新來過", skin);
+        Label label = new Label("大俠請重新來過", skin, "badEndReason");
+
 
         VerticalGroup vbox = new VerticalGroup();
         vbox.addActor(titleLabel);
@@ -31,15 +34,23 @@ public class BadEndScreen implements Screen {
         vbox.addActor(label);
         vbox.space(30f);
 
+        vbox.setPosition((float) (Gdx.graphics.getWidth() - vbox.getWidth()) / 2 , (float) Gdx.graphics.getHeight() / 2 + 300);
+
         stage.addActor(vbox);
     }
     @Override
     public void show() {
+
+        Gdx.input.setInputProcessor(stage);
+
         String reasonText = "";
         switch (game.ending) {
             case DEFAULT_BAD -> {
                 // Exit the school before finish all quest
                 reasonText = "你因為沒完成畢業前需要的手續就離開學校，沒能拿到畢業證書，最終流落街頭。";
+            }
+            case TIME_OUT -> {
+
             }
             case AWKWARD_STORE -> {
                 // Did not bring money when go to store
@@ -80,6 +91,7 @@ public class BadEndScreen implements Screen {
 
     @Override
     public void render(float delta) {
+        ScreenUtils.clear(Color.BLACK);
         stage.act();
         stage.draw();
     }

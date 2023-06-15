@@ -21,6 +21,10 @@
         "C:/Users/linxs/Desktop/intro-to-cs-final/assets/tilesets/Modern_UI_Style_1.tsx": {
             "scaleInDock": 1
         },
+        "C:/Users/linxs/Desktop/intro-to-cs-final/assets/tilesets/Modern_UI_Style_2.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
         "C:/Users/linxs/Desktop/intro-to-cs-final/assets/tilesets/Modern_UI_Style_2_48x48.tsx": {
             "scaleInDock": 1
         },
@@ -30,13 +34,13 @@
         "C:/Users/linxs/Desktop/intro-to-cs-final/assets/tilesets/event_tileset.tsx": {
             "dynamicWrapping": false,
             "scaleInDock": 1,
-            "scaleInEditor": 1
+            "scaleInEditor": 4
         },
         "academic_office.tmx": {
             "scale": 1,
-            "selectedLayer": 0,
+            "selectedLayer": 3,
             "viewCenter": {
-                "x": 240,
+                "x": 238,
                 "y": 238.5
             }
         },
@@ -44,7 +48,7 @@
             "scale": 1,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 360,
+                "x": 358,
                 "y": 119.5
             }
         },
@@ -52,24 +56,24 @@
             "scale": 3,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 115.33333333333331,
-                "y": 174.5
+                "x": 113.99999999999999,
+                "y": 173.16666666666666
             }
         },
         "dorm_exterior.tmx": {
             "scale": 1.78125,
-            "selectedLayer": 9,
+            "selectedLayer": 10,
             "viewCenter": {
-                "x": 239.1578947368421,
-                "y": 247.859649122807
+                "x": 285.7543859649123,
+                "y": 171.50877192982455
             }
         },
         "engineering_building.tmx": {
             "scale": 1.78125,
             "selectedLayer": 5,
             "viewCenter": {
-                "x": 239.1578947368421,
-                "y": 215.859649122807
+                "x": 391.859649122807,
+                "y": 228.21052631578945
             }
         },
         "event_tileset.tsx": {
@@ -78,43 +82,43 @@
             "scaleInEditor": 1
         },
         "intersection.tmx": {
-            "scale": 1.5,
+            "scale": 2,
             "selectedLayer": 7,
             "viewCenter": {
-                "x": 168.66666666666663,
-                "y": 269
+                "x": 250,
+                "y": 351.75
             }
         },
         "library_exterior.tmx": {
             "scale": 1.78125,
             "selectedLayer": 8,
             "viewCenter": {
-                "x": 239.1578947368421,
-                "y": 239.43859649122805
+                "x": 331.2280701754386,
+                "y": 186.10526315789474
             }
         },
         "library_interior.tmx": {
             "scale": 3,
-            "selectedLayer": 0,
+            "selectedLayer": 7,
             "viewCenter": {
-                "x": 121.66666666666669,
+                "x": 120.66666666666669,
                 "y": 101.83333333333333
             }
         },
         "school_gate.tmx": {
-            "scale": 1,
-            "selectedLayer": 0,
+            "scale": 2,
+            "selectedLayer": 8,
             "viewCenter": {
-                "x": 376,
-                "y": 441.5
+                "x": 282.5,
+                "y": 498.25
             }
         },
         "time_display.tmx": {
-            "scale": 1,
+            "scale": 3,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 143,
-                "y": 47.5
+                "x": 124.33333333333331,
+                "y": -33.83333333333334
             }
         },
         "ui_pause_bg.tmx": {
@@ -129,8 +133,8 @@
             "scale": 1.0143229166666665,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 372.6623876765084,
-                "y": 479.630295250321
+                "x": 371.6765083440309,
+                "y": 331.7483953786907
             }
         }
     },
@@ -152,17 +156,17 @@
     ],
     "project": "IWTG.tiled-project",
     "recentFiles": [
+        "C:/Users/linxs/Desktop/intro-to-cs-final/assets/tilesets/Modern_UI_Style_2.tsx",
+        "time_display.tmx",
+        "ui_pause_bg.tmx",
+        "C:/Users/linxs/Desktop/intro-to-cs-final/assets/tilesets/event_tileset.tsx",
+        "ui_pause_widgets.tmx",
         "academic_office.tmx",
         "dialog_box.tmx",
         "dorm.tmx",
         "dorm_exterior.tmx",
         "engineering_building.tmx",
         "intersection.tmx",
-        "library_exterior.tmx",
-        "library_interior.tmx",
-        "school_gate.tmx",
-        "time_display.tmx",
-        "ui_pause_bg.tmx",
-        "ui_pause_widgets.tmx"
+        "library_exterior.tmx"
     ]
 }

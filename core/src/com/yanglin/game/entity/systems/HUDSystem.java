@@ -9,15 +9,13 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.scenes.scene2d.Action;
-import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Container;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Array;
@@ -40,7 +38,8 @@ public class HUDSystem extends EntitySystem implements KeyInputListener {
     private BitmapFont debugFont;
     private SpriteBatch debugBatch;
     private GameScreen gameScreen;
-    private Array<Actor> pauseActors = new Array<>();
+    private Group pauseMenuGroup = new Group();
+    private Group timeDisplayGroup = new Group();
 
     public HUDSystem(IWantToGraduate game, Stage stage, GameScreen gameScreen) {
         // Display pause menu, time, quest
@@ -93,39 +92,57 @@ public class HUDSystem extends EntitySystem implements KeyInputListener {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 gameScreen.setPaused(false);
+                pauseMenuGroup.setVisible(false);
             }
         });
 
+        musicToggle.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                gameScreen.playMusic = !gameScreen.playMusic;
+                Gdx.app.log(TAG, "Change play music toggle: " + gameScreen.playMusic);
+            }
+        });
+
+        effectToggle.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                gameScreen.playEffect = !gameScreen.playEffect;
+                Gdx.app.log(TAG, "Change play effect toggle: " + gameScreen.playEffect);
+            }
+        });
+
+        pauseMenuGroup.addActor(pauseBG);
+        pauseMenuGroup.addActor(pauseMenu);
+        pauseMenuGroup.addActor(pauseResume);
+        pauseMenuGroup.addActor(musicToggle);
+        pauseMenuGroup.addActor(effectToggle);
+        pauseMenuGroup.addActor(resumeLabel);
+        pauseMenuGroup.addActor(menuLabel);
+        pauseMenuGroup.setVisible(false);
+        stage.addActor(pauseMenuGroup);
 
         Image timeImage = new Image((Texture) game.assetManager.get("ui/time_display.png"));
+        // TODO: Fix time label position
         timeImage.setPosition(stage.getWidth() - timeImage.getWidth(), stage.getHeight() - timeImage.getHeight());
         Label timeLabel = new Label("5月1日", skin, "timeLabel");
-        timeLabel.setPosition(timeImage.getX(), timeImage.getY());
+        timeLabel.setPosition(timeImage.getX() + timeImage.getWidth() / 2 - timeLabel.getWidth() / 2,
+                timeImage.getY() + timeImage.getHeight() / 2 - timeLabel.getHeight() / 2 + 22);
+        // timeLabel.debug();
+        // timeImage.debug();
         timeLabel.setName("");
-        // timeLabel.setVisible(true);
-
-        stage.addActor(pauseBG);
-        stage.addActor(pauseMenu);
-        stage.addActor(pauseResume);
-        stage.addActor(musicToggle);
-        stage.addActor(effectToggle);
-        stage.addActor(resumeLabel);
-        stage.addActor(menuLabel);
-        this.pauseActors.addAll(pauseBG, pauseMenu, pauseResume, musicToggle, effectToggle, resumeLabel, menuLabel);
-        for (Actor actor : pauseActors) {
-            actor.setVisible(false);
-        }
-
-        stage.addActor(timeImage);
-        stage.addActor(timeLabel);
         timeLabel.addAction(new Action() {
             @Override
             public boolean act(float delta) {
-                ((Label) getActor()).setText( game.gameState.month + "月" + game.gameState.date + "日");
+                ((Label) getActor()).setText(game.gameState.month + "月" + game.gameState.date + "日");
                 return false;
             }
         });
-        // TODO: Fix time label position
+
+        timeDisplayGroup.addActor(timeImage);
+        timeDisplayGroup.addActor(timeLabel);
+        stage.addActor(timeDisplayGroup);
+
     }
 
     @Override
@@ -165,18 +182,14 @@ public class HUDSystem extends EntitySystem implements KeyInputListener {
             switch (keycode) {
                 case Input.Keys.ESCAPE -> {
                     gameScreen.isPaused = false;
-                    for (Actor actor : pauseActors) {
-                        actor.setVisible(false);
-                    }
+                    pauseMenuGroup.setVisible(false);
                 }
             }
             return true;
         }
         if (keycode == Input.Keys.ESCAPE) {
             gameScreen.isPaused = true;
-            for (Actor actor : pauseActors) {
-                actor.setVisible(true);
-            }
+            pauseMenuGroup.setVisible(true);
         }
         return false;
     }

@@ -2,12 +2,15 @@ package com.yanglin.game.entity.systems;
 
 import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.ScreenUtils;
 import com.rafaskoberg.gdx.typinglabel.TypingLabel;
 import com.yanglin.game.IWantToGraduate;
 import com.yanglin.game.input.GameInputProcessor;
@@ -34,21 +37,34 @@ public class DialogSystem extends EntitySystem implements KeyInputListener, Play
 
         Skin skin = game.assetManager.get("ui/skins/title_skin.json");
 
-        // Dialog background
         dialogBackground = new Image((Texture) game.assetManager.get("ui/dialog_box.png"));
 
-        dialogLabel = new TypingLabel("Hello world!", skin, "dialogLabel");
+        dialogBackground.setPosition((stage.getWidth() - dialogBackground.getWidth()) / 2, 0);
 
-        dialogLabel.setVisible(false);
+        dialogLabel = new TypingLabel("", skin, "dialogLabel");
+        dialogLabel.setPosition(dialogBackground.getX() + 80, dialogBackground.getHeight() - 80);
 
         Group dialogGroup = new Group();
+        dialogGroup.addActor(dialogBackground);
+        dialogGroup.addActor(dialogLabel);
+        // dialogGroup.setVisible(false);
 
-        stage.addActor(dialogLabel);
-        stage.addActor(dialogBackground);
+        stage.addActor(dialogGroup);
+    }
+
+
+    @Override
+    public void onDialog(String text) {
+        inDialog = true;
+        setDialog(text);
     }
 
     public void setDialog(String text){
         currentDialog = new Array<>(text.replace("{BR}", "\n").split("\\{NEXT}"));
+        if(currentDialog.size>0){
+            dialogLabel.setText(currentDialog.pop());
+            dialogLabel.restart();
+        }
     }
 
     @Override
@@ -63,9 +79,10 @@ public class DialogSystem extends EntitySystem implements KeyInputListener, Play
 
     @Override
     public boolean keyDown(GameInputProcessor gameInputProcessor, int keycode) {
+        // Dialog system must block the input before dialog ends
         if(inDialog){
             switch (keycode) {
-                case Input.Keys.L -> {
+                case Input.Keys.Z -> {
                     if(currentDialog.size > 0) {
                         dialogLabel.setText(currentDialog.pop());
                     } else {
@@ -99,11 +116,5 @@ public class DialogSystem extends EntitySystem implements KeyInputListener, Play
             game.ending = Ending.HUNGER;
             game.changeScreen(EScreen.BAD_END);
         }
-    }
-
-    @Override
-    public void onDialog(String text) {
-        inDialog = true;
-        setDialog(text);
     }
 }

@@ -3,6 +3,7 @@ package com.yanglin.game.entity.systems;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -10,6 +11,7 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.math.Vector2;
 import com.yanglin.game.GameAssetManager;
+import com.yanglin.game.GameState;
 import com.yanglin.game.entity.EntityEngine;
 import com.yanglin.game.entity.MapManager;
 import com.yanglin.game.entity.component.*;
@@ -31,14 +33,17 @@ public class PlayerMovementSystem extends IteratingSystem implements KeyInputLis
     private final Vector2 accleration = new Vector2(0.1f, 0.1f);
     private Vector2 cameraPos = new Vector2();
 
+    private GameState gameState;
+
     // private final ComponentMapper<AnimationComponent> am;
 
-    public PlayerMovementSystem(GameAssetManager assetManager, MapManager mapManager, OrthographicCamera camera) {
+    public PlayerMovementSystem(GameAssetManager assetManager, MapManager mapManager, OrthographicCamera camera, GameState gameState) {
         super(Family.all(PlayerComponent.class, PositionComponent.class, AnimationComponent.class).get());
         // am = ComponentMapper.getFor(AnimationComponent.class);
         this.camera = camera;
         this.assetManager = assetManager;
         this.mapManager = mapManager;
+        this.gameState = gameState;
 
         map = assetManager.get(mapManager.getCurrentMap().getFileName());
         collisionLayer = (TiledMapTileLayer) map.getLayers().get("collision");
@@ -52,6 +57,7 @@ public class PlayerMovementSystem extends IteratingSystem implements KeyInputLis
         // final PlayerComponent playerComponent = EntityEngine.playerComponentMapper.get(entity);
         final PositionComponent positionComponent = EntityEngine.positionComponentMapper.get(entity);
         final StateComponent stateComponent = EntityEngine.stateComponentMapper.get(entity);
+
         if (!currentFacing.equals(previousFacing) || currentIsWalking != previousIsWalking) {
             if (currentIsWalking) {
                 switch (currentFacing) {
@@ -112,8 +118,14 @@ public class PlayerMovementSystem extends IteratingSystem implements KeyInputLis
             collisionY = collisionLayer.getCell((int) (targetX + 1), (int) (targetY)) != null;
         }
 
-        if (!collisionX) positionComponent.position.x += velocity.x;
-        if (!collisionY) positionComponent.position.y += velocity.y;
+        if (!collisionX){
+            positionComponent.position.x += velocity.x;
+            gameState.x = positionComponent.position.x;
+        }
+        if (!collisionY) {
+            positionComponent.position.y += velocity.y;
+            gameState.y = positionComponent.position.y;
+        }
 
         cameraPos.set(entity.getComponent(PositionComponent.class).position);
 
@@ -122,19 +134,28 @@ public class PlayerMovementSystem extends IteratingSystem implements KeyInputLis
         float ymax = map.getProperties().get("height", Integer.class);
         float w = Gdx.graphics.getWidth();
         float h = Gdx.graphics.getHeight();
-        float scaledViewportWidthHalfExtent = (w / h) * 20 * 0.5f;
-        float scaledViewportHeightHalfExtent = 20 * 0.5f;
-        // Horizontal
-        if (cameraPos.x < scaledViewportWidthHalfExtent)
-            cameraPos.x = scaledViewportWidthHalfExtent;
-        else if (cameraPos.x > xmax - scaledViewportWidthHalfExtent)
-            cameraPos.x = xmax - scaledViewportWidthHalfExtent;
 
-        // Vertical
-        if (cameraPos.y < scaledViewportHeightHalfExtent)
-            cameraPos.y = scaledViewportHeightHalfExtent;
-        else if (cameraPos.y > ymax - scaledViewportHeightHalfExtent)
-            cameraPos.y = ymax - scaledViewportHeightHalfExtent;
+        float scaledViewportWidthHalfExtent = (w / h) * 20 * 0.5f;
+
+        if(xmax > scaledViewportWidthHalfExtent*2){
+            // Horizontal
+            if (cameraPos.x < scaledViewportWidthHalfExtent)
+                cameraPos.x = scaledViewportWidthHalfExtent;
+            else if (cameraPos.x > xmax - scaledViewportWidthHalfExtent)
+                cameraPos.x = xmax - scaledViewportWidthHalfExtent;
+        } else {
+            cameraPos.x = xmax / 2;
+        }
+        float scaledViewportHeightHalfExtent = 20 * 0.5f;
+        if(ymax > scaledViewportHeightHalfExtent*2) {
+            // Vertical
+            if (cameraPos.y < scaledViewportHeightHalfExtent)
+                cameraPos.y = scaledViewportHeightHalfExtent;
+            else if (cameraPos.y > ymax - scaledViewportHeightHalfExtent)
+                cameraPos.y = ymax - scaledViewportHeightHalfExtent;
+        } else {
+           cameraPos.y  = ymax / 2;
+        }
 
         camera.position.set(cameraPos, 0);
         camera.update();

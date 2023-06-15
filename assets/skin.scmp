@@ -231,7 +231,7 @@ jsonData: {
 			shadowColor: null
 			spaceX: 0
 			spaceY: 0
-			characters: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890\\\"!`?'.,;:()[]{}<>|/@^$€-%+=#_&~* ¡¢£¤¥¦§¨©ª«¬­®¯°±²³´µ¶·¸¹º»¼½¾¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõö÷øùúûüýþÿ•⌘大延畢岩壁繼續月日取得了 錢包底沒有什麼，但是填飽肚子還足夠的前一段時間參加校內多益不知道達到業門檻希望佛祖保佑水果籃聽說教授很喜歡蘋你將書交給並繳逾期費離又更近步要和尷尬致死顫抖成績單語言中心服務人員在寫資料後申請通過。與之差分下次覺上課認真決定同情讓平老翹五再來檢視哪些條件列出閱讀完產覽拿小藝文數好搶"
+			characters: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890\\\"!`?'.,;:()[]{}<>|/@^$€-%+=#_&~* ¡¢£¤¥¦§¨©ª«¬­®¯°±²³´µ¶·¸¹º»¼½¾¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõö÷øùúûüýþÿ•⌘大延畢岩壁繼續月日取得了 錢包底沒有什麼，但是填飽肚子還足夠的前一段時間參加校內多益不知道達到業門檻希望佛祖保佑水果籃聽說教授很喜歡蘋你將書交給並繳逾期費離又更近步要和尷尬致死顫抖成績單語言中心服務人員在寫資料後申請通過。與之差分下次覺上課認真決定同情讓平老翹五再來檢視哪些條件列出閱讀完產覽拿小藝文數好搶\r\n\t連都帶就想回去宿舍找吧！　只能觸發依稀記本可必會失敗需處理邏輯線審核須對話以直接設未籍忘歸看納"
 			kerning: true
 			flip: false
 			genMipMaps: false
@@ -332,7 +332,7 @@ jsonData: {
 			file: C:/Users/linxs/Desktop/intro-to-cs-final/assets/fonts/NotoSansTC-Medium.otf
 			previewTTF: SourceSansPro-Regular
 			useCustomSerializer: true
-			size: 24
+			size: 32
 			mono: false
 			hinting: AutoMedium
 			color: black
@@ -1056,6 +1056,60 @@ jsonData: {
 						name: fontColor
 						optional: true
 						value: black
+					}
+					background: {
+						type: com.badlogic.gdx.scenes.scene2d.utils.Drawable
+						name: background
+						optional: true
+						value: null
+					}
+				}
+				deletable: true
+				parent: null
+			}
+			{
+				class: com.ray3k.skincomposer.data.StyleData
+				name: badEndTitle
+				clazz: com.badlogic.gdx.scenes.scene2d.ui.Label
+				properties: {
+					font: {
+						type: com.badlogic.gdx.graphics.g2d.BitmapFont
+						name: font
+						optional: false
+						value: title_font
+					}
+					fontColor: {
+						type: com.badlogic.gdx.graphics.Color
+						name: fontColor
+						optional: true
+						value: white
+					}
+					background: {
+						type: com.badlogic.gdx.scenes.scene2d.utils.Drawable
+						name: background
+						optional: true
+						value: null
+					}
+				}
+				deletable: true
+				parent: null
+			}
+			{
+				class: com.ray3k.skincomposer.data.StyleData
+				name: badEndReason
+				clazz: com.badlogic.gdx.scenes.scene2d.ui.Label
+				properties: {
+					font: {
+						type: com.badlogic.gdx.graphics.g2d.BitmapFont
+						name: font
+						optional: false
+						value: dialogFont
+					}
+					fontColor: {
+						type: com.badlogic.gdx.graphics.Color
+						name: fontColor
+						optional: true
+						value: white
 					}
 					background: {
 						type: com.badlogic.gdx.scenes.scene2d.utils.Drawable

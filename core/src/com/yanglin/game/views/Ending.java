@@ -9,5 +9,6 @@ public enum Ending {
     HUNGER,
     AWKWARD_STORE,
     AWKWARD_BOOK,
-    DEFAULT_BAD;
+    DEFAULT_BAD,
+    TIME_OUT;
 }

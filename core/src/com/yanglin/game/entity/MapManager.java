@@ -2,11 +2,12 @@ package com.yanglin.game.entity;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.Array;
+import com.yanglin.game.GameState;
+import com.yanglin.game.IWantToGraduate;
 
 public class MapManager {
     private static final String TAG = MapManager.class.getSimpleName();
     private final Array<MapListener> mapListeners;
-
     public enum EMap {
         SCHOOL_GATE("tilemaps/school_gate.tmx"),
         DORM_EXTER("tilemaps/dorm_exterior.tmx"),
@@ -29,9 +30,11 @@ public class MapManager {
     }
 
     private EMap currentMap;
+    private IWantToGraduate game;
 
-    public MapManager() {
+    public MapManager(IWantToGraduate game) {
         this.mapListeners = new Array<>();
+        this.game = game;
     }
 
     public void addMapListener(final MapListener mapListener) {
@@ -44,13 +47,19 @@ public class MapManager {
             mapListener.mapChanged(EMap, x, y);
         }
     }
+    public void clearMapListeners(){
+        mapListeners.clear();
+    }
 
     public interface MapListener {
         void mapChanged(final EMap EMap, float x, float y);
     }
 
     public void setCurrentMap(EMap map, float x, float y){
-        this.currentMap = map;
+        Gdx.app.debug(TAG, "Setting current map: " + map.name());
+        currentMap = map;
+        game.gameState.map = map;
+        Gdx.app.debug(TAG, game.gameState.map.name());
         notifyMapListener(map, x, y);
     }
 

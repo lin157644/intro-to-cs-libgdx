@@ -5,32 +5,32 @@
   <properties>
    <property name="dest" value="LIBRARY_EXTER"/>
    <property name="type" value="MAP"/>
-   <property name="x" type="float" value="0"/>
-   <property name="y" type="float" value="0"/>
+   <property name="x" type="float" value="3"/>
+   <property name="y" type="float" value="3"/>
   </properties>
  </tile>
  <tile id="1">
   <properties>
    <property name="dest" value="LIBRARY_EXTER"/>
    <property name="type" value="MAP"/>
-   <property name="x" type="float" value="0"/>
-   <property name="y" type="float" value="0"/>
+   <property name="x" type="float" value="27"/>
+   <property name="y" type="float" value="3"/>
   </properties>
  </tile>
  <tile id="2">
   <properties>
    <property name="dest" value="DORM_EXTER"/>
    <property name="type" value="MAP"/>
-   <property name="x" type="float" value="0"/>
-   <property name="y" type="float" value="0"/>
+   <property name="x" type="float" value="3"/>
+   <property name="y" type="float" value="6"/>
   </properties>
  </tile>
  <tile id="3">
   <properties>
    <property name="dest" value="DORM_EXTER"/>
    <property name="type" value="MAP"/>
-   <property name="x" type="float" value="0"/>
-   <property name="y" type="float" value="0"/>
+   <property name="x" type="float" value="18"/>
+   <property name="y" type="float" value="2"/>
   </properties>
  </tile>
  <tile id="8">
@@ -55,24 +55,24 @@
   <properties>
    <property name="dest" value="SCHOOL_GATE"/>
    <property name="type" value="MAP"/>
-   <property name="x" type="float" value="0"/>
-   <property name="y" type="float" value="0"/>
+   <property name="x" type="float" value="42"/>
+   <property name="y" type="float" value="30"/>
   </properties>
  </tile>
  <tile id="21">
   <properties>
    <property name="dest" value="SCHOOL_GATE"/>
    <property name="type" value="MAP"/>
-   <property name="x" type="float" value="0"/>
-   <property name="y" type="float" value="0"/>
+   <property name="x" type="float" value="44"/>
+   <property name="y" type="float" value="13"/>
   </properties>
  </tile>
  <tile id="22">
   <properties>
    <property name="dest" value="INTERSEC"/>
    <property name="type" value="MAP"/>
-   <property name="x" type="float" value="0"/>
-   <property name="y" type="float" value="0"/>
+   <property name="x" type="float" value="11"/>
+   <property name="y" type="float" value="3"/>
   </properties>
  </tile>
  <tile id="26">
@@ -85,7 +85,7 @@
  <tile id="27">
   <properties>
    <property name="dialog" value="WALLET"/>
-   <property name="text" value="取得了 &quot;錢包&quot; 。{BR} 月底了沒有什麼錢，但是&quot;填飽肚子&quot;還是足夠的。"/>
+   <property name="text" value="取得了 &quot;錢包&quot; 。{BR}月底了沒有什麼錢，但是&quot;填飽肚子&quot;還是足夠的。"/>
    <property name="type" value="DIALOG"/>
   </properties>
  </tile>
@@ -99,7 +99,7 @@
  <tile id="29">
   <properties>
    <property name="dialog" value="ENGLISH"/>
-   <property name="text" value="前一段時間參加了校內多益，不知道有沒有達到畢業門檻，希望佛祖保佑。"/>
+   <property name="text" value="前一段時間參加了校內多益，{BR}不知道有沒有達到畢業門檻，希望佛祖保佑。"/>
    <property name="type" value="DIALOG"/>
   </properties>
  </tile>
@@ -107,16 +107,16 @@
   <properties>
    <property name="dest" value="DORM_EXTER"/>
    <property name="type" value="MAP"/>
-   <property name="x" type="float" value="0"/>
-   <property name="y" type="float" value="0"/>
+   <property name="x" type="float" value="18"/>
+   <property name="y" type="float" value="27"/>
   </properties>
  </tile>
  <tile id="41">
   <properties>
    <property name="dest" value="LIBRARY_EXTER"/>
    <property name="type" value="MAP"/>
-   <property name="x" type="float" value="0"/>
-   <property name="y" type="float" value="0"/>
+   <property name="x" type="float" value="27"/>
+   <property name="y" type="float" value="4"/>
   </properties>
  </tile>
  <tile id="42">
@@ -131,8 +131,8 @@
   <properties>
    <property name="dest" value="ENGINEER_V"/>
    <property name="type" value="MAP"/>
-   <property name="x" type="float" value="0"/>
-   <property name="y" type="float" value="0"/>
+   <property name="x" type="float" value="27"/>
+   <property name="y" type="float" value="4"/>
   </properties>
  </tile>
  <tile id="46">
@@ -190,40 +190,40 @@
   <properties>
    <property name="dest" value="INTERSEC"/>
    <property name="type" value="MAP"/>
-   <property name="x" type="float" value="0"/>
-   <property name="y" type="float" value="0"/>
+   <property name="x" type="float" value="3"/>
+   <property name="y" type="float" value="5"/>
   </properties>
  </tile>
  <tile id="63">
   <properties>
    <property name="dest" value="SCHOOL_GATE"/>
    <property name="type" value="MAP"/>
-   <property name="x" type="float" value="0"/>
-   <property name="y" type="float" value="0"/>
+   <property name="x" type="float" value="6"/>
+   <property name="y" type="float" value="27"/>
   </properties>
  </tile>
  <tile id="64">
   <properties>
    <property name="dest" value="SCHOOL_GATE"/>
    <property name="type" value="MAP"/>
-   <property name="x" type="float" value="0"/>
-   <property name="y" type="float" value="0"/>
+   <property name="x" type="float" value="40"/>
+   <property name="y" type="float" value="47"/>
   </properties>
  </tile>
  <tile id="80">
   <properties>
    <property name="dest" value="LIBRARY_EXTER"/>
    <property name="type" value="MAP"/>
-   <property name="x" type="float" value="0"/>
-   <property name="y" type="float" value="0"/>
+   <property name="x" type="float" value="3"/>
+   <property name="y" type="float" value="13"/>
   </properties>
  </tile>
  <tile id="81">
   <properties>
    <property name="dest" value="LIBRARY_EXTER"/>
    <property name="type" value="MAP"/>
-   <property name="x" type="float" value="0"/>
-   <property name="y" type="float" value="0"/>
+   <property name="x" type="float" value="27"/>
+   <property name="y" type="float" value="13"/>
   </properties>
  </tile>
  <tile id="82">
@@ -252,8 +252,8 @@
   <properties>
    <property name="dest" value="INTERSEC"/>
    <property name="type" value="MAP"/>
-   <property name="x" type="float" value="0"/>
-   <property name="y" type="float" value="0"/>
+   <property name="x" type="float" value="11"/>
+   <property name="y" type="float" value="26"/>
   </properties>
  </tile>
  <tile id="101">
@@ -268,8 +268,8 @@
   <properties>
    <property name="dest" value="LIBRARY_INTER"/>
    <property name="type" value="MAP"/>
-   <property name="x" type="float" value="0"/>
-   <property name="y" type="float" value="0"/>
+   <property name="x" type="float" value="12"/>
+   <property name="y" type="float" value="9"/>
   </properties>
  </tile>
  <tile id="121">
@@ -289,8 +289,8 @@
   <properties>
    <property name="dest" value="LIBRARY_EXTER"/>
    <property name="type" value="MAP"/>
-   <property name="x" type="float" value="0"/>
-   <property name="y" type="float" value="0"/>
+   <property name="x" type="float" value="15"/>
+   <property name="y" type="float" value="5"/>
   </properties>
  </tile>
  <tile id="141">

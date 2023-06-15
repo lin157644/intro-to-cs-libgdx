@@ -1,6 +1,7 @@
 package com.yanglin.game.views;
 
 import com.badlogic.ashley.core.Entity;
+import com.badlogic.ashley.core.Family;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
@@ -20,25 +21,22 @@ import com.yanglin.game.entity.systems.*;
 import com.yanglin.game.input.GameInputProcessor;
 
 public class GameScreen implements Screen {
-    private final EntityEngine engine;
-    private final GameAssetManager assetManager;
-    private final MapManager mapManager;
+    private static final String TAG = GameScreen.class.getSimpleName();
+    private EntityEngine engine;
+    private GameAssetManager assetManager;
+    private MapManager mapManager;
     private final IWantToGraduate game;
     private final OrthographicCamera camera;
     public Stage uistage;
     public Stage dialogstage;
     private SpriteBatch batch;
-    private Boolean playMusic = true;
-    private Boolean playEffect = true;
+    public Boolean playMusic = true;
+    public Boolean playEffect = true;
     public Boolean isPaused = false;
 
     public GameScreen(IWantToGraduate game) {
+        Gdx.app.log(TAG, "GameScreen constructor");
         this.game = game;
-
-        this.engine = new EntityEngine();
-
-        this.assetManager = game.assetManager;
-        this.mapManager = game.mapManager;
 
         batch = new SpriteBatch();
 
@@ -58,13 +56,22 @@ public class GameScreen implements Screen {
 
     @Override
     public void show() {
+        Gdx.app.debug(TAG, "Showed");
+
+        this.engine = new EntityEngine();
+        this.assetManager = game.assetManager;
+        this.mapManager = game.mapManager;
+
+        mapManager.clearMapListeners();
+        mapManager.setCurrentMap(game.gameState.map, 24, 20);
+
         // Create systems
         final RenderingSystem renderingSystem = new RenderingSystem(assetManager, mapManager, camera, batch);
-        final PlayerMovementSystem playerMovementSystem = new PlayerMovementSystem(assetManager, mapManager, camera);
+        final PlayerMovementSystem playerMovementSystem = new PlayerMovementSystem(assetManager, mapManager, camera, game.gameState);
         final AnimationSystem playerAnimationSystem = new AnimationSystem(assetManager);
         final HUDSystem HUDSystem = new HUDSystem(game, uistage, this);
         final PlayerInteractionSystem playerInteractionSystem = new PlayerInteractionSystem(game);
-        final TimeSystem timeSystem = new TimeSystem(game.gameState, this);
+        final TimeSystem timeSystem = new TimeSystem(game, this);
         final DialogSystem dialogSystem = new DialogSystem(game, dialogstage);
         // Add systems
         engine.addSystem(renderingSystem);
@@ -76,6 +83,7 @@ public class GameScreen implements Screen {
         engine.addSystem(dialogSystem);
 
         timeSystem.addTimeSystemListener(playerMovementSystem);
+        playerInteractionSystem.addPlayerInteractionListener(dialogSystem);
 
         // Create item entity
         for (ItemComponent.ItemType itemType : ItemComponent.ItemType.values()) {
@@ -137,11 +145,14 @@ public class GameScreen implements Screen {
 
         Gdx.input.setInputProcessor(inputMultiplexer);
 
+        Entity player = engine.getEntitiesFor(Family.all(PlayerComponent.class).get()).first();
+        EntityEngine.positionComponentMapper.get(player).position.x = game.gameState.x;
+        EntityEngine.positionComponentMapper.get(player).position.y = game.gameState.y;
     }
 
     @Override
     public void render(float delta) {
-        ScreenUtils.clear(1.0f, 1.0f, 1.0f, 0.0f);
+        ScreenUtils.clear(0.2f, 0.2f, 0.7f, 1.0f);
         engine.update(delta);
     }
 
@@ -167,7 +178,9 @@ public class GameScreen implements Screen {
 
     @Override
     public void dispose() {
+        engine.getSystem(RenderingSystem.class).dispose();
         engine.removeAllEntities();
+
         engine.removeAllSystems();
     }
 }

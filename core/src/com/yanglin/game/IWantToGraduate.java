@@ -22,7 +22,7 @@ public class IWantToGraduate extends Game {
     public Screen currentScreen;
     private final EnumMap<EScreen, Screen> screenMap = new EnumMap<>(EScreen.class);
     public GameAssetManager assetManager = new GameAssetManager();
-    public MapManager mapManager = new MapManager();
+    public MapManager mapManager;
     public GameState gameState;
     public Ending ending;
 
@@ -38,7 +38,8 @@ public class IWantToGraduate extends Game {
         if (Gdx.app.getLogLevel() == Application.LOG_DEBUG)
             GameState.saveState(gameState);
 
-        mapManager.setCurrentMap(gameState.map, 24, 20);
+        mapManager = new MapManager(this);
+
         changeScreen(EScreen.LOADING);
         float w = Gdx.graphics.getWidth();
         float h = Gdx.graphics.getHeight();
@@ -58,6 +59,7 @@ public class IWantToGraduate extends Game {
         if (currentScreen == null) {
             try {
                 // Very elegant way of initializing new screens. Ref: Mystic garden
+                Gdx.app.debug(TAG, "Create screen " + s.name());
                 screenMap.put(s, (Screen) ClassReflection.getConstructor(s.getScreenType(), IWantToGraduate.class).newInstance(this));
                 currentScreen = screenMap.get(s);
             } catch (ReflectionException e) {

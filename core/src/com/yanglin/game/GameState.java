@@ -28,7 +28,7 @@ public class GameState {
     public int month = 5;
     public int date = 1;
     public int hunger = 0;
-    private final Array<ItemComponent.ItemType> items = new Array<>();
+    public final Array<ItemComponent.ItemType> items = new Array<>();
 
     public void addItem(ItemComponent.ItemType itemType){
         if (!items.contains(itemType, true))
@@ -43,6 +43,7 @@ public class GameState {
     public static GameState loadState() {
         File file = new File("graduate.save");
         if (file.exists() && !file.isDirectory()) {
+            Gdx.app.debug(TAG, "Old save exist. Read from old save file.");
             try (Scanner scanner = new Scanner(file)){
                 Json json = new Json();
                 return json.fromJson(GameState.class, scanner.nextLine());
@@ -77,7 +78,7 @@ public class GameState {
 
         File file = new File("graduate.save");
         try (FileWriter fw = new FileWriter(file)) {
-            Gdx.app.debug(TAG, json.toJson(gs));
+            Gdx.app.debug(TAG, "Saving: " + json.toJson(gs));
             fw.write(json.toJson(gs, GameState.class));
         } catch (Exception ignored) {
             Gdx.app.log(TAG, "Error when trying to write savefile");

@@ -12,6 +12,7 @@ import com.badlogic.gdx.maps.objects.TextureMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.utils.Disposable;
 import com.yanglin.game.GameAssetManager;
 import com.yanglin.game.entity.EntityEngine;
 import com.yanglin.game.entity.MapManager;
@@ -21,7 +22,7 @@ import com.badlogic.gdx.utils.Array;
 
 import java.util.Comparator;
 
-public class RenderingSystem extends SortedIteratingSystem implements MapManager.MapListener {
+public class RenderingSystem extends SortedIteratingSystem implements MapManager.MapListener, Disposable {
     private static final String TAG = RenderingSystem.class.getSimpleName();
     private final ComponentMapper<TextureComponent> tm;
     private final ComponentMapper<PositionComponent> pm;
@@ -117,6 +118,15 @@ public class RenderingSystem extends SortedIteratingSystem implements MapManager
 
         tiledMapRenderer.setMap(map);
 
+    }
+
+    @Override
+    public void dispose() {
+        TiledMap map = assetManager.get(mapManager.getCurrentMap().getFileName(), TiledMap.class);
+        MapLayer objectLayer = map.getLayers().get("playerLayer");
+        if(objectLayer != null) {
+            objectLayer.getObjects().remove(playerTextureObj);
+        }
     }
 
     private static class ZComparator implements Comparator<Entity> {

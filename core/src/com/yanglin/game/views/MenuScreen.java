@@ -103,10 +103,13 @@ public class MenuScreen implements Screen {
                             switch (currSel.getName()){
                                 case "continue" -> {
                                     // Game state already loaded in IWantToGraduate
+                                    game.gameState = GameState.loadState();
                                     game.changeScreen(EScreen.GAME);
                                 }
                                 case "start" -> {
-                                    GameState.clearSavedState();
+                                    if(GameState.clearSavedState()){
+                                        Gdx.app.log(TAG, "Start the game: Successfully removed old file.");
+                                    }
                                     game.gameState = GameState.loadState();
                                     game.changeScreen(EScreen.GAME);
                                 }
