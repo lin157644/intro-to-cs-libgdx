@@ -16,6 +16,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.rafaskoberg.gdx.typinglabel.TypingLabel;
 import com.yanglin.game.IWantToGraduate;
+import com.yanglin.game.MusicManager;
 
 public class BadEndScreen implements Screen {
     private static String TAG = BadEndScreen.class.getSimpleName();
@@ -53,6 +54,8 @@ public class BadEndScreen implements Screen {
                 return false;
             }
         });
+
+        game.musicManager.setBGM(MusicManager.BGM.BAD_END, true);
 
         stage.addActor(vbox);
     }
@@ -130,6 +133,7 @@ public class BadEndScreen implements Screen {
 
     @Override
     public void dispose() {
+        game.musicManager.stopBGM();
         stage.dispose();
     }
 }

@@ -16,6 +16,7 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGeneratorLoader;
 import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.ray3k.stripe.FreeTypeSkinLoader;
@@ -87,6 +88,7 @@ public class GameAssetManager extends AssetManager {
         load("img/happy_man.png", Texture.class);
         load("img/cert.png", Texture.class);
         load("img/the_wall.jpg", Texture.class);
+        load("img/spinner.png", Texture.class);
     }
 
     public void loadFonts(){
