@@ -200,6 +200,16 @@ jsonData: {
 		{
 			class: com.ray3k.skincomposer.data.ColorData
 			color: {
+				r: 0.35686275
+				g: 0.35686275
+				b: 0.35686275
+				a: 1
+			}
+			name: gray
+		}
+		{
+			class: com.ray3k.skincomposer.data.ColorData
+			color: {
 				r: 0.22745098
 				g: 0.22745098
 				b: 0.3137255
@@ -343,9 +353,9 @@ jsonData: {
 			borderColor: null
 			borderStraight: false
 			borderGamma: 1.8
-			shadowOffsetX: 0
+			shadowOffsetX: 3
 			shadowOffsetY: 0
-			shadowColor: null
+			shadowColor: black
 			spaceX: 0
 			spaceY: 0
 			characters: ""
@@ -449,7 +459,7 @@ jsonData: {
 			file: C:/Users/linxs/Desktop/intro-to-cs-final/assets/fonts/title_font.otf
 			previewTTF: IBMPlexSerif-Medium
 			useCustomSerializer: true
-			size: 120
+			size: 180
 			mono: false
 			hinting: AutoMedium
 			color: white
@@ -459,9 +469,9 @@ jsonData: {
 			borderColor: null
 			borderStraight: false
 			borderGamma: 1.8
-			shadowOffsetX: 0
+			shadowOffsetX: 5
 			shadowOffsetY: 0
-			shadowColor: null
+			shadowColor: gray
 			spaceX: 0
 			spaceY: 0
 			characters: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890\\\"!`?'.,;:()[]{}<>|/@^$€-%+=#_&~*\r\n ¡¢£¤¥¦§¨©ª«¬­®¯°±²³´µ¶·¸¹º»¼½¾¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõö÷øùúûüýþÿ•⌘大延畢岩壁繼續月日"

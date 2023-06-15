@@ -4,7 +4,6 @@ import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.core.Family;
-import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -149,20 +148,38 @@ public class PlayerInteractionSystem extends EntitySystem implements MapManager.
                                     return;
                                 } else {
                                     String text = "你顫抖得將多益成績單交給了語言中心服務人員 {NEXT} 在填寫了資料後，申請通過畢業門檻。";
+                                    game.gameState.hasPassEnglish = true;
                                     notifyDialogListeners(text);
                                 }
 
                             }
                             case "GIFT_PROF" -> {
                                 hasTriggeredDialog = true;
-                                if (gameState.hasItem(ItemComponent.ItemType.APPLE)) {
-                                    String text = "";
-                                    // TODO: Trigger　Dialog
+                                if(!gameState.hasMeetProf){
+                                    if (gameState.hasItem(ItemComponent.ItemType.APPLE)) {
+                                        String text = "教授覺得你上課認真，決定同情你讓你畢業。";
+                                        notifyDialogListeners(text);
+                                        gameState.hasMeetProf = true;
+                                    } else {
+                                        // Fail text won't be use here
+                                        game.ending = Ending.DID_NOT_PASS;
+                                        game.changeScreen(EScreen.BAD_END);
+                                        return;
+                                    }
+                                }
+                            }
+                            case "ACAD_PROC" -> {
+                                hasTriggeredDialog = true;
+                                if(game.gameState.hasWorshiped && game.gameState.hasPassEnglish && game.gameState.hasEnoughHours){
+                                    game.gameState.hasFinishedProcedure = true;
+                                    String text = "你已經完成離校手續領到了學位證書，可以正式告別中央了。";
+                                    // TODO: Trigger dialog
+                                    notifyDialogListeners(text + getHintDialog());
+
                                 } else {
-                                    // Fail text won't be use here
-                                    game.ending = Ending.DID_NOT_PASS;
-                                    game.changeScreen(EScreen.BAD_END);
-                                    return;
+                                    String text = "看來你距離畢業還有些事情沒做。";
+                                    // TODO: Trigger dialog
+                                    notifyDialogListeners(text);
                                 }
                             }
                             default -> {
@@ -173,10 +190,14 @@ public class PlayerInteractionSystem extends EntitySystem implements MapManager.
                     case "ITEM", "DIALOG", "TEST", "DEBUG" -> {
                     }
                     case "EXIT" -> {
-                        // TODO: Check requirement
-                        if(false) {
+                        if(game.gameState.canGraduate()) {
                             game.ending = Ending.GOOD_END;
                             game.changeScreen(EScreen.GOOD_END);
+                            return;
+                        } else {
+                            game.ending = Ending.DEFAULT_BAD;
+                            game.changeScreen(EScreen.BAD_END);
+                            return;
                         }
                     }
                     default -> {
@@ -224,8 +245,9 @@ public class PlayerInteractionSystem extends EntitySystem implements MapManager.
                                         game.ending = Ending.AWKWARD_STORE;
                                         game.changeScreen(EScreen.BAD_END);
                                     } else {
-                                        String text = "你將書交還給並繳交了逾期費，離畢業又更近了一步 (要有書和錢包)";
+                                        String text = "你將書交還給並繳交了逾期費，離畢業又更近了一步。";
                                         notifyDialogListeners(text);
+                                        game.gameState.hasReturnBook = true;
                                     }
 
                                 }
@@ -262,8 +284,13 @@ public class PlayerInteractionSystem extends EntitySystem implements MapManager.
                                     if (!gameState.hasEnoughHours) {
                                         // Only evoke dialog if not triggered before
                                         gameState.hasEnoughHours = true;
-                                        String exhibitText = "你在閱讀完展覽後填寫了心得，拿到了一小時的藝文時數{BR}OS:還好之前有搶到CPR";
-                                        notifyDialogListeners(exhibitText);
+                                        notifyDialogListeners(dialogText);
+                                    }
+                                }
+                                case "WORSHIP" -> {
+                                    if(!gameState.hasWorshiped) {
+                                        gameState.hasWorshiped = true;
+                                        notifyDialogListeners(dialogText);
                                     }
                                 }
                                 default -> {
@@ -290,6 +317,35 @@ public class PlayerInteractionSystem extends EntitySystem implements MapManager.
             }
         }
         return false;
+    }
+
+    public String getHintDialog(){
+        if(!game.gameState.hasPassEnglish) {
+            if(!game.gameState.hasItem(ItemComponent.ItemType.ENGLISH))
+                return "宿舍有多益成績單";
+            if(!game.gameState.hasWorshiped)
+                return "最好祈求佛祖保佑";
+            return  "去語言中心";
+        }
+        if (!game.gameState.hasMeetProf) {
+            if(!game.gameState.hasItem(ItemComponent.ItemType.APPLE))
+                return "還有一科沒過，找找適合見面禮";
+            return "工程五館找教授";
+        }
+        if (!game.gameState.hasEnoughHours) {
+            return "聽說圖書館正在舉辦書展，";
+        }
+        if (!game.gameState.hasReturnBook) {
+            if(!game.gameState.hasItem(ItemComponent.ItemType.BOOK))
+                return "宿舍有書";
+            if(!game.gameState.hasItem(ItemComponent.ItemType.WALLET))
+                return "書逾期好久了，宿舍拿錢包";
+            return "要還書才能畢業";
+        }
+        if (!game.gameState.hasFinishedProcedure) {
+            return "看起來事情都完成得差不多了，註冊組辦理手續吧。";
+        }
+        return "";
     }
 
     @Override

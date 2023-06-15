@@ -36,44 +36,48 @@
             "scaleInDock": 1,
             "scaleInEditor": 4
         },
+        "GuttyKreum_ZenGarden_v2.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
         "academic_office.tmx": {
-            "scale": 1,
-            "selectedLayer": 3,
+            "scale": 4,
+            "selectedLayer": 7,
             "viewCenter": {
-                "x": 238,
-                "y": 238.5
+                "x": 30,
+                "y": 38.125
             }
         },
         "dialog_box.tmx": {
             "scale": 1,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 358,
-                "y": 119.5
+                "x": 493,
+                "y": 233.5
             }
         },
         "dorm.tmx": {
             "scale": 3,
-            "selectedLayer": 0,
+            "selectedLayer": 8,
             "viewCenter": {
-                "x": 113.99999999999999,
-                "y": 173.16666666666666
+                "x": 172.33333333333334,
+                "y": 178.83333333333331
             }
         },
         "dorm_exterior.tmx": {
             "scale": 4,
-            "selectedLayer": 9,
+            "selectedLayer": 10,
             "viewCenter": {
-                "x": 120.75,
-                "y": 300.125
+                "x": 413,
+                "y": 259.625
             }
         },
         "engineering_building.tmx": {
-            "scale": 1.78125,
-            "selectedLayer": 5,
+            "scale": 2,
+            "selectedLayer": 6,
             "viewCenter": {
-                "x": 391.859649122807,
-                "y": 228.21052631578945
+                "x": 210.5,
+                "y": 242.25
             }
         },
         "event_tileset.tsx": {
@@ -85,40 +89,40 @@
             "scale": 2,
             "selectedLayer": 7,
             "viewCenter": {
-                "x": 250,
-                "y": 351.75
+                "x": 213,
+                "y": 214.75
             }
         },
         "library_exterior.tmx": {
-            "scale": 1.78125,
-            "selectedLayer": 8,
+            "scale": 4,
+            "selectedLayer": 7,
             "viewCenter": {
-                "x": 329.5438596491228,
-                "y": 186.10526315789474
+                "x": 265.5,
+                "y": 104.125
             }
         },
         "library_interior.tmx": {
-            "scale": 3,
-            "selectedLayer": 7,
+            "scale": 5.5,
+            "selectedLayer": 5,
             "viewCenter": {
-                "x": 120.66666666666669,
-                "y": 101.83333333333333
+                "x": 202.72727272727275,
+                "y": 79.36363636363636
             }
         },
         "school_gate.tmx": {
-            "scale": 3,
+            "scale": 1.5,
             "selectedLayer": 8,
             "viewCenter": {
-                "x": 501.3333333333333,
-                "y": 495.8333333333333
+                "x": 346,
+                "y": 477.66666666666663
             }
         },
         "time_display.tmx": {
             "scale": 3,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 124.33333333333331,
-                "y": -33.83333333333334
+                "x": 166.33333333333334,
+                "y": 4.166666666666657
             }
         },
         "ui_pause_bg.tmx": {
@@ -139,6 +143,7 @@
         }
     },
     "last.externalTilesetPath": "C:/Users/linxs/Desktop/intro-to-cs-final/assets/tilesets",
+    "last.imagePath": "C:/Users/linxs/Desktop/intro-to-cs-final/assets/tilesets",
     "openFiles": [
         "academic_office.tmx",
         "dialog_box.tmx",
@@ -156,17 +161,22 @@
     ],
     "project": "IWTG.tiled-project",
     "recentFiles": [
-        "C:/Users/linxs/Desktop/intro-to-cs-final/assets/tilesets/Modern_UI_Style_2.tsx",
+        "GuttyKreum_ZenGarden_v2.tsx",
+        "dialog_box.tmx",
         "time_display.tmx",
+        "library_interior.tmx",
+        "C:/Users/linxs/Desktop/intro-to-cs-final/assets/tilesets/Modern_UI_Style_2.tsx",
         "ui_pause_bg.tmx",
         "C:/Users/linxs/Desktop/intro-to-cs-final/assets/tilesets/event_tileset.tsx",
         "ui_pause_widgets.tmx",
         "academic_office.tmx",
-        "dialog_box.tmx",
         "dorm.tmx",
         "dorm_exterior.tmx",
-        "engineering_building.tmx",
-        "intersection.tmx",
-        "library_exterior.tmx"
-    ]
+        "engineering_building.tmx"
+    ],
+    "tileset.lastUsedFormat": "tsx",
+    "tileset.tileSize": {
+        "height": 16,
+        "width": 16
+    }
 }

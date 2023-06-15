@@ -57,6 +57,12 @@
    <property name="type" value="EVENT"/>
   </properties>
  </tile>
+ <tile id="12">
+  <properties>
+   <property name="event" value="ACAD_PROC"/>
+   <property name="type" value="EVENT"/>
+  </properties>
+ </tile>
  <tile id="20">
   <properties>
    <property name="dest" value="SCHOOL_GATE"/>
@@ -109,6 +115,20 @@
    <property name="type" value="DIALOG"/>
   </properties>
  </tile>
+ <tile id="30">
+  <properties>
+   <property name="dialog" value="WORSHIP"/>
+   <property name="text" value="聽說這裡的土地公是留學歸國，{BR}凡是虔誠供奉，多益成績都會不錯，堪比孔廟。"/>
+   <property name="type" value="DIALOG"/>
+  </properties>
+ </tile>
+ <tile id="31">
+  <properties>
+   <property name="dialog" value="EXHIBIT"/>
+   <property name="text" value="你在閱讀完展覽後填寫了心得，拿到了一小時的藝文時數{BR}OS:還好之前有搶到CPR。"/>
+   <property name="type" value="DIALOG"/>
+  </properties>
+ </tile>
  <tile id="40">
   <properties>
    <property name="dest" value="DORM_EXTER"/>
@@ -129,8 +149,8 @@
   <properties>
    <property name="dest" value="ACAD_OFFICE"/>
    <property name="type" value="MAP"/>
-   <property name="x" type="float" value="0"/>
-   <property name="y" type="float" value="0"/>
+   <property name="x" type="float" value="26"/>
+   <property name="y" type="float" value="3"/>
   </properties>
  </tile>
  <tile id="43">
@@ -180,16 +200,16 @@
   <properties>
    <property name="dest" value="ACAD_OFFICE"/>
    <property name="type" value="MAP"/>
-   <property name="x" type="float" value="0"/>
-   <property name="y" type="float" value="0"/>
+   <property name="x" type="float" value="3"/>
+   <property name="y" type="float" value="3"/>
   </properties>
  </tile>
  <tile id="61">
   <properties>
    <property name="dest" value="ACAD_OFFICE"/>
    <property name="type" value="MAP"/>
-   <property name="x" type="float" value="0"/>
-   <property name="y" type="float" value="0"/>
+   <property name="x" type="float" value="26"/>
+   <property name="y" type="float" value="3"/>
   </properties>
  </tile>
  <tile id="62">
@@ -236,16 +256,16 @@
   <properties>
    <property name="dest" value="INTERSEC"/>
    <property name="type" value="MAP"/>
-   <property name="x" type="float" value="0"/>
-   <property name="y" type="float" value="0"/>
+   <property name="x" type="float" value="3"/>
+   <property name="y" type="float" value="6"/>
   </properties>
  </tile>
  <tile id="83">
   <properties>
    <property name="dest" value="ENGINEER_V"/>
    <property name="type" value="MAP"/>
-   <property name="x" type="float" value="0"/>
-   <property name="y" type="float" value="0"/>
+   <property name="x" type="float" value="24"/>
+   <property name="y" type="float" value="2"/>
   </properties>
  </tile>
  <tile id="86">
@@ -266,8 +286,8 @@
   <properties>
    <property name="dest" value="ACAD_OFFICE"/>
    <property name="type" value="MAP"/>
-   <property name="x" type="float" value="0"/>
-   <property name="y" type="float" value="0"/>
+   <property name="x" type="float" value="2"/>
+   <property name="y" type="float" value="17"/>
   </properties>
  </tile>
  <tile id="120">

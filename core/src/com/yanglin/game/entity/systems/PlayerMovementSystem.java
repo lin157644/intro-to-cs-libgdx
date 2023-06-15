@@ -18,6 +18,8 @@ import com.yanglin.game.entity.component.*;
 import com.yanglin.game.input.GameInputProcessor;
 import com.yanglin.game.input.KeyInputListener;
 
+import static com.yanglin.game.views.GameScreen.viewPortHeight;
+
 public class PlayerMovementSystem extends IteratingSystem implements KeyInputListener, MapManager.MapListener, TimeSystem.TimeSystemListener {
     private static final String TAG = PlayerMovementSystem.class.getSimpleName();
     private final OrthographicCamera camera;
@@ -104,18 +106,18 @@ public class PlayerMovementSystem extends IteratingSystem implements KeyInputLis
         // Origin (0, 0) at bottom left
         if (velocity.x < 0) {
             // Bottom left
-            collisionX = collisionLayer.getCell((int) (targetX), (int) (targetY)) != null;
+            collisionX = collisionLayer.getCell((int) (targetX + 0.3), (int) (targetY)) != null;
         } else if (velocity.x > 0) {
             // Bottom right
-            collisionX = collisionLayer.getCell((int) (targetX + 1), (int) (targetY)) != null;
+            collisionX = collisionLayer.getCell((int) (targetX + 0.7), (int) (targetY)) != null;
         }
 
         if (velocity.y < 0) {
             // Bottom left
-            collisionY = collisionLayer.getCell((int) (targetX), (int) (targetY)) != null;
+            collisionY = collisionLayer.getCell((int) (targetX + 0.3), (int) (targetY)) != null;
         } else if (velocity.y > 0) {
             // Bottom right
-            collisionY = collisionLayer.getCell((int) (targetX + 1), (int) (targetY)) != null;
+            collisionY = collisionLayer.getCell((int) (targetX + 0.7), (int) (targetY)) != null;
         }
 
         if (!collisionX){
@@ -135,7 +137,7 @@ public class PlayerMovementSystem extends IteratingSystem implements KeyInputLis
         float w = Gdx.graphics.getWidth();
         float h = Gdx.graphics.getHeight();
 
-        float scaledViewportWidthHalfExtent = (w / h) * 20 * 0.5f;
+        float scaledViewportWidthHalfExtent = (w / h) * viewPortHeight * 0.5f;
 
         if(xmax > scaledViewportWidthHalfExtent*2){
             // Horizontal
@@ -146,7 +148,7 @@ public class PlayerMovementSystem extends IteratingSystem implements KeyInputLis
         } else {
             cameraPos.x = xmax / 2;
         }
-        float scaledViewportHeightHalfExtent = 20 * 0.5f;
+        float scaledViewportHeightHalfExtent = viewPortHeight * 0.5f;
         if(ymax > scaledViewportHeightHalfExtent*2) {
             // Vertical
             if (cameraPos.y < scaledViewportHeightHalfExtent)

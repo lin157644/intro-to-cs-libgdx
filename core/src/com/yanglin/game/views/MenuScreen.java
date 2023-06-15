@@ -4,6 +4,7 @@ import com.badlogic.gdx.*;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Cursor;
 import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
@@ -11,6 +12,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.actions.RepeatAction;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
@@ -74,26 +76,30 @@ public class MenuScreen implements Screen {
         VerticalGroup vbox = new VerticalGroup();
 
         vbox.addActor(titleLabel);
-        if (GameState.saveExist()){
+        if (GameState.saveExist()) {
             menuSelectionList.add(continueLabel);
         }
         vbox.addActor(new Actor());
         menuSelectionList.add(startLabel, creditLabel, exitLabel);
-        for(Actor actor : menuSelectionList) {
+        for (Actor actor : menuSelectionList) {
             vbox.addActor(actor);
         }
 
         vbox.space(30f);
 
-        vbox.setPosition((float) (Gdx.graphics.getWidth() - vbox.getWidth()) / 2 , (float) Gdx.graphics.getHeight() / 2 + startLabel.getHeight() * 2 + titleLabel.getHeight()/2 + 90);
+        vbox.setPosition((float) (Gdx.graphics.getWidth() - vbox.getWidth()) / 2, (float) Gdx.graphics.getHeight() / 2 + startLabel.getHeight() * 2 + titleLabel.getHeight() / 2 + 90);
 
         float signOffset = 20f;
         currSel = (Label) menuSelectionList.get(0);
-        Vector2 currSelVec = currSel.localToStageCoordinates(new Vector2(0,0));
+        Vector2 currSelVec = currSel.localToStageCoordinates(new Vector2(0, 0));
         // 第一次取的currSelVec會是VBox的
-        gtSign.setPosition(currSelVec.x - currSel.getWidth() / 2 - gtSign.getWidth() - signOffset, currSelVec.y - titleLabel.getHeight() -60 - currSel.getHeight());
-        ltSign.setPosition(currSelVec.x + currSel.getWidth() / 2 + signOffset, currSelVec.y - titleLabel.getHeight() -60 - currSel.getHeight());
+        gtSign.setPosition(currSelVec.x - currSel.getWidth() / 2 - gtSign.getWidth() - signOffset, currSelVec.y - titleLabel.getHeight() - 60 - currSel.getHeight());
+        ltSign.setPosition(currSelVec.x + currSel.getWidth() / 2 + signOffset, currSelVec.y - titleLabel.getHeight() - 60 - currSel.getHeight());
 
+        Image background = new Image((Texture) game.assetManager.get("img/the_wall.jpg"));
+        background.setPosition((stage.getWidth() - background.getWidth()) / 2, (stage.getHeight() - background.getHeight()) / 2 - 9);
+
+        stage.addActor(background);
         stage.addActor(vbox);
         stage.addActor(gtSign);
         stage.addActor(ltSign);
@@ -104,14 +110,14 @@ public class MenuScreen implements Screen {
                 Gdx.app.debug(TAG, "Received keycode: " + keycode);
                 switch (keycode) {
                     case Input.Keys.Z -> {
-                        switch (currSel.getName()){
+                        switch (currSel.getName()) {
                             case "continue" -> {
                                 // Game state already loaded in IWantToGraduate
                                 game.gameState = GameState.loadState();
                                 game.changeScreen(EScreen.GAME);
                             }
                             case "start" -> {
-                                if(GameState.clearSavedState()){
+                                if (GameState.clearSavedState()) {
                                     Gdx.app.log(TAG, "Start the game: Successfully removed old file.");
                                 }
                                 game.gameState = GameState.loadState();
@@ -133,8 +139,8 @@ public class MenuScreen implements Screen {
                         game.musicManager.playEffect(MusicManager.Effect.MENU_SELECT);
 
                         int currSelIndex = menuSelectionList.indexOf(currSel, true);
-                        currSelIndex = currSelIndex == 0 ? menuSelectionList.size -1 : currSelIndex - 1;
-                        currSel = (Label)menuSelectionList.get(currSelIndex);
+                        currSelIndex = currSelIndex == 0 ? menuSelectionList.size - 1 : currSelIndex - 1;
+                        currSel = (Label) menuSelectionList.get(currSelIndex);
                         updateSignPosition();
                     }
                     case Input.Keys.DOWN -> {
@@ -142,7 +148,7 @@ public class MenuScreen implements Screen {
 
                         int currSelIndex = menuSelectionList.indexOf(currSel, true);
                         currSelIndex = currSelIndex == menuSelectionList.size - 1 ? 0 : currSelIndex + 1;
-                        currSel = (Label)menuSelectionList.get(currSelIndex);
+                        currSel = (Label) menuSelectionList.get(currSelIndex);
                         updateSignPosition();
                     }
                 }
@@ -152,7 +158,7 @@ public class MenuScreen implements Screen {
 
     }
 
-    private void updateSignPosition(){
+    private void updateSignPosition() {
         float signOffset = 20f;
         Vector2 currSelVec = currSel.localToStageCoordinates(new Vector2(0, 0));
         gtSign.setPosition(currSelVec.x - gtSign.getWidth() - signOffset, currSelVec.y);

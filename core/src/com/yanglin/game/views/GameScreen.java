@@ -23,6 +23,7 @@ import com.yanglin.game.input.GameInputProcessor;
 
 public class GameScreen implements Screen {
     private static final String TAG = GameScreen.class.getSimpleName();
+    public static final int viewPortHeight = 15;
     private EntityEngine engine;
     private GameAssetManager assetManager;
     private MapManager mapManager;
@@ -45,7 +46,7 @@ public class GameScreen implements Screen {
         float h = Gdx.graphics.getHeight();
         camera = new OrthographicCamera();
         // Camera show a specific size of area in game world, which is independent to the window size.
-        camera.setToOrtho(false, (w / h) * 20, 20);
+        camera.setToOrtho(false, (w / h) * viewPortHeight, viewPortHeight);
 
         uistage = new Stage();
         dialogstage = new Stage();

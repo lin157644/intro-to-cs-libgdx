@@ -1,8 +1,6 @@
 package com.yanglin.game;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonWriter;
@@ -24,13 +22,18 @@ public class GameState {
     public boolean hasWorshiped = false;
     public boolean hasPassEnglish = false;
     public boolean hasEnoughHours = false;
-    public boolean hasFinishedOnlineProcedure = false;
+    public boolean hasMeetProf = false;
+    public boolean hasFinishedProcedure = false;
+    public boolean hasReturnBook = false;
     public int month = 5;
     public int date = 1;
     public int hunger = 0;
     public final Array<ItemComponent.ItemType> items = new Array<>();
 
     public boolean hasPlayedIntroDialog = false;
+    public boolean canGraduate(){
+        return hasPassEnglish && hasMeetProf && hasEnoughHours && hasFinishedProcedure && hasReturnBook;
+    }
 
     public void addItem(ItemComponent.ItemType itemType){
         if (!items.contains(itemType, true))

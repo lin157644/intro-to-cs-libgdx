@@ -89,6 +89,7 @@ public class DialogSystem extends EntitySystem implements KeyInputListener, Play
 
     public void setDialog(String text) {
         currentDialog = new Array<>(text.replace("{BR}", "\n").split("\\{NEXT}"));
+        currentDialog.reverse();
         if (currentDialog.size > 0) {
             dialogLabel.setText(currentDialog.pop());
             setDialogLabelY();
