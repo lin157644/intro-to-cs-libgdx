@@ -117,6 +117,7 @@ public class GameScreen implements Screen {
         engine.addSystem(dialogSystem);
 
         timeSystem.addTimeSystemListener(playerMovementSystem);
+        timeSystem.addTimeSystemListener(dialogSystem);
         playerInteractionSystem.addPlayerInteractionListener(dialogSystem);
 
         // Create item entity

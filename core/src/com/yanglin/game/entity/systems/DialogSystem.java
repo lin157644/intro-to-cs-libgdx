@@ -175,7 +175,8 @@ public class DialogSystem extends EntitySystem implements KeyInputListener, Play
 
     @Override
     public void onDayUpdate(int day) {
-        if (game.gameState.hunger > 50) {
+        // Gdx.app.log(TAG, ""+!game.gameState.hasEaten);
+        if (game.gameState.hunger > 30 && !game.gameState.hasEaten) {
             game.ending = Ending.HUNGER;
             game.changeScreen(EScreen.BAD_END);
         }

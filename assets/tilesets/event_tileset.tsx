@@ -274,6 +274,12 @@
    <property name="type" value="TEST"/>
   </properties>
  </tile>
+ <tile id="87">
+  <properties>
+   <property name="test" value="SLEEP"/>
+   <property name="type" value="TEST"/>
+  </properties>
+ </tile>
  <tile id="100">
   <properties>
    <property name="dest" value="INTERSEC"/>

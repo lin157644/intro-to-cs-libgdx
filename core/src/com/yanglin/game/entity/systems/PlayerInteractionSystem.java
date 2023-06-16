@@ -115,13 +115,13 @@ public class PlayerInteractionSystem extends EntitySystem implements MapManager.
                         switch (eventType) {
                             case "SHOP" -> {
                                 hasTriggeredDialog = true;
-                                if (!gameState.hasEaten) {
+                                if (!game.gameState.hasEaten) {
                                     if (!gameState.hasItem(ItemComponent.ItemType.WALLET)) {
                                         game.ending = Ending.AWKWARD_STORE;
                                         game.changeScreen(EScreen.BAD_END);
                                         return;
                                     } else {
-                                        gameState.hasEaten = true;
+                                        game.gameState.hasEaten = true;
                                         String text = "你到超商買了些東西，填飽了肚子才有力氣忙畢業嘛。";
                                         notifyDialogListeners(text, true);
                                     }
@@ -247,6 +247,10 @@ public class PlayerInteractionSystem extends EntitySystem implements MapManager.
                                         game.gameState.hasReturnBook = true;
                                     }
 
+                                }
+                                case "SLEEP" -> {
+                                    game.ending = Ending.OVERSLEEP;
+                                    game.changeScreen(EScreen.BAD_END);
                                 }
                             }
                         }
